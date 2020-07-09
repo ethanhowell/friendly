@@ -82,9 +82,44 @@ A simple, clean, lite, and fun group chat app. Easy to join and manage.
 <img src="wireframe.jpg" width=600>
 
 ## Schema 
-[This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+
+#### User
+   | Property     | Type      |
+   | ------------ | --------- |
+   | objectId     | String    |
+   | createdAt    | DateTime  |
+   | updatedAt    | DateTime  |
+   | username     | String    |
+   | password     | String    |
+   | email        | String    |
+   | phoneNumber  | String    |
+   | firstName    | String    |
+   | lastName     | String    |
+   | profilePic   | File      |
+   
+#### Group
+   | Property  | Type      |
+   | --------- | --------- |
+   | objectId  | String    |
+   | createdAt | DateTime  |
+   | groupName | String    |
+   
+#### Group__User
+   | Property  | Type
+   | --------- | ------------------ |
+   | user      | Pointer to User    |
+   | group     | Pointer to Group   |
+   | current   | Boolean            |
+   
+#### Message
+   | Property  | Type            |
+   | --------- | --------------- |
+   | objectId  | String          |
+   | createdAt | DateTime        |
+   | author    | Pointer to User |
+   | body      | String          |
+
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
