@@ -11,7 +11,6 @@
 A simple, clean, lite, and fun group chat app. Easy to join and manage.
 
 ### App Evaluation
-[Evaluation of your app across the following attributes]
 - **Category:** Social
 - **Mobile:** It's a real time app that can access your camera
 - **Story:** The value is that this app would be very easy to chat with peers.
@@ -35,7 +34,7 @@ A simple, clean, lite, and fun group chat app. Easy to join and manage.
 
 **Optional Nice-to-have Stories**
 
-* User can send media messages (images, videos)
+* User can send media messages (images, videos, recordings)
 * User can react to others' messages
 * User can see typing indicators/read receipts
 * User can be admin and remove others from groups
@@ -121,6 +120,16 @@ A simple, clean, lite, and fun group chat app. Easy to join and manage.
    | body      | String          |
 
 ### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+#### List of network requests by screen
+   + Login Screen
+      - GET user with username/password combo
+   + Register Screen
+      - POST new user
+      - GET user just created
+   + Home Screen
+      - GET all groups that user belongs to
+   + New Chat Screen
+      - POST new chat group
+   + Chat Screen
+      - GET new messages
+      - POST newly written message
