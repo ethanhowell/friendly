@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">friendly</string>
+    <string name="etUsername_hint">Email</string>
+    <string name="etPassword_hint">Password</string>
+    <string name="btLogin_text">Login</string>
+    <string name="tvSignup_text">Sign up</string>
 </resources>
