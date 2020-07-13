@@ -16,6 +16,9 @@ public class LoginActivity extends AppCompatActivity {
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // TODO: Detect if user is already signed in
+        // TODO: Login logic
+
         TextView tvSignup = binding.tvSignup;
         tvSignup.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
     }
