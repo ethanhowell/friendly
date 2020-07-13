@@ -1,6 +1,5 @@
 package com.ethanjhowell.friendly.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -68,7 +67,8 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.e(TAG, "registerNewUser: something happened", e);
             } else {
                 Log.i(TAG, "registerNewUser: registration success!!!");
-                startActivity(new Intent(this, GroupActivity.class));
+                // tell the login activity that registration was a success
+                setResult(RESULT_OK);
                 finish();
             }
         });

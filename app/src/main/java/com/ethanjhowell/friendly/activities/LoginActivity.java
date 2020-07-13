@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ethanjhowell.friendly.databinding.ActivityLoginBinding;
@@ -13,6 +14,7 @@ import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private static String TAG = LoginActivity.class.getCanonicalName();
+    private static int REGISTER_ACTIVITY_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +43,20 @@ public class LoginActivity extends AppCompatActivity {
                 }));
 
         TextView tvSignup = binding.tvSignup;
-        tvSignup.setOnClickListener(v -> {
-            startActivity(new Intent(this, RegisterActivity.class));
-        });
+        tvSignup.setOnClickListener(v -> startActivityForResult(
+                new Intent(this, RegisterActivity.class),
+                REGISTER_ACTIVITY_REQUEST_CODE)
+        );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, String.format("onActivityResult: requestCode = %d, resultCode = %d", requestCode, resultCode));
+        if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            // if registration was a success then we can launch the group activity
+            startActivity(new Intent(this, GroupActivity.class));
+            finish();
+        }
     }
 }
