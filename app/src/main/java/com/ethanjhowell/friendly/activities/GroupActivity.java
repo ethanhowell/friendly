@@ -1,5 +1,6 @@
 package com.ethanjhowell.friendly.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +21,10 @@ public class GroupActivity extends AppCompatActivity {
 
         // TODO: build out the group activity
         binding.textView.setText(String.format("Welcome, %s %s", user.getFirstName(), user.getLastName()));
+        binding.button.setOnClickListener(v -> {
+            ParseUser.logOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
     }
 }
