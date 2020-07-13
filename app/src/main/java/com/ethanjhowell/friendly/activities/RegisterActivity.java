@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,8 +43,13 @@ public class RegisterActivity extends AppCompatActivity {
         btSignup = binding.btSignup;
     }
 
+    private void showError(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
     private void registerNewUser(View button) {
         // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
+        // fill out fields from the views
         FriendlyParseUser user = new FriendlyParseUser();
         user.setFirstName(etFirstName.getText().toString());
         user.setLastName(etLastName.getText().toString());
@@ -56,12 +62,12 @@ public class RegisterActivity extends AppCompatActivity {
         user.setPhoneNumber(etPhoneNumber.getText().toString());
 
         user.signUpInBackground(e -> {
+            // if there was an error
             if (e != null) {
-                // TODO: handle exception
+                showError(e.getMessage());
                 Log.e(TAG, "registerNewUser: something happened", e);
             } else {
                 Log.i(TAG, "registerNewUser: registration success!!!");
-                // TODO: Launch GroupActivity
                 startActivity(new Intent(this, GroupActivity.class));
                 finish();
             }

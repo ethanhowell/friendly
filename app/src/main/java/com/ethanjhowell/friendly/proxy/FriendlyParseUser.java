@@ -5,6 +5,7 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 public class FriendlyParseUser {
+    // class that wraps ParseUser in order to provide convenience methods for setting additional fields
     public static final String KEY_FIRST_NAME = "firstName";
     public static final String KEY_LAST_NAME = "lastName";
     public static final String KEY_PROFILE_PICTURE = "profilePicture";

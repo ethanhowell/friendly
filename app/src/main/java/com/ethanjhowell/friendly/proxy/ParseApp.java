@@ -24,7 +24,6 @@ public class ParseApp extends Application {
         builder.networkInterceptors().add(httpLoggingInterceptor);
 
         // set applicationId, and server server based on the values in the Heroku settings.
-        // clientKey is not needed unless explicitly configured
         // any network interceptors must be added with the Configuration Builder given this syntax
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId("friendly-back") // should correspond to APP_ID env variable
