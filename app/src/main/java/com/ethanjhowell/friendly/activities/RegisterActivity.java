@@ -1,5 +1,6 @@
 package com.ethanjhowell.friendly.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerNewUser(View button) {
         // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
-
         FriendlyParseUser user = new FriendlyParseUser();
         user.setFirstName(etFirstName.getText().toString());
         user.setLastName(etLastName.getText().toString());
@@ -62,6 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
             } else {
                 Log.i(TAG, "registerNewUser: registration success!!!");
                 // TODO: Launch GroupActivity
+                startActivity(new Intent(this, GroupActivity.class));
+                finish();
             }
         });
 
