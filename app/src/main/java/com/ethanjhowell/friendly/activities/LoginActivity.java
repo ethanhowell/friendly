@@ -11,10 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ethanjhowell.friendly.databinding.ActivityLoginBinding;
+import com.facebook.Profile;
 import com.parse.ParseUser;
 import com.parse.facebook.ParseFacebookUtils;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class LoginActivity extends AppCompatActivity {
     private static String TAG = LoginActivity.class.getCanonicalName();
@@ -45,13 +46,14 @@ public class LoginActivity extends AppCompatActivity {
     private void facebookLoginOnClick(View v) {
         ParseFacebookUtils.logInWithReadPermissionsInBackground(
                 this,
-                Arrays.asList(),
+                Collections.singletonList("email"),
                 (user, e) -> {
                     if (user == null) {
                         Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
                         Log.e(TAG, "onCreate: ", e);
                     } else {
                         if (user.isNew()) {
+                            Profile currentProfile = Profile.getCurrentProfile();
                             Log.d(TAG, "User signed up and logged in through Facebook!");
                         }
                         Log.d(TAG, "User logged in through Facebook!");
@@ -87,9 +89,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, String.format("onActivityResult: requestCode = %d, resultCode = %d", requestCode, resultCode));
         super.onActivityResult(requestCode, resultCode, data);
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, String.format("onActivityResult: requestCode = %d, resultCode = %d", requestCode, resultCode));
         if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             // if registration was a success then we can launch the group activity
             startActivity(new Intent(this, GroupActivity.class));
