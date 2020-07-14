@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -49,9 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                 )
         );
         binding.btLogin.setOnClickListener(this::loginButtonOnClick);
-
-        TextView tvSignup = binding.tvSignup;
-        tvSignup.setOnClickListener(this::registrationOnClick);
+        binding.tvSignup.setOnClickListener(this::registrationOnClick);
     }
 
     private void updateUserInfoFromFacebook(FriendlyParseUser user) {
