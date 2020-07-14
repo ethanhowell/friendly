@@ -4,19 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="40dp"
     tools:context=".activities.NewUserActivity">
 
-    <ImageView
-        android:id="@+id/ivProfilePic"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:contentDescription="@string/ivProfilePic_contentDescription"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clChooseProfilePic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".3"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias=".3">
+
+        <ImageView
+            android:id="@+id/ivProfilePic"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:contentDescription="@string/ivProfilePic_contentDescription"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_person_24" />
+
+
+        <TextView
+            android:id="@+id/tvChoosePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="#CC6E6A6A"
+            android:padding="8dp"
+            android:text="@string/tvChoosePhoto_text"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivProfilePic"
+            app:layout_constraintEnd_toEndOf="@+id/ivProfilePic"
+            app:layout_constraintStart_toStartOf="@+id/ivProfilePic" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <EditText
         android:id="@+id/etPhoneNumber"
@@ -27,9 +56,10 @@
         android:ems="10"
         android:hint="@string/etPhoneNumber_hint"
         android:inputType="phone"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivProfilePic" />
+        app:layout_constraintTop_toBottomOf="@+id/clChooseProfilePic" />
 
     <Button
         android:id="@+id/btContinue"
@@ -41,4 +71,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etPhoneNumber"
         app:layout_constraintVertical_bias=".2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
