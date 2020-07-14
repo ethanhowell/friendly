@@ -35,20 +35,24 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // detect if user is already signed in
-        if (ParseUser.getCurrentUser() != null) {
+        FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
+        if (user != null) {
             Log.d(TAG, "onCreate: user already logged in");
-            startGroupActivity();
+            if (user.isCompleted())
+                startGroupActivity();
+            else
+                startNewUserActivity();
+        } else {
+            binding.btFacebookLogin.setOnClickListener(
+                    v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
+                            this,
+                            Collections.singletonList("email"),
+                            this::facebookLoginCallback
+                    )
+            );
+            binding.btLogin.setOnClickListener(this::loginButtonOnClick);
+            binding.tvSignup.setOnClickListener(this::registrationOnClick);
         }
-
-        binding.btFacebookLogin.setOnClickListener(
-                v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
-                        this,
-                        Collections.singletonList("email"),
-                        this::facebookLoginCallback
-                )
-        );
-        binding.btLogin.setOnClickListener(this::loginButtonOnClick);
-        binding.tvSignup.setOnClickListener(this::registrationOnClick);
     }
 
     private void updateUserInfoFromFacebook(FriendlyParseUser user) {
@@ -72,8 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (e1 != null) {
                             Log.e(TAG, "updateUserInfoFromFacebook: problem saving user profile info ", e1);
                         }
-                        startGroupActivity();
-                        // TODO: instead of launching group activity, take me to a new user activity where users can enter phone number and profile picture
+                        startNewUserActivity();
                     });
                 });
 
@@ -90,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
             Log.e(TAG, "facebookLoginOnClick: ", e);
         } else {
-            FriendlyParseUser user = new FriendlyParseUser(parseUser);
+            FriendlyParseUser user = FriendlyParseUser.fromParseUser(parseUser);
             if (user.isNew()) {
                 updateUserInfoFromFacebook(user);
                 Log.d(TAG, "User signed up and logged in through Facebook!");
@@ -104,6 +107,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startGroupActivity() {
         startActivity(new Intent(this, GroupActivity.class));
+        finish();
+    }
+
+    private void startNewUserActivity() {
+        Intent intent = new Intent(this, NewUserActivity.class);
+//        intent.putExtra("profilePic", profilePicUrl);
+        startActivity(intent);
         finish();
     }
 
@@ -137,8 +147,7 @@ public class LoginActivity extends AppCompatActivity {
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             // if registration was a success then we can launch the group activity
-            startGroupActivity();
-            // TODO: instead of launching group activity, take me to a new user activity where users can enter phone number and profile picture
+            startNewUserActivity();
         }
     }
 }

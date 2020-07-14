@@ -11,11 +11,20 @@ public class FriendlyParseUser {
     public static final String KEY_LAST_NAME = "lastName";
     public static final String KEY_PROFILE_PICTURE = "profilePicture";
     public static final String KEY_PHONE_NUMBER = "phoneNumber";
+    public static final String KEY_IS_COMPLETED = "isCompleted";
 
     private ParseUser user;
 
-    public FriendlyParseUser(ParseUser parseUser) {
+    private FriendlyParseUser(ParseUser parseUser) {
         user = parseUser;
+    }
+
+    public static FriendlyParseUser fromParseUser(ParseUser parseUser) {
+        if (parseUser == null)
+            return null;
+        else {
+            return new FriendlyParseUser(parseUser);
+        }
     }
 
     public FriendlyParseUser() {
@@ -23,7 +32,7 @@ public class FriendlyParseUser {
     }
 
     public static FriendlyParseUser getCurrentUser() {
-        return new FriendlyParseUser(ParseUser.getCurrentUser());
+        return fromParseUser(ParseUser.getCurrentUser());
     }
 
     public String getFirstName() {
@@ -56,6 +65,14 @@ public class FriendlyParseUser {
 
     public void setPhoneNumber(String phoneNumber) {
         user.put(KEY_PHONE_NUMBER, phoneNumber);
+    }
+
+    public boolean isCompleted() {
+        return user.getBoolean(KEY_IS_COMPLETED);
+    }
+
+    public void isCompleted(boolean completed) {
+        user.put(KEY_IS_COMPLETED, completed);
     }
 
     public void setEmail(String email) {
