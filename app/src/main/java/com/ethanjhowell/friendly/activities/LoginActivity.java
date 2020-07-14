@@ -38,10 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
         if (user != null) {
             Log.d(TAG, "onCreate: user already logged in");
-            if (user.isCompleted())
-                startGroupActivity();
-            else
-                startNewUserActivity();
+            startNextActivity(user);
         } else {
             binding.btFacebookLogin.setOnClickListener(
                     v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
@@ -76,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (e1 != null) {
                             Log.e(TAG, "updateUserInfoFromFacebook: problem saving user profile info ", e1);
                         }
-                        startNewUserActivity();
+                        startNextActivity(user);
                     });
                 });
 
@@ -99,21 +96,17 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "User signed up and logged in through Facebook!");
             } else {
                 Log.d(TAG, "User logged in through Facebook!");
-                startGroupActivity();
+                startNextActivity(user);
             }
         }
 
     }
 
-    private void startGroupActivity() {
-        startActivity(new Intent(this, GroupActivity.class));
-        finish();
-    }
-
-    private void startNewUserActivity() {
-        Intent intent = new Intent(this, NewUserActivity.class);
-//        intent.putExtra("profilePic", profilePicUrl);
-        startActivity(intent);
+    private void startNextActivity(FriendlyParseUser currentUser) {
+        if (currentUser.isCompleted())
+            startActivity(new Intent(this, GroupActivity.class));
+        else
+            startActivity(new Intent(this, NewUserActivity.class));
         finish();
     }
 
@@ -127,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e(TAG, "onCreate: log in problem ", e);
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        startGroupActivity();
+                        startNextActivity(FriendlyParseUser.fromParseUser(user));
                     }
                 }
         );
@@ -147,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             // if registration was a success then we can launch the group activity
-            startNewUserActivity();
+            startNextActivity(FriendlyParseUser.getCurrentUser());
         }
     }
 }
