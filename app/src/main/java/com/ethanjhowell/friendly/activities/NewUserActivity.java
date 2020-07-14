@@ -2,6 +2,7 @@ package com.ethanjhowell.friendly.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -114,9 +115,9 @@ public class NewUserActivity extends AppCompatActivity {
         if (requestCode == ACTION_IMAGE_CAPTURE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
-                Glide.with(this)
-                        .load(photoFile)
-                        .into(binding.ivProfilePic);
+                binding.ivProfilePic.setImageBitmap(
+                        BitmapFactory.decodeFile(photoFile.getAbsolutePath())
+                );
                 parsePhotoFile = new ParseFile(photoFile);
             }
         } else
