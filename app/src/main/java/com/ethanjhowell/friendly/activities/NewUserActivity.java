@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.databinding.ActivityNewUserBinding;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.facebook.Profile;
@@ -91,12 +93,10 @@ public class NewUserActivity extends AppCompatActivity {
         Glide.with(this)
                 .asBitmap()
                 .load(profile.getProfilePictureUri(300, 300).toString())
-                .circleCrop()
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         binding.ivProfilePic.setImageBitmap(resource);
-                        photoFile = getPhotoFileUri();
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         resource.compress(Bitmap.CompressFormat.PNG, 100, stream);
                         parsePhotoFile = new ParseFile(stream.toByteArray());
@@ -116,7 +116,6 @@ public class NewUserActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 Glide.with(this)
                         .load(photoFile)
-                        .circleCrop()
                         .into(binding.ivProfilePic);
                 parsePhotoFile = new ParseFile(photoFile);
             }
@@ -140,8 +139,8 @@ public class NewUserActivity extends AppCompatActivity {
                 startActivity(new Intent(this, GroupActivity.class));
                 finish();
             });
-
-
+        } else {
+            Toast.makeText(this, getResources().getString(R.string.selectImage_toast), Toast.LENGTH_SHORT).show();
         }
     }
 
