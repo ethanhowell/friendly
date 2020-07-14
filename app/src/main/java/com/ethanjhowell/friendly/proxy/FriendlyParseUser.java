@@ -22,6 +22,10 @@ public class FriendlyParseUser {
         this(new ParseUser());
     }
 
+    public static FriendlyParseUser getCurrentUser() {
+        return new FriendlyParseUser(ParseUser.getCurrentUser());
+    }
+
     public String getFirstName() {
         return user.getString(KEY_FIRST_NAME);
     }

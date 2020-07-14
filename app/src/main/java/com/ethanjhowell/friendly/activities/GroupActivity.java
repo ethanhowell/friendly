@@ -17,7 +17,7 @@ public class GroupActivity extends AppCompatActivity {
         ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        FriendlyParseUser user = new FriendlyParseUser(ParseUser.getCurrentUser());
+        FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
 
         // TODO: build out the group activity
         binding.textView.setText(String.format("Welcome, %s %s", user.getFirstName(), user.getLastName()));
