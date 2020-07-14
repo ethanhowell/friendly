@@ -3,6 +3,7 @@ package com.ethanjhowell.friendly.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,12 +18,14 @@ import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
     private static String TAG = LoginActivity.class.getCanonicalName();
-    private static int REGISTER_ACTIVITY_REQUEST_CODE = 1;
+    public static int REGISTER_ACTIVITY_REQUEST_CODE = 1;
+
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // detect if user is already signed in
@@ -32,20 +35,35 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        binding.btFacebookLogin.setOnClickListener(v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(this, Arrays.asList(), (user, e) -> {
-            if (user == null) {
-                Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
-            } else {
-                if (user.isNew()) {
-                    Log.d(TAG, "User signed up and logged in through Facebook!");
-                }
-                Log.d(TAG, "User logged in through Facebook!");
-                startActivity(new Intent(this, GroupActivity.class));
-                finish();
-            }
-        }));
+        binding.btFacebookLogin.setOnClickListener(this::facebookLoginOnClick);
+        binding.btLogin.setOnClickListener(this::loginButtonOnClick);
 
-        binding.btLogin.setOnClickListener(v -> ParseUser.logInInBackground(binding.etUsername.getText().toString(),
+        TextView tvSignup = binding.tvSignup;
+        tvSignup.setOnClickListener(this::registrationOnClick);
+    }
+
+    private void facebookLoginOnClick(View v) {
+        ParseFacebookUtils.logInWithReadPermissionsInBackground(
+                this,
+                Arrays.asList(),
+                (user, e) -> {
+                    if (user == null) {
+                        Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
+                        Log.e(TAG, "onCreate: ", e);
+                    } else {
+                        if (user.isNew()) {
+                            Log.d(TAG, "User signed up and logged in through Facebook!");
+                        }
+                        Log.d(TAG, "User logged in through Facebook!");
+                        startActivity(new Intent(this, GroupActivity.class));
+                        finish();
+                    }
+                });
+    }
+
+    private void loginButtonOnClick(View v) {
+        ParseUser.logInInBackground(
+                binding.etUsername.getText().toString(),
                 binding.etPassword.getText().toString(),
                 (user, e) -> {
                     // there was a log in problem
@@ -56,19 +74,21 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(this, GroupActivity.class));
                         finish();
                     }
-                }));
+                }
+        );
+    }
 
-        TextView tvSignup = binding.tvSignup;
-        tvSignup.setOnClickListener(v -> startActivityForResult(
+    private void registrationOnClick(View v) {
+        startActivityForResult(
                 new Intent(this, RegisterActivity.class),
-                REGISTER_ACTIVITY_REQUEST_CODE)
+                REGISTER_ACTIVITY_REQUEST_CODE
         );
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, String.format("onActivityResult: requestCode = %d, resultCode = %d", requestCode, resultCode));
         if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             // if registration was a success then we can launch the group activity
