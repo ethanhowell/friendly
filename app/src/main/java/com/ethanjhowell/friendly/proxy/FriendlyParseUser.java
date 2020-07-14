@@ -7,11 +7,11 @@ import com.parse.SignUpCallback;
 
 public class FriendlyParseUser {
     // class that wraps ParseUser in order to provide convenience methods for setting additional fields
-    public static final String KEY_FIRST_NAME = "firstName";
-    public static final String KEY_LAST_NAME = "lastName";
-    public static final String KEY_PROFILE_PICTURE = "profilePicture";
-    public static final String KEY_PHONE_NUMBER = "phoneNumber";
-    public static final String KEY_IS_COMPLETED = "isCompleted";
+    public final static String KEY_FIRST_NAME = "firstName";
+    public final static String KEY_LAST_NAME = "lastName";
+    public final static String KEY_PROFILE_PICTURE = "profilePicture";
+    public final static String KEY_PHONE_NUMBER = "phoneNumber";
+    public final static String KEY_IS_COMPLETED = "isCompleted";
 
     private ParseUser user;
 

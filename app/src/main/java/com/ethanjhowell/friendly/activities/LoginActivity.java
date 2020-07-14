@@ -23,8 +23,8 @@ import org.json.JSONException;
 import java.util.Collections;
 
 public class LoginActivity extends AppCompatActivity {
-    private static String TAG = LoginActivity.class.getCanonicalName();
-    public static int REGISTER_ACTIVITY_REQUEST_CODE = 1;
+    public final static int REGISTER_ACTIVITY_REQUEST_CODE = 1;
+    private final static String TAG = LoginActivity.class.getCanonicalName();
 
     private ActivityLoginBinding binding;
 

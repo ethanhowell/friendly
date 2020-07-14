@@ -30,10 +30,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class NewUserActivity extends AppCompatActivity {
-    // TODO: change all static constants to final
-    private static String TAG = NewUserActivity.class.getCanonicalName();
-    private static int ACTION_IMAGE_CAPTURE_REQUEST_CODE = 2;
-    private static String PHOTO_FILE_NAME = "photo.png";
+    private final static String TAG = NewUserActivity.class.getCanonicalName();
+    private final static int ACTION_IMAGE_CAPTURE_REQUEST_CODE = 2;
+    private final static String PHOTO_FILE_NAME = "photo.png";
     private File photoFile;
     private ActivityNewUserBinding binding;
     private ParseFile parsePhotoFile;

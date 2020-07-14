@@ -13,7 +13,7 @@ import com.ethanjhowell.friendly.databinding.ActivityRegisterBinding;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 
 public class RegisterActivity extends AppCompatActivity {
-    private static String TAG = RegisterActivity.class.getCanonicalName();
+    private final static String TAG = RegisterActivity.class.getCanonicalName();
     private EditText etFirstName;
     private EditText etLastName;
     private EditText etEmail;
