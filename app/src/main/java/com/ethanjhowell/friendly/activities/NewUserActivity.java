@@ -1,7 +1,9 @@
 package com.ethanjhowell.friendly.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,11 +13,12 @@ import com.facebook.Profile;
 
 public class NewUserActivity extends AppCompatActivity {
     private static String TAG = NewUserActivity.class.getCanonicalName();
+    private ActivityNewUserBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityNewUserBinding binding = ActivityNewUserBinding.inflate(getLayoutInflater());
+        binding = ActivityNewUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Profile currentProfile = Profile.getCurrentProfile();
@@ -29,5 +32,20 @@ public class NewUserActivity extends AppCompatActivity {
                     .into(binding.ivProfilePic);
         }
 
+        binding.btContinue.setOnClickListener(this::continueOnClick);
+
     }
+
+    private void continueOnClick(View v) {
+        // TODO: check image not empty
+        // TODO: validate phone number
+        // TODO: save image and phone number
+        // TODO: mark user as completed
+
+        // by now user account is completely created, we can navigate to the next activity
+        startActivity(new Intent(this, GroupActivity.class));
+        finish();
+    }
+
+
 }

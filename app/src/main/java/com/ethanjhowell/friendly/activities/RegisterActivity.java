@@ -48,12 +48,14 @@ public class RegisterActivity extends AppCompatActivity {
         // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
         // fill out fields from the views
         FriendlyParseUser user = new FriendlyParseUser();
+        // TODO: check first name not empty
         user.setFirstName(etFirstName.getText().toString());
+        // TODO: check last name not empty
         user.setLastName(etLastName.getText().toString());
         // TODO: Email validation
         user.setEmail(etEmail.getText().toString());
         user.setUsername(etEmail.getText().toString());
-        // TODO: Check that password and confirm password match
+        // TODO: Check that password and confirm password not empty and match
         user.setPassword(etPassword.getText().toString());
 
         user.signUpInBackground(e -> {
