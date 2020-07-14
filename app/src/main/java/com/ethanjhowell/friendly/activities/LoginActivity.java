@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         Profile currentProfile = Profile.getCurrentProfile();
         user.setFirstName(currentProfile.getFirstName());
         user.setLastName(currentProfile.getLastName());
+        // get the email from the facebook api
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
                 (object, response) -> {
@@ -75,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.e(TAG, "updateUserInfoFromFacebook: problem saving user profile info ", e1);
                         }
                         startGroupActivity();
+                        // TODO: instead of launching group activity, take me to a new user activity where users can enter phone number and profile picture
                     });
                 });
 
@@ -92,13 +94,13 @@ public class LoginActivity extends AppCompatActivity {
             Log.e(TAG, "facebookLoginOnClick: ", e);
         } else {
             FriendlyParseUser user = new FriendlyParseUser(parseUser);
-//            if (user.isNew()) {
-            updateUserInfoFromFacebook(user);
-            Log.d(TAG, "User signed up and logged in through Facebook!");
-//            } else {
-            Log.d(TAG, "User logged in through Facebook!");
-//            startGroupActivity();
-//            }
+            if (user.isNew()) {
+                updateUserInfoFromFacebook(user);
+                Log.d(TAG, "User signed up and logged in through Facebook!");
+            } else {
+                Log.d(TAG, "User logged in through Facebook!");
+                startGroupActivity();
+            }
         }
 
     }
@@ -139,6 +141,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             // if registration was a success then we can launch the group activity
             startGroupActivity();
+            // TODO: instead of launching group activity, take me to a new user activity where users can enter phone number and profile picture
         }
     }
 }
