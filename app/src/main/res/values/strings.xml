@@ -11,4 +11,6 @@
     <string name="etConfirmPassword_hint">Confirm Password</string>
     <string name="btSignup_text">Sign up</string>
     <string name="btFacebookLogin_text">Log In with facebook</string>
+    <string name="btContinue_text">Continue</string>
+    <string name="ivProfilePic_contentDescription">Profile Picture</string>
 </resources>
