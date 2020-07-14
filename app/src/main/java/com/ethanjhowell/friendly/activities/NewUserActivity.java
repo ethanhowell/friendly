@@ -19,8 +19,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ethanjhowell.friendly.databinding.ActivityNewUserBinding;
+import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.facebook.Profile;
+import com.parse.ParseFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class NewUserActivity extends AppCompatActivity {
@@ -30,6 +33,7 @@ public class NewUserActivity extends AppCompatActivity {
     private static String PHOTO_FILE_NAME = "photo.png";
     private File photoFile;
     private ActivityNewUserBinding binding;
+    private ParseFile parsePhotoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,20 +87,6 @@ public class NewUserActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ACTION_IMAGE_CAPTURE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // by this point we have the camera photo on disk
-                Glide.with(this)
-                        .load(photoFile)
-                        .circleCrop()
-                        .into(binding.ivProfilePic);
-            }
-        } else
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void loadFacebookImage(Profile profile) {
         Glide.with(this)
                 .asBitmap()
@@ -106,6 +96,10 @@ public class NewUserActivity extends AppCompatActivity {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         binding.ivProfilePic.setImageBitmap(resource);
+                        photoFile = getPhotoFileUri();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        resource.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        parsePhotoFile = new ParseFile(stream.toByteArray());
                     }
 
                     @Override
@@ -115,15 +109,40 @@ public class NewUserActivity extends AppCompatActivity {
                 });
     }
 
-    private void continueOnClick(View v) {
-        // TODO: check image not empty
-        // TODO: validate phone number
-        // TODO: save image and phone number
-        // TODO: mark user as completed
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTION_IMAGE_CAPTURE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // by this point we have the camera photo on disk
+                Glide.with(this)
+                        .load(photoFile)
+                        .circleCrop()
+                        .into(binding.ivProfilePic);
+                parsePhotoFile = new ParseFile(photoFile);
+            }
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
 
-        // by now user account is completely created, we can navigate to the next activity
-        startActivity(new Intent(this, GroupActivity.class));
-        finish();
+    private void continueOnClick(View v) {
+        if (parsePhotoFile != null) {
+            // TODO: some sort of loading status visual
+            // TODO: validate phone number
+            FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
+            user.setProfilePicture(parsePhotoFile);
+            user.setPhoneNumber(binding.etPhoneNumber.getText().toString());
+            user.isCompleted(true);
+            user.saveInBackground(e -> {
+                if (e != null) {
+                    Log.e(TAG, "continueOnClick: problem saving user data", e);
+                }
+                // by now user account is completely created, we can navigate to the next activity
+                startActivity(new Intent(this, GroupActivity.class));
+                finish();
+            });
+
+
+        }
     }
 
 
