@@ -1,5 +1,6 @@
 package com.ethanjhowell.friendly.proxy;
 
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -67,5 +68,13 @@ public class FriendlyParseUser {
 
     public void signUpInBackground(SignUpCallback callback) {
         user.signUpInBackground(callback);
+    }
+
+    public boolean isNew() {
+        return user.isNew();
+    }
+
+    public void save() throws ParseException {
+        user.save();
     }
 }

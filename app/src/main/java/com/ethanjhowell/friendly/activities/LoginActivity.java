@@ -11,7 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ethanjhowell.friendly.databinding.ActivityLoginBinding;
+import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.facebook.Profile;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.facebook.ParseFacebookUtils;
 
@@ -32,35 +34,51 @@ public class LoginActivity extends AppCompatActivity {
         // detect if user is already signed in
         if (ParseUser.getCurrentUser() != null) {
             Log.d(TAG, "onCreate: user already logged in");
-            startActivity(new Intent(this, GroupActivity.class));
-            finish();
+            startGroupActivity();
         }
 
-        binding.btFacebookLogin.setOnClickListener(this::facebookLoginOnClick);
+        binding.btFacebookLogin.setOnClickListener(
+                v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
+                        this,
+                        Collections.singletonList("email"),
+                        this::facebookLoginCallback
+                )
+        );
         binding.btLogin.setOnClickListener(this::loginButtonOnClick);
 
         TextView tvSignup = binding.tvSignup;
         tvSignup.setOnClickListener(this::registrationOnClick);
     }
 
-    private void facebookLoginOnClick(View v) {
-        ParseFacebookUtils.logInWithReadPermissionsInBackground(
-                this,
-                Collections.singletonList("email"),
-                (user, e) -> {
-                    if (user == null) {
-                        Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
-                        Log.e(TAG, "onCreate: ", e);
-                    } else {
-                        if (user.isNew()) {
-                            Profile currentProfile = Profile.getCurrentProfile();
-                            Log.d(TAG, "User signed up and logged in through Facebook!");
-                        }
-                        Log.d(TAG, "User logged in through Facebook!");
-                        startActivity(new Intent(this, GroupActivity.class));
-                        finish();
+    private void facebookLoginCallback(ParseUser parseUser, ParseException e) {
+        if (parseUser == null) {
+            Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
+            Log.e(TAG, "facebookLoginOnClick: ", e);
+        } else {
+            FriendlyParseUser user = new FriendlyParseUser(parseUser);
+            if (user.isNew()) {
+                Profile currentProfile = Profile.getCurrentProfile();
+                user.setFirstName(currentProfile.getFirstName());
+                user.setLastName(currentProfile.getLastName());
+                parseUser.saveInBackground(e1 -> {
+                    if (e1 != null) {
+                        Log.e(TAG, "facebookLoginOnClick: problem saving user profile info ", e1);
                     }
+                    startGroupActivity();
                 });
+                // TODO: Some sort of intermediate loading bar
+                Log.d(TAG, "User signed up and logged in through Facebook!");
+            } else {
+                Log.d(TAG, "User logged in through Facebook!");
+                startGroupActivity();
+            }
+        }
+
+    }
+
+    private void startGroupActivity() {
+        startActivity(new Intent(this, GroupActivity.class));
+        finish();
     }
 
     private void loginButtonOnClick(View v) {
@@ -73,8 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e(TAG, "onCreate: log in problem ", e);
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        startActivity(new Intent(this, GroupActivity.class));
-                        finish();
+                        startGroupActivity();
                     }
                 }
         );
@@ -94,8 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             // if registration was a success then we can launch the group activity
-            startActivity(new Intent(this, GroupActivity.class));
-            finish();
+            startGroupActivity();
         }
     }
 }
