@@ -1,13 +1,19 @@
 package com.ethanjhowell.friendly.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ethanjhowell.friendly.databinding.ActivityNewUserBinding;
 import com.facebook.Profile;
 
@@ -26,14 +32,29 @@ public class NewUserActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: logged in via parse");
         } else {
             Log.d(TAG, "onCreate: logged in via facebook");
-            Glide.with(this)
-                    .load(currentProfile.getProfilePictureUri(300, 300).toString())
-                    .circleCrop()
-                    .into(binding.ivProfilePic);
+            loadFacebookImage(currentProfile);
         }
 
         binding.btContinue.setOnClickListener(this::continueOnClick);
 
+    }
+
+    private void loadFacebookImage(Profile profile) {
+        Glide.with(this)
+                .asBitmap()
+                .load(profile.getProfilePictureUri(300, 300).toString())
+                .circleCrop()
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        binding.ivProfilePic.setImageBitmap(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
     }
 
     private void continueOnClick(View v) {
