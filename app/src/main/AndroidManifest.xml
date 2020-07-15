@@ -15,6 +15,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,UnusedAttribute">
+        <activity
+            android:name=".activities.NewGroupActivity"
+            android:parentActivityName=".activities.GroupActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.ethanjhowell.friendly.fileprovider"
@@ -24,6 +28,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
+
         <activity android:name=".activities.NewUserActivity" />
 
         <meta-data

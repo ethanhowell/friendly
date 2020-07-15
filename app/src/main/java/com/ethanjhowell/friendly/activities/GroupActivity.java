@@ -3,6 +3,7 @@ package com.ethanjhowell.friendly.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,6 +39,11 @@ public class GroupActivity extends AppCompatActivity {
                 );
     }
 
+    private void newGroupOnClick(View v) {
+        // TODO: handle result, if new group is succesfully created go to the chat view
+        startActivity(new Intent(this, NewGroupActivity.class));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +68,15 @@ public class GroupActivity extends AppCompatActivity {
             finish();
         });
 
+        // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;
         GroupAdapter groupAdapter = new GroupAdapter(groups);
         getUserGroupsInBackground(groupAdapter);
         rvGroups.setAdapter(groupAdapter);
         rvGroups.setLayoutManager(new LinearLayoutManager(this));
+
+        // click handler for floating action button
+        binding.fabNewGroup.setOnClickListener(this::newGroupOnClick);
 
     }
 }
