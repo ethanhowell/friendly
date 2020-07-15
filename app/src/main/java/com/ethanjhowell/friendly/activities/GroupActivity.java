@@ -22,25 +22,29 @@ import java.util.ArrayList;
 
 public class GroupActivity extends AppCompatActivity {
     private final static String TAG = GroupActivity.class.getCanonicalName();
-    ArrayList<Group> groups;
+    private ArrayList<Group> groups;
+    private GroupAdapter groupAdapter;
 
-    private void getUserGroupsInBackground(GroupAdapter adapter) {
+    private void getUserGroupsInBackground() {
+        assert groupAdapter != null;
         ParseQuery.getQuery(Group__User.class)
                 .include(Group__User.KEY_GROUP)
                 .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
                 .findInBackground((gs__us, e) -> {
+                            // since we run this when the activity resumes, we want to clear the
+                            // groups so that we can re-add them
+                            groups.clear();
                             for (Group__User g__u : gs__us) {
                                 Group group = g__u.getGroup();
                                 Log.d(TAG, "getUserGroups: " + group.getGroupName());
                                 groups.add(group);
                             }
-                            adapter.notifyDataSetChanged();
+                            groupAdapter.notifyDataSetChanged();
                         }
                 );
     }
 
     private void newGroupOnClick(View v) {
-        // TODO: handle result, if new group is successfully created go to the chat view
         startActivity(new Intent(this, NewGroupActivity.class));
     }
 
@@ -68,13 +72,19 @@ public class GroupActivity extends AppCompatActivity {
 
         // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;
-        GroupAdapter groupAdapter = new GroupAdapter(groups);
-        getUserGroupsInBackground(groupAdapter);
+        groupAdapter = new GroupAdapter(groups);
         rvGroups.setAdapter(groupAdapter);
         rvGroups.setLayoutManager(new LinearLayoutManager(this));
 
         // click handler for floating action button
         binding.fabNewGroup.setOnClickListener(this::newGroupOnClick);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: loading list of groups");
+        getUserGroupsInBackground();
     }
 }
