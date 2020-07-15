@@ -52,8 +52,6 @@ public class GroupActivity extends AppCompatActivity {
         groups = new ArrayList<>();
 
         FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
-
-        // TODO: build out the group activity
         user.getProfilePicture().getFileInBackground((file, e) -> {
             if (e != null)
                 Log.e(TAG, "onCreate: ", e);
