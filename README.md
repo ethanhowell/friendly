@@ -24,8 +24,8 @@ A simple, clean, lite, and fun group chat app. Easy to join and manage.
 
 **Required Must-have Stories**
 
-* User can log in with account or with Facebook/Google
-* User can send view groups of which he is a member
+* User can log in with account or with Facebook
+* User can see groups of which he is a member
 * User can create new groups
 * User can add people to groups
 * User can leave groups
@@ -34,12 +34,13 @@ A simple, clean, lite, and fun group chat app. Easy to join and manage.
 
 **Optional Nice-to-have Stories**
 
+* Messages come in live
 * User can send media messages (images, videos, recordings)
 * User can react to others' messages
 * User can see typing indicators/read receipts
 * User can be admin and remove others from groups
 * User can direct message
-* User scan QR code to join chat
+* User scan QR code to join chat or enter url
 
 ### 2. Screen Archetypes
 
@@ -117,6 +118,7 @@ A simple, clean, lite, and fun group chat app. Easy to join and manage.
    | objectId  | String          |
    | createdAt | DateTime        |
    | author    | Pointer to User |
+   | group     | Pointer to Group|
    | body      | String          |
 
 ### Networking
