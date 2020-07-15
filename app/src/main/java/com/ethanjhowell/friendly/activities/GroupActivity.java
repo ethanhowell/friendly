@@ -40,7 +40,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void newGroupOnClick(View v) {
-        // TODO: handle result, if new group is succesfully created go to the chat view
+        // TODO: handle result, if new group is successfully created go to the chat view
         startActivity(new Intent(this, NewGroupActivity.class));
     }
 
