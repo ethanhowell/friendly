@@ -10,6 +10,14 @@ public class Group__User extends ParseObject {
     public static final String KEY_USER = "user";
     public static final String KEY_GROUP = "group";
 
+    public Group__User() {
+    }
+
+    public Group__User(Group group, ParseUser user) {
+        setGroup(group);
+        setUser(user);
+    }
+
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
