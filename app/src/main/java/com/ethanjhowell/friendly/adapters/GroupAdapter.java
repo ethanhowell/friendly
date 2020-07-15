@@ -1,6 +1,6 @@
 package com.ethanjhowell.friendly.adapters;
 
-import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ethanjhowell.friendly.databinding.ItemGroupBinding;
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.models.Group;
 
 import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
-    ItemGroupBinding binding;
+    private static final String TAG = GroupAdapter.class.getCanonicalName();
     List<Group> groups;
 
     public GroupAdapter(List<Group> groups) {
@@ -25,9 +25,8 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        binding = ItemGroupBinding.inflate(LayoutInflater.from(context), parent, false);
-        return new ViewHolder(binding.getRoot());
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        return new ViewHolder(inflater.inflate(R.layout.item_group, parent, false));
     }
 
     @Override
@@ -40,16 +39,17 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         return groups.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvGroupName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // TODO: on click listeners to take us to the chat view
-            tvGroupName = binding.tvGroupName;
+            tvGroupName = itemView.findViewById(R.id.tvGroupName);
         }
 
         public void bind(Group group) {
+            Log.d(TAG, "bind: " + group.getGroupName());
             tvGroupName.setText(group.getGroupName());
         }
     }
