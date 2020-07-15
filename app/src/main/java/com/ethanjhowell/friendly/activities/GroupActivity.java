@@ -32,8 +32,8 @@ public class GroupActivity extends AppCompatActivity {
                     .load(file)
                     .into(binding.ivProfilePic);
         });
-        binding.textView.setText(String.format("Welcome, %s %s", user.getFirstName(), user.getLastName()));
-        binding.button.setOnClickListener(v -> {
+        binding.textView.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
+        binding.btLogOut.setOnClickListener(v -> {
             ParseUser.logOut();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
