@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class GroupActivity extends AppCompatActivity {
     private final static String TAG = GroupActivity.class.getCanonicalName();
-    private ArrayList<Group> groups;
+    private ArrayList<Group> currentGroups;
     private GroupAdapter groupAdapter;
 
     private void getUserGroupsInBackground() {
@@ -31,16 +31,23 @@ public class GroupActivity extends AppCompatActivity {
                 .include(Group__User.KEY_GROUP)
                 .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
                 .findInBackground((gs__us, e) -> {
-                            // since we run this when the activity resumes, we want to clear the
-                            // groups so that we can re-add them
-                            groups.clear();
-                            for (Group__User g__u : gs__us) {
-                                Group group = g__u.getGroup();
-                                Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
-                                Log.d(TAG, "getUserGroupsInBackground: has left? " + g__u.hasLeft());
-                                groups.add(group);
+                            if (e != null)
+                                Log.e(TAG, "getUserGroupsInBackground: ", e);
+                            else {
+                                // since we run this when the activity resumes, we want to clear the
+                                // groups so that we can re-add them
+                                currentGroups.clear();
+                                for (Group__User g__u : gs__us) {
+                                    Group group = g__u.getGroup();
+                                    Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
+                                    if (!g__u.hasLeft())
+                                        currentGroups.add(group);
+                                    else
+                                        // TODO: make an archived groups list
+                                        Log.i(TAG, "getUserGroupsInBackground: Archived group: " + group.getGroupName());
+                                }
+                                groupAdapter.notifyDataSetChanged();
                             }
-                            groupAdapter.notifyDataSetChanged();
                         }
                 );
     }
@@ -54,7 +61,7 @@ public class GroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        groups = new ArrayList<>();
+        currentGroups = new ArrayList<>();
 
         FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
         user.getProfilePicture().getFileInBackground((file, e) -> {
@@ -73,7 +80,7 @@ public class GroupActivity extends AppCompatActivity {
 
         // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;
-        groupAdapter = new GroupAdapter(groups);
+        groupAdapter = new GroupAdapter(currentGroups);
         rvGroups.setAdapter(groupAdapter);
         rvGroups.setLayoutManager(new LinearLayoutManager(this));
 

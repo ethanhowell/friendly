@@ -39,7 +39,11 @@ public class Group__User extends ParseObject {
     }
 
     public boolean hasLeft() {
-        return getParseObject(KEY_DATE_LEFT) != null;
+        return getDate(KEY_DATE_LEFT) != null;
+    }
+
+    public Date getDateLeft() {
+        return getDate(KEY_DATE_LEFT);
     }
 
     public void setDateLeft(Date date) {
