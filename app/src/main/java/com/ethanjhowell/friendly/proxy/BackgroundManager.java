@@ -18,7 +18,7 @@ public class BackgroundManager {
             callback.run();
     }
 
-    public void failed() {
+    public void failed(Exception e) {
         allPassed = false;
         countDown();
     }

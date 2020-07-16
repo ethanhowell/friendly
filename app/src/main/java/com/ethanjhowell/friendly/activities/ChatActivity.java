@@ -24,8 +24,6 @@ public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP = "groupId";
 
-    private static final int NUM_LOAD_THREADS = 1;
-
     private String groupId;
     private Group group;
     private ActivityChatBinding binding;
@@ -44,7 +42,7 @@ public class ChatActivity extends AppCompatActivity {
                 .getFirstInBackground((g, e) -> {
                     if (e != null) {
                         Log.e(TAG, "loadGroup: ", e);
-                        manager.failed();
+                        manager.failed(e);
                     } else {
                         group = g;
                         manager.succeeded();
