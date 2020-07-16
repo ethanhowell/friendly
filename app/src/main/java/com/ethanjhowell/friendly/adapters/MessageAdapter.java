@@ -3,13 +3,16 @@ package com.ethanjhowell.friendly.adapters;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.ethanjhowell.friendly.databinding.ItemMessageBinding;
 import com.ethanjhowell.friendly.models.Message;
+import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 
 import java.util.List;
 
@@ -43,16 +46,27 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvMessageBody;
+        TextView tvAuthorName;
+        ImageView ivAuthorProfilePic;
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {
             super(binding.getRoot());
 
             tvMessageBody = binding.tvMessageBody;
+            tvAuthorName = binding.tvAuthorName;
+            ivAuthorProfilePic = binding.ivAuthorProfilePic;
         }
 
         public void bind(Message message) {
             Log.d(TAG, "bind: " + message.getBody());
+            FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
+
             tvMessageBody.setText(message.getBody());
+            tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
+            Glide.with(itemView)
+                    .load(author.getProfilePicture().getUrl())
+                    .circleCrop()
+                    .into(ivAuthorProfilePic);
         }
     }
 }
