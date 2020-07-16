@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.ethanjhowell.friendly.adapters.MessageAdapter;
 import com.ethanjhowell.friendly.databinding.ActivityChatBinding;
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Group__User;
@@ -31,6 +34,7 @@ public class ChatActivity extends AppCompatActivity {
     private String groupId;
     private Group group;
     private List<Message> messages;
+    private MessageAdapter adapter;
     private ActivityChatBinding binding;
     private FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
 
@@ -73,6 +77,7 @@ public class ChatActivity extends AppCompatActivity {
                         for (Message message : messages) {
                             Log.d(TAG, "loadMessages: " + message.getBody());
                         }
+                        adapter.notifyDataSetChanged();
                         manager.succeeded();
                     }
                 });
@@ -134,6 +139,12 @@ public class ChatActivity extends AppCompatActivity {
 
         messages = new ArrayList<>();
         groupId = getIntent().getStringExtra(INTENT_GROUP);
+
+        RecyclerView rvMessages = binding.rvMessages;
+        adapter = new MessageAdapter(messages);
+        rvMessages.setAdapter(adapter);
+        rvMessages.setLayoutManager(new LinearLayoutManager(this));
+
         loadData();
     }
 
