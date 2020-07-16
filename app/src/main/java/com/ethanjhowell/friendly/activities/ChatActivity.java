@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ethanjhowell.friendly.databinding.ActivityChatBinding;
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Group__User;
+import com.ethanjhowell.friendly.models.Message;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -54,6 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     private void onDataLoaded() {
         binding.tvGroupName.setText(group.getGroupName());
         binding.tvLeave.setOnClickListener(this::leaveGroupOnClick);
+        binding.btSend.setOnClickListener(this::sendOnClick);
 
         // TODO: show that user has left the chat if so
         // TODO: disable sending messages if user has left the chat
@@ -66,7 +68,16 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         String groupId = getIntent().getStringExtra(INTENT_GROUP);
-        loadGroup(groupId);
+        loadData(groupId);
+    }
+
+    private void sendOnClick(View v) {
+        // TODO: check that message isn't empty
+        String body = binding.etMessageBody.getText().toString();
+        binding.etMessageBody.setText("");
+        Message message = new Message(body, group);
+
+        message.saveInBackground(e -> Log.e(TAG, "sendOnClick: ", e));
     }
 
     private void leaveGroupOnClick(View v) {
