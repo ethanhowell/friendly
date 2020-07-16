@@ -93,7 +93,8 @@ public class ChatActivity extends AppCompatActivity {
                         Message.KEY_GROUP,
                         ParseQuery.getQuery(Group.class)
                                 .whereEqualTo(Group.KEY_OBJECT_ID, groupId)
-                );
+                )
+                .include(Message.KEY_AUTHOR);
         // Connect to Parse server
         SubscriptionHandling<Message> subscriptionHandling = parseLiveQueryClient.subscribe(query);
 
@@ -101,9 +102,7 @@ public class ChatActivity extends AppCompatActivity {
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
             messages.add(message);
             Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
-
-            // RecyclerView updates need to be run on the UI thread
-//            runOnUiThread(() -> mAdapter.notifyDataSetChanged());
+            adapter.notifyItemInserted(messages.size() - 1);
         });
     }
 

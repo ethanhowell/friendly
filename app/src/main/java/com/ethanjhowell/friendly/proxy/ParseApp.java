@@ -39,6 +39,7 @@ public class ParseApp extends Application {
         // any network interceptors must be added with the Configuration Builder given this syntax
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(PARSE_APPLICATION_ID) // should correspond to APP_ID env variable
+                .clientKey(null)
                 .clientBuilder(builder)
                 .server(PARSE_SERVER_URL).build());
 
