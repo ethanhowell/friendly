@@ -36,7 +36,8 @@ public class GroupActivity extends AppCompatActivity {
                             groups.clear();
                             for (Group__User g__u : gs__us) {
                                 Group group = g__u.getGroup();
-                                Log.d(TAG, "getUserGroups: " + group.getGroupName());
+                                Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
+                                Log.d(TAG, "getUserGroupsInBackground: has left? " + g__u.hasLeft());
                                 groups.add(group);
                             }
                             groupAdapter.notifyDataSetChanged();
