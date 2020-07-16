@@ -17,8 +17,12 @@ import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.boltsinternal.Task;
+import com.parse.livequery.ParseLiveQueryClient;
+import com.parse.livequery.SubscriptionHandling;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
@@ -26,6 +30,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private String groupId;
     private Group group;
+    private List<Message> messages;
     private ActivityChatBinding binding;
     private FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
 
@@ -50,10 +55,64 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
+    private void loadMessages(BackgroundManager manager) {
+        ParseQuery.getQuery(Message.class)
+                .whereMatchesQuery(
+                        Message.KEY_GROUP,
+                        ParseQuery.getQuery(Group.class)
+                                .whereEqualTo(Group.KEY_OBJECT_ID, groupId)
+                )
+                // id is unique so we only need to get the first (and only) result
+                .findInBackground((messagesFromServer, e) -> {
+                    if (e != null) {
+                        Log.e(TAG, "loadMessages: ", e);
+                        manager.failed(e);
+                    } else {
+                        messages.addAll(messagesFromServer);
+                        for (Message message : messages) {
+                            Log.d(TAG, "loadMessages: " + message.getBody());
+                        }
+                        manager.succeeded();
+                    }
+                });
+    }
+
+    private void connectMessageSocket() {
+        // Make sure the Parse server is setup to configured for live queries
+        // URL for server is determined by Parse.initialize() call.
+        ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
+
+        ParseQuery<Message> query = ParseQuery.getQuery(Message.class)
+                .whereMatchesQuery(
+                        Message.KEY_GROUP,
+                        ParseQuery.getQuery(Group.class)
+                                .whereEqualTo(Group.KEY_OBJECT_ID, groupId)
+                );
+        // Connect to Parse server
+        SubscriptionHandling<Message> subscriptionHandling = parseLiveQueryClient.subscribe(query);
+
+        // Listen for CREATE events
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
+            messages.add(message);
+            Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
+
+            // RecyclerView updates need to be run on the UI thread
+//            runOnUiThread(() -> mAdapter.notifyDataSetChanged());
+        });
+    }
+
     private void loadData() {
+        // first we subscribe for all new messages that might be sent to us
+        // TODO: figure out how to fix the server so we don't get these annoying errors
+//        connectMessageSocket();
         // TODO: load all the users in that group
-        // TODO: load all the messages in the group
-        BackgroundManager backgroundManager = new BackgroundManager(this::onDataLoaded, this::loadGroup);
+        BackgroundManager backgroundManager = new BackgroundManager(
+                // callback
+                this::onDataLoaded,
+                // tasks to run
+                this::loadGroup,
+                this::loadMessages
+        );
         backgroundManager.run();
     }
 
@@ -72,6 +131,7 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        messages = new ArrayList<>();
         groupId = getIntent().getStringExtra(INTENT_GROUP);
         loadData();
     }
@@ -83,7 +143,9 @@ public class ChatActivity extends AppCompatActivity {
         Message message = new Message(body, group);
         Task<Void> voidTask = message.saveInBackground();
 
-        message.saveInBackground(e -> Log.e(TAG, "sendOnClick: ", e));
+        message.saveInBackground(e -> {
+            if (e != null) Log.e(TAG, "sendOnClick: ", e);
+        });
     }
 
     private void leaveGroupOnClick(View v) {
