@@ -62,6 +62,7 @@ public class ChatActivity extends AppCompatActivity {
                         ParseQuery.getQuery(Group.class)
                                 .whereEqualTo(Group.KEY_OBJECT_ID, groupId)
                 )
+                .include(Message.KEY_AUTHOR)
                 // id is unique so we only need to get the first (and only) result
                 .findInBackground((messagesFromServer, e) -> {
                     if (e != null) {
