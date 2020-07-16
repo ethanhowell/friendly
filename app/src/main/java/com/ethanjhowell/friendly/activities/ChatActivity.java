@@ -12,15 +12,21 @@ import com.ethanjhowell.friendly.databinding.ActivityChatBinding;
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Group__User;
 import com.ethanjhowell.friendly.models.Message;
+import com.ethanjhowell.friendly.proxy.BackgroundManager;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.boltsinternal.Task;
 
 import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP = "groupId";
+
+    private static final int NUM_LOAD_THREADS = 1;
+
+    private String groupId;
     private Group group;
     private ActivityChatBinding binding;
     private FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
@@ -31,25 +37,26 @@ public class ChatActivity extends AppCompatActivity {
         return intent;
     }
 
-    private void loadGroup(String groupId) {
+    private void loadGroup(BackgroundManager manager) {
         ParseQuery.getQuery(Group.class)
                 .whereEqualTo(ParseObject.KEY_OBJECT_ID, groupId)
                 // id is unique so we only need to get the first (and only) result
                 .getFirstInBackground((g, e) -> {
-                    if (e != null)
+                    if (e != null) {
                         Log.e(TAG, "loadGroup: ", e);
-                    else {
+                        manager.failed();
+                    } else {
                         group = g;
-                        onDataLoaded();
+                        manager.succeeded();
                     }
                 });
     }
 
-    private void loadData(String groupId) {
-        // TODO: some sort of fancy thing that waits for all the data to load before calling onDataLoaded
+    private void loadData() {
         // TODO: load all the users in that group
         // TODO: load all the messages in the group
-        loadGroup(groupId);
+        BackgroundManager backgroundManager = new BackgroundManager(this::onDataLoaded, this::loadGroup);
+        backgroundManager.run();
     }
 
     private void onDataLoaded() {
@@ -67,8 +74,8 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String groupId = getIntent().getStringExtra(INTENT_GROUP);
-        loadData(groupId);
+        groupId = getIntent().getStringExtra(INTENT_GROUP);
+        loadData();
     }
 
     private void sendOnClick(View v) {
@@ -76,6 +83,7 @@ public class ChatActivity extends AppCompatActivity {
         String body = binding.etMessageBody.getText().toString();
         binding.etMessageBody.setText("");
         Message message = new Message(body, group);
+        Task<Void> voidTask = message.saveInBackground();
 
         message.saveInBackground(e -> Log.e(TAG, "sendOnClick: ", e));
     }
