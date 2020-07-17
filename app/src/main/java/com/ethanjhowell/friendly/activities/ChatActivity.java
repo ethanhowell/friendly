@@ -89,12 +89,13 @@ public class ChatActivity extends AppCompatActivity {
         ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
 
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class)
-                .whereMatchesQuery(
-                        Message.KEY_GROUP,
-                        ParseQuery.getQuery(Group.class)
-                                .whereEqualTo(Group.KEY_OBJECT_ID, groupId)
-                )
-                .include(Message.KEY_AUTHOR);
+                .whereMatchesQuery(Message.KEY_GROUP, ParseQuery.getQuery(Group.class).whereEqualTo(Group.KEY_OBJECT_ID, groupId));
+
+        parseLiveQueryClient.subscribe(ParseQuery.getQuery(Message.class).include(Message.KEY_GROUP)).handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
+            Log.d(TAG, "connectMessageSocket: new Message temp");
+        });
+
+
         // Connect to Parse server
         SubscriptionHandling<Message> subscriptionHandling = parseLiveQueryClient.subscribe(query);
 
@@ -109,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadData() {
         // first we subscribe for all new messages that might be sent to us
         // TODO: figure out how to fix the server so we don't get these annoying errors
-//        connectMessageSocket();
+        connectMessageSocket();
         // TODO: load all the users in that group
         BackgroundManager backgroundManager = new BackgroundManager(
                 // callback

@@ -2,11 +2,13 @@ package com.ethanjhowell.friendly.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -49,6 +51,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         TextView tvAuthorName;
         ImageView ivAuthorProfilePic;
 
+
         public ViewHolder(@NonNull ItemMessageBinding binding) {
             super(binding.getRoot());
 
@@ -62,11 +65,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
 
             tvMessageBody.setText(message.getBody());
-            tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
-            Glide.with(itemView)
-                    .load(author.getProfilePicture().getUrl())
-                    .circleCrop()
-                    .into(ivAuthorProfilePic);
+            if (message.authorIsCurrentUser()) {
+                ivAuthorProfilePic.setVisibility(View.INVISIBLE);
+                tvAuthorName.setVisibility(View.GONE);
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvMessageBody.getLayoutParams();
+                layoutParams.setMarginStart(176);
+                layoutParams.setMarginEnd(44);
+                Log.d(TAG, String.format("bind: %d %d %d %d", layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin, layoutParams.leftMargin));
+            } else {
+                ivAuthorProfilePic.setVisibility(View.VISIBLE);
+                tvAuthorName.setVisibility(View.VISIBLE);
+                tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
+                Glide.with(itemView)
+                        .load(author.getProfilePicture().getUrl())
+                        .circleCrop()
+                        .into(ivAuthorProfilePic);
+            }
         }
     }
 }

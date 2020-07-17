@@ -30,4 +30,8 @@ public class Message extends ParseObject {
     public Group getGroup() {
         return (Group) getParseObject(KEY_GROUP);
     }
+
+    public boolean authorIsCurrentUser() {
+        return getAuthor().getObjectId().equals(ParseUser.getCurrentUser().getObjectId());
+    }
 }
