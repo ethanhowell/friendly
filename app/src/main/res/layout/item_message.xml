@@ -18,24 +18,30 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_person_24" />
 
-    <TextView
-        android:id="@+id/tvMessageBody"
+    <LinearLayout
+        android:id="@+id/llMessage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
         android:layout_marginEnd="64dp"
-        android:background="#C3C3C3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="hello there" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tvMessageBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#C3C3C3"
+            tools:text="Message body" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvAuthorName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvMessageBody"
-        app:layout_constraintStart_toStartOf="@+id/tvMessageBody"
+        app:layout_constraintBottom_toTopOf="@+id/llMessage"
+        app:layout_constraintStart_toStartOf="@+id/llMessage"
         tools:text="First Last" />
 </androidx.constraintlayout.widget.ConstraintLayout>

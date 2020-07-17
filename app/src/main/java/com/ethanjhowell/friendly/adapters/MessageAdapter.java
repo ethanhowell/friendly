@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -59,10 +60,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return messages.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvMessageBody;
         private TextView tvAuthorName;
         private ImageView ivAuthorProfilePic;
+        private LinearLayout llMessage;
+        private ConstraintLayout.LayoutParams layoutParams;
 
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {
@@ -71,6 +74,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             tvMessageBody = binding.tvMessageBody;
             tvAuthorName = binding.tvAuthorName;
             ivAuthorProfilePic = binding.ivAuthorProfilePic;
+            llMessage = binding.llMessage;
+
+            layoutParams = (ConstraintLayout.LayoutParams) llMessage.getLayoutParams();
         }
 
         public void bind(Message message) {
@@ -78,21 +84,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
 
             tvMessageBody.setText(message.getBody());
-            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvMessageBody.getLayoutParams();
-            // TODO: make the message bubble wrap the textview if length is less than the whole screen
             if (message.authorIsCurrentUser()) {
                 ivAuthorProfilePic.setVisibility(View.GONE);
                 tvAuthorName.setVisibility(View.GONE);
                 layoutParams.setMarginStart(OWN_MESSAGE_MARGIN_START_PX);
                 layoutParams.setMarginEnd(OWN_MESSAGE_MARGIN_END_PX);
-                tvMessageBody.setGravity(Gravity.END);
+                llMessage.setGravity(Gravity.END);
             } else {
                 ivAuthorProfilePic.setVisibility(View.VISIBLE);
                 tvAuthorName.setVisibility(View.VISIBLE);
                 tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
                 layoutParams.setMarginStart(OTHER_MESSAGE_MARGIN_START_PX);
                 layoutParams.setMarginEnd(OTHER_MESSAGE_MARGIN_END_PX);
-                tvMessageBody.setGravity(Gravity.START);
+                llMessage.setGravity(Gravity.START);
                 Glide.with(itemView)
                         .load(author.getProfilePicture().getUrl())
                         .circleCrop()
