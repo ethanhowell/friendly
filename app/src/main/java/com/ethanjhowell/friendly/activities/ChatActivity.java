@@ -88,13 +88,7 @@ public class ChatActivity extends AppCompatActivity {
         // URL for server is determined by Parse.initialize() call.
         ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
 
-        ParseQuery<Message> query = ParseQuery.getQuery(Message.class)
-                .whereMatchesQuery(Message.KEY_GROUP, ParseQuery.getQuery(Group.class).whereEqualTo(Group.KEY_OBJECT_ID, groupId));
-
-        parseLiveQueryClient.subscribe(ParseQuery.getQuery(Message.class).include(Message.KEY_GROUP)).handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
-            Log.d(TAG, "connectMessageSocket: new Message temp");
-        });
-
+        ParseQuery<Message> query = ParseQuery.getQuery(Message.class).whereEqualTo(Message.KEY_GROUP, group);
 
         // Connect to Parse server
         SubscriptionHandling<Message> subscriptionHandling = parseLiveQueryClient.subscribe(query);
@@ -103,14 +97,17 @@ public class ChatActivity extends AppCompatActivity {
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
             messages.add(message);
             Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
-            adapter.notifyItemInserted(messages.size() - 1);
+            runOnUiThread(() -> {
+                adapter.notifyItemInserted(messages.size() - 1);
+                binding.rvMessages.scrollToPosition(messages.size() - 1);
+            });
         });
     }
 
     private void loadData() {
         // first we subscribe for all new messages that might be sent to us
-        // TODO: figure out how to fix the server so we don't get these annoying errors
-        connectMessageSocket();
+        // TODO: figure out how to fix the server so messages actually come in
+
         // TODO: load all the users in that group
         BackgroundManager backgroundManager = new BackgroundManager(
                 // callback
@@ -123,6 +120,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void onDataLoaded() {
+        connectMessageSocket();
         binding.tvGroupName.setText(group.getGroupName());
         binding.tvLeave.setOnClickListener(this::leaveGroupOnClick);
         binding.btSend.setOnClickListener(this::sendOnClick);
