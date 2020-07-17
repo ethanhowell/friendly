@@ -33,6 +33,7 @@ import java.util.List;
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP = "groupId";
+    private static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
     private String groupId;
     private Group group;
@@ -179,7 +180,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 }
                 int lastVisiblePosition = rvMessagesLayoutManager.findLastVisibleItemPosition();
-                if (lastVisiblePosition < messages.size() - 20) {
+                if (lastVisiblePosition < messages.size() - 1 - NUM_MESSAGES_BEFORE_SCROLL_BUTTON) {
                     btScrollToBottom.setVisibility(View.VISIBLE);
                 } else if (lastVisiblePosition == messages.size() - 1) {
                     btScrollToBottom.setVisibility(View.GONE);
