@@ -73,8 +73,6 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             rvMessages.scrollToPosition(messages.size() - 1);
         }
-
-        btScrollToBottom.setVisibility(View.GONE);
     }
 
     private void loadMessages(BackgroundManager manager) {
@@ -113,11 +111,15 @@ public class ChatActivity extends AppCompatActivity {
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
             messages.add(message);
             Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
+            int oldLastMessagePos = messages.size() - 2;
+            int lastVisiblePosition = rvMessagesLayoutManager.findLastVisibleItemPosition();
+            // TODO: add a button to scroll to see latest messages if we aren't looking at the
+            //  bottom of the list of messages
+
             runOnUiThread(() -> {
                 messagesAdapter.notifyItemInserted(messages.size() - 1);
-                int oldLastMessagePos = messages.size() - 2;
                 // we only want to scroll to the bottom if the we're at the bottom of the messages
-                if (rvMessagesLayoutManager.findLastCompletelyVisibleItemPosition() == oldLastMessagePos) {
+                if (lastVisiblePosition == oldLastMessagePos) {
                     scrollToBottomOfMessages(false);
                 }
             });
@@ -166,14 +168,7 @@ public class ChatActivity extends AppCompatActivity {
 
         rvMessages.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                Log.d(TAG, "onScrollStateChanged: " + newState);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                Log.d(TAG, "onScrolled: " + dy);
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy < 0) {
                     InputMethodManager inputManager = (InputMethodManager) ChatActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -194,6 +189,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void scrollToBottomOnClick(View v) {
+        btScrollToBottom.setVisibility(View.GONE);
         scrollToBottomOfMessages(true);
     }
 
