@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -64,7 +63,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         private TextView tvMessageBody;
         private TextView tvAuthorName;
         private ImageView ivAuthorProfilePic;
-        private ConstraintSet constraintSet;
 
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {
@@ -73,9 +71,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             tvMessageBody = binding.tvMessageBody;
             tvAuthorName = binding.tvAuthorName;
             ivAuthorProfilePic = binding.ivAuthorProfilePic;
-//            constraintSet = new ConstraintSet();
-//            constraintSet.clone(binding.clRoot);
-//            binding.clRoot.setConstraintSet(constraintSet);
         }
 
         public void bind(Message message) {
@@ -84,14 +79,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             tvMessageBody.setText(message.getBody());
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvMessageBody.getLayoutParams();
+            // TODO: make the message bubble wrap the textview if length is less than the whole screen
             if (message.authorIsCurrentUser()) {
                 ivAuthorProfilePic.setVisibility(View.GONE);
                 tvAuthorName.setVisibility(View.GONE);
                 layoutParams.setMarginStart(OWN_MESSAGE_MARGIN_START_PX);
                 layoutParams.setMarginEnd(OWN_MESSAGE_MARGIN_END_PX);
                 tvMessageBody.setGravity(Gravity.END);
-//                constraintSet.setHorizontalBias(R.id.tvMessageBody, 1);
-                Log.d(TAG, String.format("bind: %d %d %d %d", layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin, layoutParams.leftMargin));
             } else {
                 ivAuthorProfilePic.setVisibility(View.VISIBLE);
                 tvAuthorName.setVisibility(View.VISIBLE);
@@ -99,7 +93,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 layoutParams.setMarginStart(OTHER_MESSAGE_MARGIN_START_PX);
                 layoutParams.setMarginEnd(OTHER_MESSAGE_MARGIN_END_PX);
                 tvMessageBody.setGravity(Gravity.START);
-//                constraintSet.setHorizontalBias(R.id.tvMessageBody, 0);
                 Glide.with(itemView)
                         .load(author.getProfilePicture().getUrl())
                         .circleCrop()
