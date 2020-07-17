@@ -46,7 +46,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvGroupName;
+        private TextView tvGroupName;
 
         public ViewHolder(@NonNull ItemGroupBinding binding) {
             super(binding.getRoot());

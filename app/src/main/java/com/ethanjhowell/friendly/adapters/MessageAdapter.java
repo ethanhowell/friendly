@@ -1,6 +1,10 @@
 package com.ethanjhowell.friendly.adapters;
 
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,6 +25,15 @@ import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     private static final String TAG = MessageAdapter.class.getCanonicalName();
+    private static final float OTHER_MESSAGE_MARGIN_START_DP = 80;
+    private static final float OTHER_MESSAGE_MARGIN_END_DP = 64;
+    private static final float OWN_MESSAGE_MARGIN_START_DP = 128;
+    private static final float OWN_MESSAGE_MARGIN_END_DP = 16;
+    private static final DisplayMetrics DISPLAY_METRICS = Resources.getSystem().getDisplayMetrics();
+    private static final int OTHER_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
+    private static final int OTHER_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
+    private static final int OWN_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
+    private static final int OWN_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
     private List<Message> messages;
 
     public MessageAdapter(List<Message> messages) {
@@ -47,9 +61,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMessageBody;
-        TextView tvAuthorName;
-        ImageView ivAuthorProfilePic;
+        private TextView tvMessageBody;
+        private TextView tvAuthorName;
+        private ImageView ivAuthorProfilePic;
+        private ConstraintSet constraintSet;
 
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {
@@ -58,6 +73,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             tvMessageBody = binding.tvMessageBody;
             tvAuthorName = binding.tvAuthorName;
             ivAuthorProfilePic = binding.ivAuthorProfilePic;
+//            constraintSet = new ConstraintSet();
+//            constraintSet.clone(binding.clRoot);
+//            binding.clRoot.setConstraintSet(constraintSet);
         }
 
         public void bind(Message message) {
@@ -65,17 +83,23 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
 
             tvMessageBody.setText(message.getBody());
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvMessageBody.getLayoutParams();
             if (message.authorIsCurrentUser()) {
-                ivAuthorProfilePic.setVisibility(View.INVISIBLE);
+                ivAuthorProfilePic.setVisibility(View.GONE);
                 tvAuthorName.setVisibility(View.GONE);
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvMessageBody.getLayoutParams();
-                layoutParams.setMarginStart(176);
-                layoutParams.setMarginEnd(44);
+                layoutParams.setMarginStart(OWN_MESSAGE_MARGIN_START_PX);
+                layoutParams.setMarginEnd(OWN_MESSAGE_MARGIN_END_PX);
+                tvMessageBody.setGravity(Gravity.END);
+//                constraintSet.setHorizontalBias(R.id.tvMessageBody, 1);
                 Log.d(TAG, String.format("bind: %d %d %d %d", layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin, layoutParams.leftMargin));
             } else {
                 ivAuthorProfilePic.setVisibility(View.VISIBLE);
                 tvAuthorName.setVisibility(View.VISIBLE);
                 tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
+                layoutParams.setMarginStart(OTHER_MESSAGE_MARGIN_START_PX);
+                layoutParams.setMarginEnd(OTHER_MESSAGE_MARGIN_END_PX);
+                tvMessageBody.setGravity(Gravity.START);
+//                constraintSet.setHorizontalBias(R.id.tvMessageBody, 0);
                 Glide.with(itemView)
                         .load(author.getProfilePicture().getUrl())
                         .circleCrop()

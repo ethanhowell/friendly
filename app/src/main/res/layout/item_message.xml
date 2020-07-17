@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
@@ -21,13 +22,15 @@
         android:id="@+id/tvMessageBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="80dp"
         android:layout_marginEnd="64dp"
         android:background="#C3C3C3"
-        app:layout_constraintBottom_toBottomOf="@+id/ivAuthorProfilePic"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivAuthorProfilePic"
-        tools:text="Message body" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_max="wrap"
+        tools:text="hello there" />
 
     <TextView
         android:id="@+id/tvAuthorName"
