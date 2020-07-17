@@ -34,6 +34,7 @@ public class ChatActivity extends AppCompatActivity {
     private String groupId;
     private Group group;
     private List<Message> messages;
+    private RecyclerView rvMessages;
     private MessageAdapter adapter;
     private ActivityChatBinding binding;
     private FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
@@ -78,7 +79,7 @@ public class ChatActivity extends AppCompatActivity {
                             Log.d(TAG, "loadMessages: " + message.getBody());
                         }
                         adapter.notifyDataSetChanged();
-                        binding.rvMessages.scrollToPosition(messages.size() - 1);
+                        rvMessages.scrollToPosition(messages.size() - 1);
                         manager.succeeded();
                     }
                 });
@@ -93,11 +94,17 @@ public class ChatActivity extends AppCompatActivity {
 
         // Listen for CREATE events
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
+            int oldLastMessagePos = messages.size() > 0 ? messages.size() - 1 : 0;
             messages.add(message);
             Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
             runOnUiThread(() -> {
                 adapter.notifyItemInserted(messages.size() - 1);
-                binding.rvMessages.scrollToPosition(messages.size() - 1);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) rvMessages.getLayoutManager();
+                assert layoutManager != null;
+                // we only want to scroll to the bottom if the we're at the bottom of the messages
+                if (layoutManager.findLastCompletelyVisibleItemPosition() == oldLastMessagePos) {
+                    rvMessages.scrollToPosition(messages.size() - 1);
+                }
             });
         });
     }
@@ -128,6 +135,20 @@ public class ChatActivity extends AppCompatActivity {
         // TODO: disable sending messages if user has left the chat
     }
 
+    private void setUpRecyclerView() {
+        rvMessages = binding.rvMessages;
+        adapter = new MessageAdapter(messages);
+        rvMessages.setAdapter(adapter);
+        rvMessages.setLayoutManager(new LinearLayoutManager(this));
+
+        rvMessages.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (bottom < oldBottom) {
+                Log.d(TAG, "setUpRecyclerView: scrolling");
+                rvMessages.post(() -> rvMessages.smoothScrollToPosition(messages.size() - 1));
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,10 +158,7 @@ public class ChatActivity extends AppCompatActivity {
         messages = new ArrayList<>();
         groupId = getIntent().getStringExtra(INTENT_GROUP);
 
-        RecyclerView rvMessages = binding.rvMessages;
-        adapter = new MessageAdapter(messages);
-        rvMessages.setAdapter(adapter);
-        rvMessages.setLayoutManager(new LinearLayoutManager(this));
+        setUpRecyclerView();
 
         loadData();
     }
