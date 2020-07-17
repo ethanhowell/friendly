@@ -78,19 +78,17 @@ public class ChatActivity extends AppCompatActivity {
                             Log.d(TAG, "loadMessages: " + message.getBody());
                         }
                         adapter.notifyDataSetChanged();
+                        binding.rvMessages.scrollToPosition(messages.size() - 1);
                         manager.succeeded();
                     }
                 });
     }
 
     private void connectMessageSocket() {
-        // Make sure the Parse server is setup to configured for live queries
-        // URL for server is determined by Parse.initialize() call.
         ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
-
-        ParseQuery<Message> query = ParseQuery.getQuery(Message.class).whereEqualTo(Message.KEY_GROUP, group);
-
-        // Connect to Parse server
+        ParseQuery<Message> query = ParseQuery.getQuery(Message.class)
+                .whereEqualTo(Message.KEY_GROUP, group)
+                .include(Message.KEY_AUTHOR);
         SubscriptionHandling<Message> subscriptionHandling = parseLiveQueryClient.subscribe(query);
 
         // Listen for CREATE events
@@ -105,9 +103,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        // first we subscribe for all new messages that might be sent to us
-        // TODO: figure out how to fix the server so messages actually come in
-
         // TODO: load all the users in that group
         BackgroundManager backgroundManager = new BackgroundManager(
                 // callback
@@ -120,6 +115,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void onDataLoaded() {
+        // TODO: I don't want to lose any messages on connection so I think I need to connect
+        //  the socket first but I'm not sure how to properly handle the multithreading to avoid
+        //  duplicates and still make sure that the times work. This is quite a dirty solution
+        //  but it'll work for now.
         connectMessageSocket();
         binding.tvGroupName.setText(group.getGroupName());
         binding.tvLeave.setOnClickListener(this::leaveGroupOnClick);
