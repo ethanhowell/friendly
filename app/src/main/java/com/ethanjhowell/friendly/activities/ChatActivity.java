@@ -60,6 +60,16 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
+    private void scrollToBottomOfMessages(boolean smoothScroll) {
+        if (smoothScroll) {
+            rvMessages.smoothScrollToPosition(messages.size() - 1);
+        } else {
+            rvMessages.scrollToPosition(messages.size() - 1);
+        }
+        // TODO: uncomment this
+//        binding.btScrollToBottom.setVisibility(View.GONE);
+    }
+
     private void loadMessages(BackgroundManager manager) {
         ParseQuery.getQuery(Message.class)
                 .whereMatchesQuery(
@@ -79,7 +89,7 @@ public class ChatActivity extends AppCompatActivity {
                             Log.d(TAG, "loadMessages: " + message.getBody());
                         }
                         adapter.notifyDataSetChanged();
-                        rvMessages.scrollToPosition(messages.size() - 1);
+                        scrollToBottomOfMessages(false);
                         manager.succeeded();
                     }
                 });
@@ -103,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
                 assert layoutManager != null;
                 // we only want to scroll to the bottom if the we're at the bottom of the messages
                 if (layoutManager.findLastCompletelyVisibleItemPosition() == oldLastMessagePos) {
-                    rvMessages.scrollToPosition(messages.size() - 1);
+                    scrollToBottomOfMessages(false);
                 }
             });
         });
@@ -144,7 +154,7 @@ public class ChatActivity extends AppCompatActivity {
         rvMessages.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
                 Log.d(TAG, "setUpRecyclerView: scrolling");
-                rvMessages.post(() -> rvMessages.smoothScrollToPosition(messages.size() - 1));
+                rvMessages.post(() -> scrollToBottomOfMessages(true));
             }
         });
     }
