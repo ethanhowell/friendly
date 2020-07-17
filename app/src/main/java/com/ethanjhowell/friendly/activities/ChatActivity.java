@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,9 +36,13 @@ public class ChatActivity extends AppCompatActivity {
 
     private String groupId;
     private Group group;
+
     private List<Message> messages;
     private RecyclerView rvMessages;
-    private MessageAdapter adapter;
+    LinearLayoutManager rvMessagesLayoutManager;
+    private MessageAdapter messagesAdapter;
+    private Button btScrollToBottom;
+
     private ActivityChatBinding binding;
     private FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
 
@@ -66,8 +73,8 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             rvMessages.scrollToPosition(messages.size() - 1);
         }
-        // TODO: uncomment this
-//        binding.btScrollToBottom.setVisibility(View.GONE);
+
+        btScrollToBottom.setVisibility(View.GONE);
     }
 
     private void loadMessages(BackgroundManager manager) {
@@ -88,7 +95,7 @@ public class ChatActivity extends AppCompatActivity {
                         for (Message message : messages) {
                             Log.d(TAG, "loadMessages: " + message.getBody());
                         }
-                        adapter.notifyDataSetChanged();
+                        messagesAdapter.notifyDataSetChanged();
                         scrollToBottomOfMessages(false);
                         manager.succeeded();
                     }
@@ -104,15 +111,13 @@ public class ChatActivity extends AppCompatActivity {
 
         // Listen for CREATE events
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
-            int oldLastMessagePos = messages.size() > 0 ? messages.size() - 1 : 0;
             messages.add(message);
             Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
             runOnUiThread(() -> {
-                adapter.notifyItemInserted(messages.size() - 1);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) rvMessages.getLayoutManager();
-                assert layoutManager != null;
+                messagesAdapter.notifyItemInserted(messages.size() - 1);
+                int oldLastMessagePos = messages.size() - 2;
                 // we only want to scroll to the bottom if the we're at the bottom of the messages
-                if (layoutManager.findLastCompletelyVisibleItemPosition() == oldLastMessagePos) {
+                if (rvMessagesLayoutManager.findLastCompletelyVisibleItemPosition() == oldLastMessagePos) {
                     scrollToBottomOfMessages(false);
                 }
             });
@@ -147,9 +152,10 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         rvMessages = binding.rvMessages;
-        adapter = new MessageAdapter(messages);
-        rvMessages.setAdapter(adapter);
-        rvMessages.setLayoutManager(new LinearLayoutManager(this));
+        messagesAdapter = new MessageAdapter(messages);
+        rvMessages.setAdapter(messagesAdapter);
+        rvMessagesLayoutManager = new LinearLayoutManager(this);
+        rvMessages.setLayoutManager(rvMessagesLayoutManager);
 
         rvMessages.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
@@ -157,6 +163,38 @@ public class ChatActivity extends AppCompatActivity {
                 rvMessages.post(() -> scrollToBottomOfMessages(true));
             }
         });
+
+        rvMessages.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                Log.d(TAG, "onScrollStateChanged: " + newState);
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                Log.d(TAG, "onScrolled: " + dy);
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy < 0) {
+                    InputMethodManager inputManager = (InputMethodManager) ChatActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (inputManager != null) {
+                        View currentFocus = ChatActivity.this.getCurrentFocus();
+                        if (currentFocus != null)
+                            inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                    }
+                }
+                int lastVisiblePosition = rvMessagesLayoutManager.findLastVisibleItemPosition();
+                if (lastVisiblePosition < messages.size() - 20) {
+                    btScrollToBottom.setVisibility(View.VISIBLE);
+                } else if (lastVisiblePosition == messages.size() - 1) {
+                    btScrollToBottom.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    private void scrollToBottomOnClick(View v) {
+        scrollToBottomOfMessages(true);
     }
 
     @Override
@@ -168,6 +206,8 @@ public class ChatActivity extends AppCompatActivity {
         messages = new ArrayList<>();
         groupId = getIntent().getStringExtra(INTENT_GROUP);
 
+        btScrollToBottom = binding.btScrollToBottom;
+        btScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
         setUpRecyclerView();
 
         loadData();
