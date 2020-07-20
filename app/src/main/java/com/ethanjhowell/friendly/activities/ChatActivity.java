@@ -38,7 +38,7 @@ public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP_ID = "groupId";
     private static final String INTENT_GROUP_NAME = "groupName";
-    private static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
+    public static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
     private Group group;
 
