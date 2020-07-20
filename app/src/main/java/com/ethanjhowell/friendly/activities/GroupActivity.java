@@ -34,6 +34,8 @@ public class GroupActivity extends AppCompatActivity {
         ParseQuery.getQuery(Group__User.class)
                 .include(Group__User.KEY_GROUP)
                 .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
+                // means user hasn't left the group yet
+                .whereDoesNotExist(Group__User.KEY_DATE_LEFT)
                 .findInBackground((gs__us, e) -> {
                             if (e != null)
                                 Log.e(TAG, "getUserGroupsInBackground: ", e);
@@ -44,11 +46,7 @@ public class GroupActivity extends AppCompatActivity {
                                 for (Group__User g__u : gs__us) {
                                     Group group = g__u.getGroup();
                                     Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
-                                    if (!g__u.hasLeft())
-                                        currentGroups.add(group);
-                                    else
-                                        // TODO: make an archived groups list
-                                        Log.i(TAG, "getUserGroupsInBackground: Archived group: " + group.getGroupName());
+                                    currentGroups.add(group);
                                 }
                                 groupAdapter.notifyDataSetChanged();
                             }
