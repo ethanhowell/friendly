@@ -65,6 +65,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
     private void loadMessages() {
         ParseQuery.getQuery(Message.class)
                 .whereEqualTo(Message.KEY_GROUP, group)
+                // only the ones before we left the group
                 .whereLessThanOrEqualTo(Message.KEY_CREATED_AT, group.getDateLeft())
                 .findInBackground((messages, e) -> {
                     if (e != null) {
