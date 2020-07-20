@@ -1,16 +1,17 @@
 package com.ethanjhowell.friendly.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ethanjhowell.friendly.activities.ArchivedChatActivity;
 import com.ethanjhowell.friendly.databinding.ItemGroupBinding;
 import com.ethanjhowell.friendly.models.Group;
 
@@ -67,9 +68,8 @@ public class ArchivedGroupAdapter extends RecyclerView.Adapter<ArchivedGroupAdap
             Log.d(TAG, "onClick: click at " + pos);
             if (pos != RecyclerView.NO_POSITION) {
                 Context context = view.getContext();
-                Toast.makeText(context, "Clicked " + groups.get(pos).getGroupName(), Toast.LENGTH_SHORT).show();
-//                Intent intent = ChatActivity.createIntent(context, groups.get(pos));
-//                context.startActivity(intent);
+                Intent intent = ArchivedChatActivity.createIntent(context, groups.get(pos));
+                context.startActivity(intent);
             }
         }
     }
