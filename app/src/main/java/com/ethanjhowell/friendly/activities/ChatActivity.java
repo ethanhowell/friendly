@@ -20,7 +20,6 @@ import com.ethanjhowell.friendly.models.Group__User;
 import com.ethanjhowell.friendly.models.Message;
 import com.ethanjhowell.friendly.proxy.BackgroundManager;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.boltsinternal.Task;
 import com.parse.livequery.ParseLiveQueryClient;
@@ -54,18 +53,17 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadGroup(BackgroundManager manager) {
-        ParseQuery.getQuery(Group.class)
-                .whereEqualTo(ParseObject.KEY_OBJECT_ID, groupId)
-                // id is unique so we only need to get the first (and only) result
-                .getFirstInBackground((g, e) -> {
-                    if (e != null) {
-                        Log.e(TAG, "loadGroup: ", e);
-                        manager.failed(e);
-                    } else {
-                        group = g;
-                        manager.succeeded();
-                    }
-                });
+        group.fetchInBackground((g, e) -> {
+            if (e != null) {
+                Log.e(TAG, "loadGroup: ", e);
+                manager.failed(e);
+            } else {
+                Log.d(TAG, "loadGroup: " + group.getGroupName());
+                this.group = (Group) g;
+                Log.d(TAG, "loadGroup: " + group.getGroupName());
+                manager.succeeded();
+            }
+        });
     }
 
     private void scrollToBottomOfMessages(boolean smoothScroll) {
@@ -202,6 +200,8 @@ public class ChatActivity extends AppCompatActivity {
 
         messages = new ArrayList<>();
         groupId = getIntent().getStringExtra(INTENT_GROUP);
+        group = new Group();
+        group.setObjectId(groupId);
 
         btScrollToBottom = binding.btScrollToBottom;
         btScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
