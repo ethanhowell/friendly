@@ -23,4 +23,5 @@
     <string name="btSend_text">Send</string>
     <string name="ivAuthorProfilePic_contentDescription">Author Profile Picture</string>
     <string name="btScrollToBottom_latest_text">Latest Message ↓</string>
+    <string name="itArchivedGroups_title">Archived groups</string>
 </resources>
