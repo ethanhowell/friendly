@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,11 +82,6 @@ public class GroupActivity extends AppCompatActivity {
                     .into(binding.ivProfilePic);
         });
         binding.textView.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
-        binding.btLogOut.setOnClickListener(v -> {
-            ParseUser.logOut();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        });
 
         // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;
@@ -102,6 +98,22 @@ public class GroupActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.group, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.itArchivedGroups:
+                Log.i(TAG, "onOptionsItemSelected: going to see archived chats");
+                return true;
+            case R.id.itLogOut:
+                ParseUser.logOut();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

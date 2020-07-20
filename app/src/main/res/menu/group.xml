@@ -6,4 +6,7 @@
         android:id="@+id/itArchivedGroups"
         android:title="@string/itArchivedGroups_title"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/itLogOut"
+        android:title="@string/itLogOut_title" />
 </menu>
