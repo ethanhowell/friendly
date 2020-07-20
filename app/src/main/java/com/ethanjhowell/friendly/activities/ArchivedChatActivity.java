@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ethanjhowell.friendly.R;
-import com.ethanjhowell.friendly.adapters.MessageAdapter;
+import com.ethanjhowell.friendly.adapters.ArchivedMessageAdapter;
 import com.ethanjhowell.friendly.databinding.ActivityArchivedChatBinding;
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Message;
@@ -34,7 +34,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
     private static final String INTENT_GROUP_DATE_LEFT = "groupDateLeft";
 
     private final List<Message> archivedMessages = new ArrayList<>();
-    private final MessageAdapter archivedMessagesAdapter = new MessageAdapter(archivedMessages);
+    private final ArchivedMessageAdapter archivedMessagesAdapter = new ArchivedMessageAdapter(archivedMessages);
 
 
     private final Group group = new Group();
