@@ -31,7 +31,10 @@ public class Group__User extends ParseObject {
     }
 
     public Group getGroup() {
-        return (Group) getParseObject(KEY_GROUP);
+        Group g = (Group) getParseObject(KEY_GROUP);
+        assert g != null;
+        g.setDateLeft(getDateLeft());
+        return g;
     }
 
     public void setGroup(Group group) {

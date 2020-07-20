@@ -31,6 +31,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
     private static final String TAG = ArchivedChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP_ID = "groupId";
     private static final String INTENT_GROUP_NAME = "groupName";
+    private static final String INTENT_GROUP_DATE_LEFT = "groupDateLeft";
 
     private final List<Message> archivedMessages = new ArrayList<>();
     private final MessageAdapter archivedMessagesAdapter = new MessageAdapter(archivedMessages);
@@ -44,6 +45,9 @@ public class ArchivedChatActivity extends AppCompatActivity {
         Intent intent = new Intent(context, ArchivedChatActivity.class);
         intent.putExtra(INTENT_GROUP_ID, group.getObjectId());
         intent.putExtra(INTENT_GROUP_NAME, group.getGroupName());
+        Date dateLeft = group.getDateLeft();
+        assert dateLeft != null;
+        intent.putExtra(INTENT_GROUP_DATE_LEFT, dateLeft.getTime());
         return intent;
     }
 
@@ -61,8 +65,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
     private void loadMessages() {
         ParseQuery.getQuery(Message.class)
                 .whereEqualTo(Message.KEY_GROUP, group)
-                // TODO: make it before the date we left
-                .whereLessThanOrEqualTo(Message.KEY_CREATED_AT, new Date())
+                .whereLessThanOrEqualTo(Message.KEY_CREATED_AT, group.getDateLeft())
                 .findInBackground((messages, e) -> {
                     if (e != null) {
                         Log.e(TAG, "problem retrieving archived messages: ", e);
@@ -109,6 +112,8 @@ public class ArchivedChatActivity extends AppCompatActivity {
 
         String groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
         String groupId = getIntent().getStringExtra(INTENT_GROUP_ID);
+        Date groupDateLeft = new Date();
+        groupDateLeft.setTime(getIntent().getLongExtra(INTENT_GROUP_DATE_LEFT, -1));
 
         Toolbar toolbar = binding.toolbar.toolbar;
         toolbar.setTitle(String.format(getString(R.string.activity_archived_chat_titleFormat), groupName));
@@ -123,6 +128,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
 
         group.setObjectId(groupId);
         group.setGroupName(groupName);
+        group.setDateLeft(groupDateLeft);
 
         loadMessages();
     }
