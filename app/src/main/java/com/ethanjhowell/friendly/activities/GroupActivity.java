@@ -105,6 +105,7 @@ public class GroupActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.itArchivedGroups:
                 Log.i(TAG, "onOptionsItemSelected: going to see archived chats");
+                startActivity(new Intent(this, ArchivedGroupActivity.class));
                 return true;
             case R.id.itLogOut:
                 ParseUser.logOut();
