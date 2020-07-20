@@ -8,7 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ethanjhowell.friendly.adapters.GroupAdapter;
+import com.ethanjhowell.friendly.adapters.ArchivedGroupAdapter;
 import com.ethanjhowell.friendly.databinding.ActivityArchivedGroupBinding;
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Group__User;
@@ -23,7 +23,7 @@ public class ArchivedGroupActivity extends AppCompatActivity {
     private static final String TAG = ArchivedGroupActivity.class.getCanonicalName();
 
     private final List<Group> archivedGroups = new ArrayList<>();
-    private final GroupAdapter adapter = new GroupAdapter(archivedGroups);
+    private final ArchivedGroupAdapter adapter = new ArchivedGroupAdapter(archivedGroups);
 
     private void getUserGroupsInBackground() {
         ParseQuery.getQuery(Group__User.class)
