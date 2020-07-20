@@ -47,9 +47,21 @@ public class ArchivedChatActivity extends AppCompatActivity {
         return intent;
     }
 
+    private void scrollToBottomOfMessages(boolean smoothScroll) {
+        int size = archivedMessages.size();
+        if (size > 0) {
+            if (smoothScroll) {
+                rvArchivedMessages.smoothScrollToPosition(size - 1);
+            } else {
+                rvArchivedMessages.scrollToPosition(size - 1);
+            }
+        }
+    }
+
     private void loadMessages() {
         ParseQuery.getQuery(Message.class)
                 .whereEqualTo(Message.KEY_GROUP, group)
+                // TODO: make it before the date we left
                 .whereLessThanOrEqualTo(Message.KEY_CREATED_AT, new Date())
                 .findInBackground((messages, e) -> {
                     if (e != null) {
@@ -61,7 +73,13 @@ public class ArchivedChatActivity extends AppCompatActivity {
                     }
                     archivedMessages.addAll(messages);
                     archivedMessagesAdapter.notifyDataSetChanged();
+                    scrollToBottomOfMessages(false);
                 });
+    }
+
+    private void scrollToBottomOnClick(View v) {
+        btScrollToBottom.setVisibility(View.GONE);
+        scrollToBottomOfMessages(true);
     }
 
     private void setUpRecyclerView() {
@@ -101,6 +119,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
         setUpRecyclerView();
 
         btScrollToBottom = binding.btScrollToBottom;
+        btScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
 
         group.setObjectId(groupId);
         group.setGroupName(groupName);
