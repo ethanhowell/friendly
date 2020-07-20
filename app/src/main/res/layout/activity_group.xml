@@ -8,7 +8,9 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar_main" />
+        layout="@layout/toolbar_main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"

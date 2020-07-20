@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +32,8 @@ import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
-    private static final String INTENT_GROUP = "groupId";
+    private static final String INTENT_GROUP_ID = "groupId";
+    private static final String INTENT_GROUP_NAME = "groupName";
     private static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
     private Group group;
@@ -47,7 +49,8 @@ public class ChatActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context, Group group) {
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra(INTENT_GROUP, group.getObjectId());
+        intent.putExtra(INTENT_GROUP_ID, group.getObjectId());
+        intent.putExtra(INTENT_GROUP_NAME, group.getGroupName());
         return intent;
     }
 
@@ -137,8 +140,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void onDataLoaded() {
         loadMessages();
-        binding.tvGroupName.setText(group.getGroupName());
-        binding.tvLeave.setOnClickListener(this::leaveGroupOnClick);
         binding.btSend.setOnClickListener(this::sendOnClick);
 
         // TODO: show that user has left the chat if so
@@ -192,7 +193,13 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String groupId = getIntent().getStringExtra(INTENT_GROUP);
+        String groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
+        String groupId = getIntent().getStringExtra(INTENT_GROUP_ID);
+
+        Toolbar toolbar = binding.toolbar.toolbar;
+        toolbar.setTitle(groupName);
+        setSupportActionBar(toolbar);
+
         group = new Group();
         group.setObjectId(groupId);
 
