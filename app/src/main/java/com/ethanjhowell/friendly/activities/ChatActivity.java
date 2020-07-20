@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -206,6 +207,7 @@ public class ChatActivity extends AppCompatActivity {
 
         group = new Group();
         group.setObjectId(groupId);
+        group.setGroupName(groupName);
 
         btScrollToBottom = binding.btScrollToBottom;
         btScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
@@ -220,6 +222,16 @@ public class ChatActivity extends AppCompatActivity {
         return true;
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.itLeaveGroup) {
+            leaveGroupOnClick();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void sendOnClick(View v) {
         // TODO: check that message isn't empty
         String body = binding.etMessageBody.getText().toString();
@@ -232,7 +244,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void leaveGroupOnClick(View v) {
+    private void leaveGroupOnClick() {
         Log.i(
                 TAG,
                 String.format(
