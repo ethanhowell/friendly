@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.adapters.MessageAdapter;
 import com.ethanjhowell.friendly.databinding.ActivityChatBinding;
 import com.ethanjhowell.friendly.models.Group;
@@ -29,6 +31,7 @@ import com.parse.livequery.SubscriptionHandling;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
@@ -199,6 +202,7 @@ public class ChatActivity extends AppCompatActivity {
         Toolbar toolbar = binding.toolbar.toolbar;
         toolbar.setTitle(groupName);
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         group = new Group();
         group.setObjectId(groupId);
@@ -208,6 +212,12 @@ public class ChatActivity extends AppCompatActivity {
         setUpRecyclerView();
 
         loadData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat, menu);
+        return true;
     }
 
     private void sendOnClick(View v) {
