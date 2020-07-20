@@ -34,10 +34,9 @@ public class ChatActivity extends AppCompatActivity {
     private static final String INTENT_GROUP = "groupId";
     private static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
-    private String groupId;
     private Group group;
 
-    private List<Message> messages;
+    private final List<Message> messages = new ArrayList<>();
     private RecyclerView rvMessages;
     LinearLayoutManager rvMessagesLayoutManager;
     private MessageAdapter messagesAdapter;
@@ -58,9 +57,8 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e(TAG, "loadGroup: ", e);
                 manager.failed(e);
             } else {
-                Log.d(TAG, "loadGroup: " + group.getGroupName());
                 this.group = (Group) g;
-                Log.d(TAG, "loadGroup: " + group.getGroupName());
+                Log.i(TAG, "loadGroup: " + group.getGroupName());
                 manager.succeeded();
             }
         });
@@ -74,32 +72,29 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void loadMessages(BackgroundManager manager) {
+    private void loadMessages() {
         ParseQuery.getQuery(Message.class)
-                .whereMatchesQuery(
-                        Message.KEY_GROUP,
-                        ParseQuery.getQuery(Group.class)
-                                .whereEqualTo(Group.KEY_OBJECT_ID, groupId)
-                )
+                .whereEqualTo(Message.KEY_GROUP, group)
                 .include(Message.KEY_AUTHOR)
                 // id is unique so we only need to get the first (and only) result
                 .findInBackground((messagesFromServer, e) -> {
-                    if (e != null) {
-                        Log.e(TAG, "loadMessages: ", e);
-                        manager.failed(e);
-                    } else {
-                        messages.addAll(messagesFromServer);
-                        for (Message message : messages) {
-                            Log.d(TAG, "loadMessages: " + message.getBody());
+                    synchronized (messages) {
+                        if (e != null) {
+                            Log.e(TAG, "loadMessages: ", e);
+                            return;
                         }
-                        messagesAdapter.notifyDataSetChanged();
-                        scrollToBottomOfMessages(false);
-                        manager.succeeded();
+                        messages.clear();
+                        messages.addAll(messagesFromServer);
                     }
+                    for (Message message : messagesFromServer) {
+                        Log.d(TAG, "loadMessages: " + message.getBody());
+                    }
+                    messagesAdapter.notifyDataSetChanged();
+                    scrollToBottomOfMessages(false);
                 });
     }
 
-    private void connectMessageSocket() {
+    private void connectMessageSocket(BackgroundManager manager) {
         ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class)
                 .whereEqualTo(Message.KEY_GROUP, group)
@@ -108,7 +103,9 @@ public class ChatActivity extends AppCompatActivity {
 
         // Listen for CREATE events
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
-            messages.add(message);
+            synchronized (messages) {
+                messages.add(message);
+            }
             Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
             int oldLastMessagePos = messages.size() - 2;
             int lastVisiblePosition = rvMessagesLayoutManager.findLastVisibleItemPosition();
@@ -123,6 +120,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         });
+        manager.succeeded();
     }
 
     private void loadData() {
@@ -132,17 +130,13 @@ public class ChatActivity extends AppCompatActivity {
                 this::onDataLoaded,
                 // tasks to run
                 this::loadGroup,
-                this::loadMessages
+                this::connectMessageSocket
         );
         backgroundManager.run();
     }
 
     private void onDataLoaded() {
-        // TODO: I don't want to lose any messages on connection so I think I need to connect
-        //  the socket first but I'm not sure how to properly handle the multithreading to avoid
-        //  duplicates and still make sure that the times work. This is quite a dirty solution
-        //  but it'll work for now.
-        connectMessageSocket();
+        loadMessages();
         binding.tvGroupName.setText(group.getGroupName());
         binding.tvLeave.setOnClickListener(this::leaveGroupOnClick);
         binding.btSend.setOnClickListener(this::sendOnClick);
@@ -198,8 +192,7 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        messages = new ArrayList<>();
-        groupId = getIntent().getStringExtra(INTENT_GROUP);
+        String groupId = getIntent().getStringExtra(INTENT_GROUP);
         group = new Group();
         group.setObjectId(groupId);
 
