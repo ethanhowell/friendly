@@ -72,10 +72,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void scrollToBottomOfMessages(boolean smoothScroll) {
-        if (smoothScroll) {
-            rvMessages.smoothScrollToPosition(messages.size() - 1);
-        } else {
-            rvMessages.scrollToPosition(messages.size() - 1);
+        int size = messages.size();
+        if (size > 0) {
+            if (smoothScroll) {
+                rvMessages.smoothScrollToPosition(size - 1);
+            } else {
+                rvMessages.scrollToPosition(size - 1);
+            }
         }
     }
 
