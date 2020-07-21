@@ -42,17 +42,17 @@ public class GroupActivity extends AppCompatActivity {
                 // means user hasn't left the group yet
                 .whereDoesNotExist(Group__User.KEY_DATE_LEFT)
                 .findInBackground((gs__us, e) -> {
-                    if (e != null)
-                        Log.e(TAG, "getUserGroupsInBackground: ", e);
-                    else {
-                        // since we run this when the activity resumes, we want to clear the
-                        // groups so that we can re-add them
-                        currentGroups.clear();
-                        for (Group__User g__u : gs__us) {
-                            Group group = g__u.getGroup();
-                            Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
-                            currentGroups.add(group);
-                        }
+                            if (e != null)
+                                Log.e(TAG, "getUserGroupsInBackground: ", e);
+                            else {
+                                // since we run this when the activity resumes, we want to clear the
+                                // groups so that we can re-add them
+                                currentGroups.clear();
+                                for (Group__User g__u : gs__us) {
+                                    Group group = g__u.getGroup();
+                                    Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
+                                    currentGroups.add(group);
+                                }
                                 groupAdapter.notifyDataSetChanged();
                             }
                         }
@@ -61,6 +61,39 @@ public class GroupActivity extends AppCompatActivity {
 
     private void newGroupOnClick(View v) {
         startActivity(new Intent(this, NewGroupActivity.class));
+    }
+
+    private void joinGroup(String groupID) {
+        Group group = new Group();
+        group.setObjectId(groupID);
+        group.fetchInBackground((g, groupException) -> {
+            if (groupException != null) {
+                // group not found
+                // TODO: display some sort of message to that effect
+                Log.e(TAG, "joinGroup: ", groupException);
+            } else {
+                ParseQuery.getQuery(Group__User.class)
+                        .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
+                        .whereEqualTo(Group__User.KEY_GROUP, group)
+                        .getFirstInBackground((result, e) -> {
+                            // means that the relation doesn't yet exist, so we go and create it
+                            if (result == null) {
+                                Group__User group__user = new Group__User(group, ParseUser.getCurrentUser());
+                                group__user.saveInBackground(e1 -> {
+                                    if (e1 != null)
+                                        Log.e(TAG, "joinGroup: ", e1);
+                                    else {
+                                        startActivity(ChatActivity.createIntent(this, group));
+                                    }
+                                });
+                            } else {
+                                startActivity(ChatActivity.createIntent(this, group));
+                            }
+                        });
+            }
+
+        });
+
     }
 
     @Override
@@ -76,11 +109,11 @@ public class GroupActivity extends AppCompatActivity {
                 finish();
             }
             Matcher matcher = DEEPLINK_GROUP_PATTERN.matcher(data.toString());
+            Log.d(TAG, "onCreate: " + data.toString());
             if (matcher.matches()) {
                 String groupID = matcher.group(1);
-
+                joinGroup(groupID);
             }
-            Log.d(TAG, "onCreate: " + data.toString());
         }
 
         ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
