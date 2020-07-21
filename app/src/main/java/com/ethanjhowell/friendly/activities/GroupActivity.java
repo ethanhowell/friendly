@@ -1,11 +1,13 @@
 package com.ethanjhowell.friendly.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -61,6 +63,15 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if (data != null) {
+            Toast.makeText(this, action + " " + data.toString(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "onCreate: " + action + " " + data.toString());
+        }
+
         ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

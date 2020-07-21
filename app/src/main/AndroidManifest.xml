@@ -48,7 +48,20 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-        <activity android:name=".activities.GroupActivity" />
+        <activity android:name=".activities.GroupActivity">
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://friendly-back.herokuapp.com/g/” -->
+                <data
+                    android:host="friendly-back.herokuapp.com"
+                    android:pathPrefix="/g/"
+                    android:scheme="http" />
+                <!-- note that the leading "/" is required for pathPrefix-->
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.RegisterActivity"
             android:parentActivityName=".activities.LoginActivity" />
