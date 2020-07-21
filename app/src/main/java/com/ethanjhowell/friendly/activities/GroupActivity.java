@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -68,9 +69,8 @@ public class GroupActivity extends AppCompatActivity {
         group.setObjectId(groupID);
         group.fetchInBackground((g, groupException) -> {
             if (groupException != null) {
-                // group not found
-                // TODO: display some sort of message to that effect
-                Log.e(TAG, "joinGroup: ", groupException);
+                Toast.makeText(this, R.string.invalidGroupLink_toast, Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "joinGroup: " + groupException);
             } else {
                 ParseQuery.getQuery(Group__User.class)
                         .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())

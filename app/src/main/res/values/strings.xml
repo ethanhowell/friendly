@@ -26,4 +26,5 @@
     <string name="itArchivedGroups_title">Archived groups</string>
     <string name="activity_new_group_title">Create a New Group</string>
     <string name="activity_archived_chat_titleFormat">Archived: %s</string>
+    <string name="invalidGroupLink_toast">Invalid friendly invite.</string>
 </resources>
