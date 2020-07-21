@@ -18,7 +18,7 @@
     <string name="itLogOut_title">Log out</string>
     <string name="etGroupName_hint">Group Name</string>
     <string name="btCreate_text">Create</string>
-    <string name="itLeaveGroup_title">Leave group</string>
+    <string name="btLeaveGroup_text">Leave group</string>
     <string name="etMessageBody_hint">Friendly message</string>
     <string name="btSend_text">Send</string>
     <string name="ivAuthorProfilePic_contentDescription">Author Profile Picture</string>
@@ -28,4 +28,5 @@
     <string name="activity_archived_chat_titleFormat">Archived: %s</string>
     <string name="invalidGroupLink_toast">Invalid friendly invite.</string>
     <string name="itDetails_title">Details</string>
+    <string name="ivQR_contentDescription">Invite QR code</string>
 </resources>

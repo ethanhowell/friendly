@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.ethanjhowell.friendly.databinding.ActivityGroupDetailsBinding;
 import com.ethanjhowell.friendly.models.Group;
 
@@ -33,11 +34,18 @@ public class GroupDetails extends AppCompatActivity {
 
         String groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
         String groupId = getIntent().getStringExtra(INTENT_GROUP_ID);
+        String inviteUrl = "http://friendly-back.herokuapp.com/g/" + groupId;
 
         Toolbar toolbar = binding.toolbar.toolbar;
         toolbar.setTitle(groupName);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        binding.tvInviteLink.setText(inviteUrl);
+
+        Glide.with(this)
+                .load("https://zxing.org/w/chart?cht=qr&chs=350x350&chld=L&choe=UTF-8&chl=" + inviteUrl)
+                .into(binding.ivQR);
     }
 
     @Override
