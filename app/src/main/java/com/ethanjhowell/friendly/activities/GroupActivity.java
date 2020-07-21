@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,11 +24,15 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GroupActivity extends AppCompatActivity {
     private final static String TAG = GroupActivity.class.getCanonicalName();
     private ArrayList<Group> currentGroups;
     private GroupAdapter groupAdapter;
+
+    private static final Pattern DEEPLINK_GROUP_PATTERN = Pattern.compile("^http://friendly-back\\.herokuapp.com/g/(.*)$");
 
     private void getUserGroupsInBackground() {
         assert groupAdapter != null;
@@ -39,17 +42,17 @@ public class GroupActivity extends AppCompatActivity {
                 // means user hasn't left the group yet
                 .whereDoesNotExist(Group__User.KEY_DATE_LEFT)
                 .findInBackground((gs__us, e) -> {
-                            if (e != null)
-                                Log.e(TAG, "getUserGroupsInBackground: ", e);
-                            else {
-                                // since we run this when the activity resumes, we want to clear the
-                                // groups so that we can re-add them
-                                currentGroups.clear();
-                                for (Group__User g__u : gs__us) {
-                                    Group group = g__u.getGroup();
-                                    Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
-                                    currentGroups.add(group);
-                                }
+                    if (e != null)
+                        Log.e(TAG, "getUserGroupsInBackground: ", e);
+                    else {
+                        // since we run this when the activity resumes, we want to clear the
+                        // groups so that we can re-add them
+                        currentGroups.clear();
+                        for (Group__User g__u : gs__us) {
+                            Group group = g__u.getGroup();
+                            Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
+                            currentGroups.add(group);
+                        }
                                 groupAdapter.notifyDataSetChanged();
                             }
                         }
@@ -65,11 +68,19 @@ public class GroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        String action = intent.getAction();
         Uri data = intent.getData();
         if (data != null) {
-            Toast.makeText(this, action + " " + data.toString(), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "onCreate: " + action + " " + data.toString());
+            // if user isn't logged in, we redirect them to the login page
+            if (ParseUser.getCurrentUser() == null) {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+            Matcher matcher = DEEPLINK_GROUP_PATTERN.matcher(data.toString());
+            if (matcher.matches()) {
+                String groupID = matcher.group(1);
+
+            }
+            Log.d(TAG, "onCreate: " + data.toString());
         }
 
         ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
