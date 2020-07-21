@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/itDetails"
+        android:title="@string/itDetails_title"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/itLeaveGroup"
         android:title="@string/itLeaveGroup_title"
         app:showAsAction="never" />

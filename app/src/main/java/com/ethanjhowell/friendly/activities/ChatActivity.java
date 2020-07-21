@@ -231,6 +231,8 @@ public class ChatActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.itLeaveGroup) {
             leaveGroupOnClick();
             return true;
+        } else if (item.getItemId() == R.id.itDetails) {
+            startActivity(GroupDetails.createIntent(this, group));
         }
         return super.onOptionsItemSelected(item);
     }
