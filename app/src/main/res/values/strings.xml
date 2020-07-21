@@ -18,7 +18,7 @@
     <string name="itLogOut_title">Log out</string>
     <string name="etGroupName_hint">Group Name</string>
     <string name="btCreate_text">Create</string>
-    <string name="btLeaveGroup_text">Leave group</string>
+    <string name="itLeaveGroup_title">Leave group</string>
     <string name="etMessageBody_hint">Friendly message</string>
     <string name="btSend_text">Send</string>
     <string name="ivAuthorProfilePic_contentDescription">Author Profile Picture</string>
