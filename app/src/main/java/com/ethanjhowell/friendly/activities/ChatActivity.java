@@ -207,10 +207,12 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                relation.type(e -> {
-                    if (e != null)
-                        Log.e(TAG, "afterTextChanged: ", e);
-                });
+                if (editable.length() > 0) {
+                    relation.type(e -> {
+                        if (e != null)
+                            Log.e(TAG, "afterTextChanged: ", e);
+                    });
+                }
             }
         });
 
@@ -308,7 +310,7 @@ public class ChatActivity extends AppCompatActivity {
     private void sendOnClick(View v) {
         // TODO: check that message isn't empty
         String body = binding.etMessageBody.getText().toString();
-        binding.etMessageBody.setText("");
+        binding.etMessageBody.getText().clear();
         Message message = new Message(body, group);
 
         message.saveInBackground(e -> {

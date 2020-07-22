@@ -49,6 +49,7 @@ public class NewGroupActivity extends AppCompatActivity {
                     if (e1 != null)
                         Log.e(TAG, "createGroupOnClick: ", e1);
                     else {
+                        startActivity(ChatActivity.createIntent(this, group));
                         startActivity(GroupDetails.createIntent(this, group));
                         finish();
                     }
