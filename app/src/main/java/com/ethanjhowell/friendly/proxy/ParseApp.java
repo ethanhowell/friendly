@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Group__User;
+import com.ethanjhowell.friendly.models.Message;
 import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.facebook.ParseFacebookUtils;
@@ -19,6 +20,7 @@ public class ParseApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        ParseObject.registerSubclass(Message.class);
         ParseObject.registerSubclass(Group.class);
         ParseObject.registerSubclass(Group__User.class);
 
@@ -37,6 +39,7 @@ public class ParseApp extends Application {
         // any network interceptors must be added with the Configuration Builder given this syntax
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(PARSE_APPLICATION_ID) // should correspond to APP_ID env variable
+                .clientKey(null)
                 .clientBuilder(builder)
                 .server(PARSE_SERVER_URL).build());
 

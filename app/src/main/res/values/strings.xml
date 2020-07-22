@@ -19,4 +19,8 @@
     <string name="etGroupName_hint">Group Name</string>
     <string name="btCreate_text">Create</string>
     <string name="tvLeave_text">Leave</string>
+    <string name="etMessageBody_hint">Friendly message</string>
+    <string name="btSend_text">Send</string>
+    <string name="ivAuthorProfilePic_contentDescription">Author Profile Picture</string>
+    <string name="btScrollToBottom_latest_text">Latest Message ↓</string>
 </resources>

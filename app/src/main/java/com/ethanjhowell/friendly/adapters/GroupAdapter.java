@@ -46,7 +46,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvGroupName;
+        private TextView tvGroupName;
 
         public ViewHolder(@NonNull ItemGroupBinding binding) {
             super(binding.getRoot());
@@ -59,7 +59,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         public void bind(Group group) {
             Log.d(TAG, "bind: " + group.getGroupName());
             tvGroupName.setText(group.getGroupName());
-            // also show the most recent message sent in the chat
+            // TODO: also show the most recent message sent in the chat
         }
 
         public void onClick(View view) {

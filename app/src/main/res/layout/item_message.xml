@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp">
+
+    <ImageView
+        android:id="@+id/ivAuthorProfilePic"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/ivAuthorProfilePic_contentDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_person_24" />
+
+    <LinearLayout
+        android:id="@+id/llMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tvMessageBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#C3C3C3"
+            tools:text="Message body" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAuthorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/llMessage"
+        app:layout_constraintStart_toStartOf="@+id/llMessage"
+        tools:text="First Last" />
+</androidx.constraintlayout.widget.ConstraintLayout>

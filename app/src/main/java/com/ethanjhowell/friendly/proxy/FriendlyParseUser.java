@@ -1,5 +1,8 @@
 package com.ethanjhowell.friendly.proxy;
 
+import android.util.Log;
+
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -12,6 +15,7 @@ public class FriendlyParseUser {
     public final static String KEY_PROFILE_PICTURE = "profilePicture";
     public final static String KEY_PHONE_NUMBER = "phoneNumber";
     public final static String KEY_IS_COMPLETED = "isCompleted";
+    private static final String TAG = FriendlyParseUser.class.getCanonicalName();
 
     private ParseUser user;
 
@@ -23,7 +27,12 @@ public class FriendlyParseUser {
         if (parseUser == null)
             return null;
         else {
-            return new FriendlyParseUser(parseUser);
+            try {
+                return new FriendlyParseUser(parseUser.fetchIfNeeded());
+            } catch (ParseException e) {
+                Log.e(TAG, "fromParseUser: problem fetching user", e);
+                return null;
+            }
         }
     }
 
