@@ -29,7 +29,6 @@ import com.ethanjhowell.friendly.proxy.BackgroundManager;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.boltsinternal.Task;
 import com.parse.livequery.ParseLiveQueryClient;
 import com.parse.livequery.SubscriptionHandling;
 
@@ -37,60 +36,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
-//public class TestActivity extends Activity {
-//
-//    TextView timerTextView;
-//    long startTime = 0;
-//
-//    //runs without a timer by reposting this handler at the end of the runnable
-//    Handler timerHandler = new Handler();
-//
-//
-//    private void timerRunnable() {
-//
-//
-//        timerHandler.postDelayed()
-//        long millis = System.currentTimeMillis() - startTime;
-//        int seconds = (int) (millis / 1000);
-//        int minutes = seconds / 60;
-//        seconds = seconds % 60;
-//
-//        timerTextView.setText(String.format("%d:%02d", minutes, seconds));
-//
-//        timerHandler.postDelayed(this, 500);
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.test_activity);
-//
-//        timerTextView = (TextView) findViewById(R.id.timerTextView);
-//
-//        Button b = (Button) findViewById(R.id.button);
-//        b.setText("start");
-//        b.setOnClickListener(v -> {
-//            if (b.getText().equals("stop")) {
-//                timerHandler.removeCallbacks(this::timerRunnable);
-//                b.setText("start");
-//            } else {
-//                startTime = System.currentTimeMillis();
-//                timerHandler.postDelayed(this::timerRunnable, 0);
-//                b.setText("stop");
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        timerHandler.removeCallbacks(this::timerRunnable);
-//        Button b = (Button) findViewById(R.id.button);
-//        b.setText("start");
-//    }
-//
-//}
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -191,12 +136,9 @@ public class ChatActivity extends AppCompatActivity {
             // if the event comes from another user
             if (!relation.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                 typingTimer.removeCallbacksAndMessages(null);
-                runOnUiThread(() -> {
-                    binding.tvTypingNotification.setVisibility(View.VISIBLE);
-                });
-                typingTimer.postDelayed(() -> runOnUiThread(() -> {
-                    binding.tvTypingNotification.setVisibility(View.GONE);
-                }), 1000);
+                runOnUiThread(() -> binding.tvTypingNotification.setVisibility(View.VISIBLE));
+                typingTimer.postDelayed(() -> runOnUiThread(() ->
+                        binding.tvTypingNotification.setVisibility(View.GONE)), 1000);
             }
         });
 
@@ -364,7 +306,6 @@ public class ChatActivity extends AppCompatActivity {
         String body = binding.etMessageBody.getText().toString();
         binding.etMessageBody.setText("");
         Message message = new Message(body, group);
-        Task<Void> voidTask = message.saveInBackground();
 
         message.saveInBackground(e -> {
             if (e != null) Log.e(TAG, "sendOnClick: ", e);
