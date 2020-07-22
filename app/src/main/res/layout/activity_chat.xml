@@ -17,13 +17,24 @@
         android:id="@+id/rvMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="32dp"
         android:overScrollMode="never"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/clSendMessageBar"
+        app:layout_constraintBottom_toTopOf="@+id/tvTypingNotification"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/tvTypingNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:textSize="64sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/clSendMessageBar"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clSendMessageBar"
