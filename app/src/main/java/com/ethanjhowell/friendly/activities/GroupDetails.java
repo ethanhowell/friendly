@@ -8,22 +8,27 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.ethanjhowell.friendly.adapters.UserAdapter;
 import com.ethanjhowell.friendly.databinding.ActivityGroupDetailsBinding;
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Group__User;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class GroupDetails extends AppCompatActivity {
     private static final String TAG = GroupDetails.class.getCanonicalName();
     private static final String INTENT_GROUP_ID = "groupId";
     private static final String INTENT_GROUP_NAME = "groupName";
-
     private final Group group = new Group();
+    private final List<FriendlyParseUser> users = new ArrayList<>();
+    private final UserAdapter userAdapter = new UserAdapter(users);
 
     public static Intent createIntent(Context context, Group group) {
         Intent intent = new Intent(context, GroupDetails.class);
@@ -42,8 +47,10 @@ public class GroupDetails extends AppCompatActivity {
                     else {
                         for (Group__User group__user : group__users) {
                             FriendlyParseUser friendlyParseUser = FriendlyParseUser.fromParseUser(group__user.getUser());
+                            users.add(friendlyParseUser);
                             Log.d(TAG, "loadUsers: " + friendlyParseUser.getFirstName() + " " + friendlyParseUser.getLastName());
                         }
+                        userAdapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -71,6 +78,8 @@ public class GroupDetails extends AppCompatActivity {
 
         binding.tvInviteLink.setText(inviteUrl);
 
+        binding.rvUsers.setAdapter(userAdapter);
+        binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
         loadUsers();
 
         Glide.with(this)

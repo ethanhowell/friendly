@@ -55,7 +55,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public void bind(FriendlyParseUser user) {
             tvName.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
             Glide.with(itemView)
-                    .load(user.getProfilePicture())
+                    .load(user.getProfilePicture().getUrl())
                     .circleCrop()
                     .into(ivProfilePic);
         }

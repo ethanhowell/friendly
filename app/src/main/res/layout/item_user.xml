@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/ivProfilePic"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:contentDescription="@string/ivProfilePic_contentDescription"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
