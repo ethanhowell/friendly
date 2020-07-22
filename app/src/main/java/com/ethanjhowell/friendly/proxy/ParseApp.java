@@ -2,7 +2,10 @@ package com.ethanjhowell.friendly.proxy;
 
 import android.app.Application;
 
+import com.ethanjhowell.friendly.models.Group;
+import com.ethanjhowell.friendly.models.Group__User;
 import com.parse.Parse;
+import com.parse.ParseObject;
 import com.parse.facebook.ParseFacebookUtils;
 
 import okhttp3.OkHttpClient;
@@ -15,6 +18,9 @@ public class ParseApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ParseObject.registerSubclass(Group.class);
+        ParseObject.registerSubclass(Group__User.class);
 
         // Use for troubleshooting -- remove this line for production
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);

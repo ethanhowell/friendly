@@ -15,4 +15,5 @@
     <string name="ivProfilePic_contentDescription">Profile Picture</string>
     <string name="tvChoosePhoto_text">Choose Photo</string>
     <string name="selectImage_toast">Please select an image</string>
+    <string name="btLogOut_text">Log Out</string>
 </resources>
