@@ -134,7 +134,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        // TODO: load all the users in that group
         BackgroundManager backgroundManager = new BackgroundManager(
                 // callback
                 this::onDataLoaded,
@@ -150,7 +149,6 @@ public class ChatActivity extends AppCompatActivity {
         binding.btSend.setOnClickListener(this::sendOnClick);
 
         // TODO: show that user has left the chat if so
-        // TODO: disable sending messages if user has left the chat
     }
 
     private void setUpRecyclerView() {
