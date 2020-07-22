@@ -8,6 +8,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
+import java.util.Objects;
+
 public class FriendlyParseUser {
     // class that wraps ParseUser in order to provide convenience methods for setting additional fields
     public final static String KEY_FIRST_NAME = "firstName";
@@ -110,5 +112,18 @@ public class FriendlyParseUser {
 
     public ParseUser getParseUser() {
         return user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FriendlyParseUser that = (FriendlyParseUser) o;
+        return user.getObjectId().equals(that.user.getObjectId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user.getObjectId());
     }
 }

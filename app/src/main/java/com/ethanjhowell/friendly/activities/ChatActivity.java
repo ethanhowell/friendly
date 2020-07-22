@@ -133,8 +133,15 @@ public class ChatActivity extends AppCompatActivity {
                 .include(Group__User.KEY_USER)
                 .whereEqualTo(Group__User.KEY_GROUP, group));
         relationHandling.handleEvent(SubscriptionHandling.Event.UPDATE, (q, relation) -> {
+            FriendlyParseUser userTyping = FriendlyParseUser.fromParseUser(relation.getUser());
+            Log.i(TAG, String.format(
+                    "connectMessageSocket: %s %s is typing",
+                    userTyping.getFirstName(),
+                    userTyping.getLastName()
+            ));
+
             // if the event comes from another user
-            if (!relation.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+            if (!userTyping.equals(FriendlyParseUser.getCurrentUser())) {
                 typingTimer.removeCallbacksAndMessages(null);
                 runOnUiThread(() -> binding.tvTypingNotification.setVisibility(View.VISIBLE));
                 typingTimer.postDelayed(() -> runOnUiThread(() ->
@@ -200,12 +207,9 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.d(TAG, "afterTextChanged: " + relation.getUpdatedAt());
                 relation.type(e -> {
                     if (e != null)
                         Log.e(TAG, "afterTextChanged: ", e);
-                    else
-                        Log.d(TAG, "afterTextChanged: " + relation.getUpdatedAt());
                 });
             }
         });
