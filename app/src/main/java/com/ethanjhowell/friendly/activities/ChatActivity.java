@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -186,16 +185,19 @@ public class ChatActivity extends AppCompatActivity {
         ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
 
         SubscriptionHandling<Group__User> relationHandling = parseLiveQueryClient.subscribe(ParseQuery.getQuery(Group__User.class)
-                .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
+                .include(Group__User.KEY_USER)
                 .whereEqualTo(Group__User.KEY_GROUP, group));
         relationHandling.handleEvent(SubscriptionHandling.Event.UPDATE, (q, relation) -> {
-            runOnUiThread(() -> {
-                binding.tvTypingNotification.setVisibility(View.VISIBLE);
-                Toast.makeText(this, "Typing", Toast.LENGTH_SHORT).show();
-            });
-            typingTimer.postDelayed(() -> runOnUiThread(() -> {
-                binding.tvTypingNotification.setVisibility(View.GONE);
-            }), 1000);
+            // if the event comes from another user
+            if (!relation.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                typingTimer.removeCallbacksAndMessages(null);
+                runOnUiThread(() -> {
+                    binding.tvTypingNotification.setVisibility(View.VISIBLE);
+                });
+                typingTimer.postDelayed(() -> runOnUiThread(() -> {
+                    binding.tvTypingNotification.setVisibility(View.GONE);
+                }), 1000);
+            }
         });
 
 
@@ -331,6 +333,12 @@ public class ChatActivity extends AppCompatActivity {
         setUpRecyclerView();
 
         loadData();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        typingTimer.removeCallbacksAndMessages(null);
     }
 
     @Override
