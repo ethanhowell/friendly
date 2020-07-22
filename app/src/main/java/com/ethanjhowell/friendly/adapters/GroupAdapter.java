@@ -59,7 +59,6 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         public void bind(Group group) {
             Log.d(TAG, "bind: " + group.getGroupName());
             tvGroupName.setText(group.getGroupName());
-            // TODO: also show the most recent message sent in the chat
         }
 
         public void onClick(View view) {
