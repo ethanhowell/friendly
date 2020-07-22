@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,8 +23,8 @@ import org.json.JSONException;
 import java.util.Collections;
 
 public class LoginActivity extends AppCompatActivity {
-    private static String TAG = LoginActivity.class.getCanonicalName();
-    public static int REGISTER_ACTIVITY_REQUEST_CODE = 1;
+    public final static int REGISTER_ACTIVITY_REQUEST_CODE = 1;
+    private final static String TAG = LoginActivity.class.getCanonicalName();
 
     private ActivityLoginBinding binding;
 
@@ -36,22 +35,21 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // detect if user is already signed in
-        if (ParseUser.getCurrentUser() != null) {
+        FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
+        if (user != null) {
             Log.d(TAG, "onCreate: user already logged in");
-            startGroupActivity();
+            startNextActivity(user);
+        } else {
+            binding.btFacebookLogin.setOnClickListener(
+                    v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
+                            this,
+                            Collections.singletonList("email"),
+                            this::facebookLoginCallback
+                    )
+            );
+            binding.btLogin.setOnClickListener(this::loginButtonOnClick);
+            binding.tvSignup.setOnClickListener(this::registrationOnClick);
         }
-
-        binding.btFacebookLogin.setOnClickListener(
-                v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
-                        this,
-                        Collections.singletonList("email"),
-                        this::facebookLoginCallback
-                )
-        );
-        binding.btLogin.setOnClickListener(this::loginButtonOnClick);
-
-        TextView tvSignup = binding.tvSignup;
-        tvSignup.setOnClickListener(this::registrationOnClick);
     }
 
     private void updateUserInfoFromFacebook(FriendlyParseUser user) {
@@ -75,8 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (e1 != null) {
                             Log.e(TAG, "updateUserInfoFromFacebook: problem saving user profile info ", e1);
                         }
-                        startGroupActivity();
-                        // TODO: instead of launching group activity, take me to a new user activity where users can enter phone number and profile picture
+                        startNextActivity(user);
                     });
                 });
 
@@ -93,20 +90,24 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
             Log.e(TAG, "facebookLoginOnClick: ", e);
         } else {
-            FriendlyParseUser user = new FriendlyParseUser(parseUser);
+            FriendlyParseUser user = FriendlyParseUser.fromParseUser(parseUser);
             if (user.isNew()) {
                 updateUserInfoFromFacebook(user);
                 Log.d(TAG, "User signed up and logged in through Facebook!");
             } else {
                 Log.d(TAG, "User logged in through Facebook!");
-                startGroupActivity();
+                startNextActivity(user);
             }
         }
 
     }
 
-    private void startGroupActivity() {
-        startActivity(new Intent(this, GroupActivity.class));
+    private void startNextActivity(FriendlyParseUser currentUser) {
+        if (currentUser.isCompleted())
+            startActivity(new Intent(this, GroupActivity.class));
+        else
+            // still missing fields to fill out
+            startActivity(new Intent(this, NewUserActivity.class));
         finish();
     }
 
@@ -120,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e(TAG, "onCreate: log in problem ", e);
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        startGroupActivity();
+                        startNextActivity(FriendlyParseUser.fromParseUser(user));
                     }
                 }
         );
@@ -140,8 +141,7 @@ public class LoginActivity extends AppCompatActivity {
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             // if registration was a success then we can launch the group activity
-            startGroupActivity();
-            // TODO: instead of launching group activity, take me to a new user activity where users can enter phone number and profile picture
+            startNextActivity(FriendlyParseUser.getCurrentUser());
         }
     }
 }

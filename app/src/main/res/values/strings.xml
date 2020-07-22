@@ -6,9 +6,13 @@
     <string name="etFirstName_hint">First Name</string>
     <string name="etLastName_hint">Last Name</string>
     <string name="etEmail_hint">Email</string>
-    <string name="etPhoneNumber_hint">Phone</string>
+    <string name="etPhoneNumber_hint">Phone Number</string>
     <string name="etPassword_hint">Password</string>
     <string name="etConfirmPassword_hint">Confirm Password</string>
     <string name="btSignup_text">Sign up</string>
     <string name="btFacebookLogin_text">Log In with facebook</string>
+    <string name="btContinue_text">Continue</string>
+    <string name="ivProfilePic_contentDescription">Profile Picture</string>
+    <string name="tvChoosePhoto_text">Choose Photo</string>
+    <string name="selectImage_toast">Please select an image</string>
 </resources>

@@ -9,6 +9,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 public class ParseApp extends Application {
+    private final static String PARSE_APPLICATION_ID = "friendly-back";
+    private final static String PARSE_SERVER_URL = "https://friendly-back.herokuapp.com/parse/";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,9 +30,9 @@ public class ParseApp extends Application {
         // set applicationId, and server server based on the values in the Heroku settings.
         // any network interceptors must be added with the Configuration Builder given this syntax
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("friendly-back") // should correspond to APP_ID env variable
+                .applicationId(PARSE_APPLICATION_ID) // should correspond to APP_ID env variable
                 .clientBuilder(builder)
-                .server("https://friendly-back.herokuapp.com/parse/").build());
+                .server(PARSE_SERVER_URL).build());
 
         ParseFacebookUtils.initialize(this);
     }
