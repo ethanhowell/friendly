@@ -19,22 +19,34 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/tvTypingNotification"
+        app:layout_constraintBottom_toTopOf="@+id/typingDots"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <TextView
-        android:id="@+id/tvTypingNotification"
+    <com.eyalbira.loadingdots.LoadingDots
+        android:id="@+id/typingDots"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="..."
-        android:textSize="64sp"
-        android:textStyle="bold"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="16dp"
         android:visibility="gone"
+
+        app:LoadingDots_auto_play="true"
+
+        app:LoadingDots_dots_color="@android:color/tertiary_text_dark"
+        app:LoadingDots_dots_count="3"
+        app:LoadingDots_dots_size="16dp"
+        app:LoadingDots_dots_space="12dp"
+
+        app:LoadingDots_jump_duration="500"
+        app:LoadingDots_jump_height="32dp"
+
+        app:LoadingDots_loop_duration="1000"
+        app:LoadingDots_loop_start_delay="200"
         app:layout_constraintBottom_toTopOf="@+id/clSendMessageBar"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clSendMessageBar"

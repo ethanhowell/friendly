@@ -143,9 +143,9 @@ public class ChatActivity extends AppCompatActivity {
             // if the event comes from another user
             if (!userTyping.equals(FriendlyParseUser.getCurrentUser())) {
                 typingTimer.removeCallbacksAndMessages(null);
-                runOnUiThread(() -> binding.tvTypingNotification.setVisibility(View.VISIBLE));
+                runOnUiThread(() -> binding.typingDots.setVisibility(View.VISIBLE));
                 typingTimer.postDelayed(() -> runOnUiThread(() ->
-                        binding.tvTypingNotification.setVisibility(View.GONE)), 1000);
+                        binding.typingDots.setVisibility(View.GONE)), 1000);
             }
         });
 
