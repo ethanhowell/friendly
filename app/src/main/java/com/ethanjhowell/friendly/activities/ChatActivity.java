@@ -3,6 +3,7 @@ package com.ethanjhowell.friendly.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -38,6 +39,61 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+//public class TestActivity extends Activity {
+//
+//    TextView timerTextView;
+//    long startTime = 0;
+//
+//    //runs without a timer by reposting this handler at the end of the runnable
+//    Handler timerHandler = new Handler();
+//
+//
+//    private void timerRunnable() {
+//
+//
+//        timerHandler.postDelayed()
+//        long millis = System.currentTimeMillis() - startTime;
+//        int seconds = (int) (millis / 1000);
+//        int minutes = seconds / 60;
+//        seconds = seconds % 60;
+//
+//        timerTextView.setText(String.format("%d:%02d", minutes, seconds));
+//
+//        timerHandler.postDelayed(this, 500);
+//    }
+//
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.test_activity);
+//
+//        timerTextView = (TextView) findViewById(R.id.timerTextView);
+//
+//        Button b = (Button) findViewById(R.id.button);
+//        b.setText("start");
+//        b.setOnClickListener(v -> {
+//            if (b.getText().equals("stop")) {
+//                timerHandler.removeCallbacks(this::timerRunnable);
+//                b.setText("start");
+//            } else {
+//                startTime = System.currentTimeMillis();
+//                timerHandler.postDelayed(this::timerRunnable, 0);
+//                b.setText("stop");
+//            }
+//        });
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        timerHandler.removeCallbacks(this::timerRunnable);
+//        Button b = (Button) findViewById(R.id.button);
+//        b.setText("start");
+//    }
+//
+//}
+
+
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP_ID = "groupId";
@@ -46,6 +102,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private final Group group = new Group();
     private Group__User relation;
+
+    private final Handler typingTimer = new Handler();
 
     private final List<Message> messages = new ArrayList<>();
     private RecyclerView rvMessages;
@@ -132,8 +190,12 @@ public class ChatActivity extends AppCompatActivity {
                 .whereEqualTo(Group__User.KEY_GROUP, group));
         relationHandling.handleEvent(SubscriptionHandling.Event.UPDATE, (q, relation) -> {
             runOnUiThread(() -> {
+                binding.tvTypingNotification.setVisibility(View.VISIBLE);
                 Toast.makeText(this, "Typing", Toast.LENGTH_SHORT).show();
             });
+            typingTimer.postDelayed(() -> runOnUiThread(() -> {
+                binding.tvTypingNotification.setVisibility(View.GONE);
+            }), 1000);
         });
 
 
