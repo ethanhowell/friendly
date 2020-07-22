@@ -3,12 +3,15 @@ package com.ethanjhowell.friendly.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -123,13 +126,25 @@ public class ChatActivity extends AppCompatActivity {
 
     private void connectMessageSocket(BackgroundManager manager) {
         ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
-        ParseQuery<Message> query = ParseQuery.getQuery(Message.class)
-                .whereEqualTo(Message.KEY_GROUP, group)
-                .include(Message.KEY_AUTHOR);
-        SubscriptionHandling<Message> subscriptionHandling = parseLiveQueryClient.subscribe(query);
+
+        SubscriptionHandling<Group__User> relationHandling = parseLiveQueryClient.subscribe(ParseQuery.getQuery(Group__User.class)
+                .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
+                .whereEqualTo(Group__User.KEY_GROUP, group));
+        relationHandling.handleEvent(SubscriptionHandling.Event.UPDATE, (q, relation) -> {
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Typing", Toast.LENGTH_SHORT).show();
+            });
+        });
+
+
+        SubscriptionHandling<Message> messageHandling = parseLiveQueryClient.subscribe(
+                ParseQuery.getQuery(Message.class)
+                        .whereEqualTo(Message.KEY_GROUP, group)
+                        .include(Message.KEY_AUTHOR)
+        );
 
         // Listen for CREATE events
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
+        messageHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
             synchronized (messages) {
                 messages.add(message);
             }
@@ -165,6 +180,29 @@ public class ChatActivity extends AppCompatActivity {
     private void onDataLoaded() {
         loadMessages();
         binding.btSend.setOnClickListener(this::sendOnClick);
+
+        binding.etMessageBody.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Log.d(TAG, "afterTextChanged: " + relation.getUpdatedAt());
+                relation.type(e -> {
+                    if (e != null)
+                        Log.e(TAG, "afterTextChanged: ", e);
+                    else
+                        Log.d(TAG, "afterTextChanged: " + relation.getUpdatedAt());
+                });
+            }
+        });
 
         // TODO: show that user has left the chat if so
     }
