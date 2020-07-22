@@ -25,6 +25,7 @@ import com.ethanjhowell.friendly.models.Message;
 import com.ethanjhowell.friendly.proxy.BackgroundManager;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.boltsinternal.Task;
 import com.parse.livequery.ParseLiveQueryClient;
 import com.parse.livequery.SubscriptionHandling;
@@ -40,7 +41,8 @@ public class ChatActivity extends AppCompatActivity {
     private static final String INTENT_GROUP_NAME = "groupName";
     public static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
-    private Group group;
+    private final Group group = new Group();
+    private Group__User relation;
 
     private final List<Message> messages = new ArrayList<>();
     private RecyclerView rvMessages;
@@ -64,11 +66,26 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e(TAG, "loadGroup: ", e);
                 manager.failed(e);
             } else {
-                this.group = (Group) g;
                 Log.i(TAG, "loadGroup: " + group.getGroupName());
                 manager.succeeded();
             }
         });
+    }
+
+    private void loadRelation(BackgroundManager manager) {
+        ParseQuery.getQuery(Group__User.class)
+                .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
+                .whereEqualTo(Group__User.KEY_GROUP, group)
+                .getFirstInBackground((r, e) -> {
+                    if (e != null) {
+                        Log.e(TAG, "loadGroup: ", e);
+                        manager.failed(e);
+                    } else {
+                        relation = r;
+                        Log.i(TAG, "loadRelation: " + relation.getObjectId());
+                        manager.succeeded();
+                    }
+                });
     }
 
     private void scrollToBottomOfMessages(boolean smoothScroll) {
@@ -139,6 +156,7 @@ public class ChatActivity extends AppCompatActivity {
                 this::onDataLoaded,
                 // tasks to run
                 this::loadGroup,
+                this::loadRelation,
                 this::connectMessageSocket
         );
         backgroundManager.run();
@@ -206,9 +224,7 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        group = new Group();
         group.setObjectId(groupId);
-        group.setGroupName(groupName);
 
         btScrollToBottom = binding.btScrollToBottom;
         btScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
