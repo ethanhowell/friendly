@@ -3,6 +3,7 @@ package com.ethanjhowell.friendly.proxy;
 import android.app.Application;
 
 import com.parse.Parse;
+import com.parse.facebook.ParseFacebookUtils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -29,5 +30,7 @@ public class ParseApp extends Application {
                 .applicationId("friendly-back") // should correspond to APP_ID env variable
                 .clientBuilder(builder)
                 .server("https://friendly-back.herokuapp.com/parse/").build());
+
+        ParseFacebookUtils.initialize(this);
     }
 }

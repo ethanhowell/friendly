@@ -17,7 +17,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etFirstName;
     private EditText etLastName;
     private EditText etEmail;
-    private EditText etPhoneNumber;
     private EditText etPassword;
     private EditText etConfirmPassword;
     private Button btSignup;
@@ -36,7 +35,6 @@ public class RegisterActivity extends AppCompatActivity {
         etFirstName = binding.etFirstName;
         etLastName = binding.etLastName;
         etEmail = binding.etEmail;
-        etPhoneNumber = binding.etPhoneNumber;
         etPassword = binding.etPassword;
         etConfirmPassword = binding.etConfirmPassword;
         btSignup = binding.btSignup;
@@ -57,8 +55,6 @@ public class RegisterActivity extends AppCompatActivity {
         user.setUsername(etEmail.getText().toString());
         // TODO: Check that password and confirm password match
         user.setPassword(etPassword.getText().toString());
-        // TODO: phone number validation
-        user.setPhoneNumber(etPhoneNumber.getText().toString());
 
         user.signUpInBackground(e -> {
             // if there was an error
