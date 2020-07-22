@@ -1,5 +1,6 @@
 package com.ethanjhowell.friendly.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -53,6 +54,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
 
         public void bind(FriendlyParseUser user) {
+            Log.d(TAG, "bind: ");
             tvName.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
             Glide.with(itemView)
                     .load(user.getProfilePicture().getUrl())

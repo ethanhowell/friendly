@@ -29,4 +29,5 @@
     <string name="invalidGroupLink_toast">Invalid friendly invite.</string>
     <string name="itDetails_title">Details</string>
     <string name="ivQR_contentDescription">Invite QR code</string>
+    <string name="tvUsers_text">Users</string>
 </resources>
