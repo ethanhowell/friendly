@@ -98,4 +98,8 @@ public class FriendlyParseUser {
     public void saveInBackground(SaveCallback callback) {
         user.saveInBackground(callback);
     }
+
+    public ParseUser getParseUser() {
+        return user;
+    }
 }

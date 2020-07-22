@@ -18,4 +18,5 @@
     <string name="btLogOut_text">Log Out</string>
     <string name="etGroupName_hint">Group Name</string>
     <string name="btCreate_text">Create</string>
+    <string name="tvLeave_text">Leave</string>
 </resources>
