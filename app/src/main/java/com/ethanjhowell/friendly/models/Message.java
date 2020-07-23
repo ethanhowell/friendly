@@ -39,8 +39,9 @@ public class Message extends ParseObject {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (obj == null || obj.getClass() != Message.class)
+        if (obj == null || obj.getClass() != Message.class) {
             return false;
+        }
         Message other = (Message) obj;
         return this.getObjectId().equals(other.getObjectId());
     }
