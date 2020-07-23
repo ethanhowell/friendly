@@ -41,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         btSignup = binding.btSignup;
     }
 
+    // TODO: refactor all activities to inherit from a shared base implementing these 2 methods
     private void showError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
@@ -72,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         String password = etPassword.getText().toString();
         if (password.isEmpty() || !password.equals(etConfirmPassword.getText().toString())) {
-            showError(R.string.etPassword_invalid_toast);
+            showError(R.string.etPassword_invalidRegister_toast);
             return null;
         }
 
