@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.databinding.ActivityRegisterBinding;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 
@@ -44,30 +45,34 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
+    private void showError(int errorID) {
+        Toast.makeText(this, errorID, Toast.LENGTH_SHORT).show();
+    }
+
     // returns null if there is a problem with the user validation
     private FriendlyParseUser validateUserCreation() {
         // fill out fields from the views
         String firstName = etFirstName.getText().toString();
         if (firstName.isEmpty()) {
-            showError("First name field cannot be empty.");
+            showError(R.string.etFirstName_invalid_toast);
             return null;
         }
 
         String lastName = etLastName.getText().toString();
         if (lastName.isEmpty()) {
-            showError("Last name field cannot be empty.");
+            showError(R.string.etLastName_invalid_toast);
             return null;
         }
 
         String email = etEmail.getText().toString();
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            showError("Invalid email.");
+            showError(R.string.etEmail_invalid_toast);
             return null;
         }
 
         String password = etPassword.getText().toString();
         if (password.isEmpty() || !password.equals(etConfirmPassword.getText().toString())) {
-            showError("Passwords may not be empty and must match");
+            showError(R.string.etPassword_invalid_toast);
             return null;
         }
 
