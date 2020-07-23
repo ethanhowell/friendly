@@ -41,7 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
         btSignup = binding.btSignup;
     }
 
-    // TODO: refactor all activities to inherit from a shared base implementing these 2 methods
     private void showError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
