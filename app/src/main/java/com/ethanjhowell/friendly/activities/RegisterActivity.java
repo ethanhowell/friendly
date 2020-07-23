@@ -48,15 +48,34 @@ public class RegisterActivity extends AppCompatActivity {
         // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
         // fill out fields from the views
         FriendlyParseUser user = new FriendlyParseUser();
-        // TODO: check first name not empty
-        user.setFirstName(etFirstName.getText().toString());
-        // TODO: check last name not empty
-        user.setLastName(etLastName.getText().toString());
-        // TODO: Email validation
-        user.setEmail(etEmail.getText().toString());
-        user.setUsername(etEmail.getText().toString());
-        // TODO: Check that password and confirm password not empty and match
-        user.setPassword(etPassword.getText().toString());
+        String firstName = etFirstName.getText().toString();
+        if (firstName.isEmpty()) {
+            showError("First name field cannot be empty.");
+            return;
+        }
+        user.setFirstName(firstName);
+
+        String lastName = etLastName.getText().toString();
+        if (lastName.isEmpty()) {
+            showError("Last name field cannot be empty.");
+            return;
+        }
+        user.setLastName(lastName);
+
+        String email = etEmail.getText().toString();
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showError("Invalid email.");
+            return;
+        }
+        user.setEmail(email);
+        user.setUsername(email);
+
+        String password = etPassword.getText().toString();
+        if (password.isEmpty() || !password.equals(etConfirmPassword.getText().toString())) {
+            showError("Passwords may not be empty and must match");
+            return;
+        }
+        user.setPassword(password);
 
         user.signUpInBackground(e -> {
             // if there was an error
