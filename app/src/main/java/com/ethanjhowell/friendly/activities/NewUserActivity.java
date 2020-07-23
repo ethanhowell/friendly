@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -126,10 +127,15 @@ public class NewUserActivity extends AppCompatActivity {
     private void continueOnClick(View v) {
         if (parsePhotoFile != null) {
             // TODO: some sort of loading status visual
-            // TODO: validate phone number
+            String phoneNumber = binding.etPhoneNumber.getText().toString();
+            phoneNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
+            if (phoneNumber.isEmpty() || !PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
+                Toast.makeText(this, R.string.etPhoneNumber_invalid_toast, Toast.LENGTH_SHORT).show();
+                return;
+            }
             FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
             user.setProfilePicture(parsePhotoFile);
-            user.setPhoneNumber(binding.etPhoneNumber.getText().toString());
+            user.setPhoneNumber(phoneNumber);
             user.isCompleted(true);
             user.saveInBackground(e -> {
                 if (e != null) {
