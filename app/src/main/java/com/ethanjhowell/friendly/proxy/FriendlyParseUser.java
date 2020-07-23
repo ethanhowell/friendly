@@ -19,7 +19,7 @@ public class FriendlyParseUser {
     public final static String KEY_IS_COMPLETED = "isCompleted";
     private static final String TAG = FriendlyParseUser.class.getCanonicalName();
 
-    private ParseUser user;
+    private final ParseUser user;
 
     private FriendlyParseUser(ParseUser parseUser) {
         user = parseUser;

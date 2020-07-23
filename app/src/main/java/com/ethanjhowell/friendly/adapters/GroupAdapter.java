@@ -19,7 +19,7 @@ import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
     private static final String TAG = GroupAdapter.class.getCanonicalName();
-    private List<Group> groups;
+    private final List<Group> groups;
 
     public GroupAdapter(List<Group> groups) {
         this.groups = groups;
