@@ -34,4 +34,5 @@
     <string name="etLastName_invalid_toast">Last name field cannot be empty.</string>
     <string name="etEmail_invalid_toast">Invalid email.</string>
     <string name="etPassword_invalid_toast">Passwords may not be empty and must match</string>
+    <string name="etGroupName_invalid_toast">Group name can\'t be blank</string>
 </resources>

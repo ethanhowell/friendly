@@ -3,6 +3,7 @@ package com.ethanjhowell.friendly.activities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -34,20 +35,26 @@ public class NewGroupActivity extends AppCompatActivity {
     }
 
     private void createGroupOnClick(View v) {
+        // TODO: loading indicator
+        String groupName = binding.etGroupName.getText().toString();
+        if (groupName.isEmpty()) {
+            Toast.makeText(this, R.string.etGroupName_invalid_toast, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Group group = new Group();
-        // TODO: blank group name edge case?
-        group.setGroupName(binding.etGroupName.getText().toString());
+        group.setGroupName(groupName);
 
         // save the group and wait
         group.saveInBackground(e -> {
             if (e != null)
-                Log.e(TAG, "createGroupOnClick: ", e);
+                Log.e(TAG, "createGroupOnClick: problem saving group", e);
             else {
                 // once the group is saved, save the relation
                 Group__User group__user = new Group__User(group, ParseUser.getCurrentUser());
                 group__user.saveInBackground(e1 -> {
                     if (e1 != null)
-                        Log.e(TAG, "createGroupOnClick: ", e1);
+                        Log.e(TAG, "createGroupOnClick: problem saving group__user relation", e1);
                     else {
                         startActivity(ChatActivity.createIntent(this, group));
                         startActivity(GroupDetails.createIntent(this, group));
