@@ -1,11 +1,13 @@
 package com.ethanjhowell.friendly.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,11 +25,15 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GroupActivity extends AppCompatActivity {
     private final static String TAG = GroupActivity.class.getCanonicalName();
     private ArrayList<Group> currentGroups;
     private GroupAdapter groupAdapter;
+
+    private static final Pattern DEEPLINK_GROUP_PATTERN = Pattern.compile("^http://friendly-back\\.herokuapp.com/g/(.*)$");
 
     private void getUserGroupsInBackground() {
         assert groupAdapter != null;
@@ -58,9 +64,58 @@ public class GroupActivity extends AppCompatActivity {
         startActivity(new Intent(this, NewGroupActivity.class));
     }
 
+    private void joinGroup(String groupID) {
+        Group group = new Group();
+        group.setObjectId(groupID);
+        group.fetchInBackground((g, groupException) -> {
+            if (groupException != null) {
+                Toast.makeText(this, R.string.invalidGroupLink_toast, Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "joinGroup: " + groupException);
+            } else {
+                ParseQuery.getQuery(Group__User.class)
+                        .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
+                        .whereEqualTo(Group__User.KEY_GROUP, group)
+                        .getFirstInBackground((result, e) -> {
+                            // means that the relation doesn't yet exist, so we go and create it
+                            if (result == null) {
+                                Group__User group__user = new Group__User(group, ParseUser.getCurrentUser());
+                                group__user.saveInBackground(e1 -> {
+                                    if (e1 != null)
+                                        Log.e(TAG, "joinGroup: ", e1);
+                                    else {
+                                        startActivity(ChatActivity.createIntent(this, group));
+                                    }
+                                });
+                            } else {
+                                startActivity(ChatActivity.createIntent(this, group));
+                            }
+                        });
+            }
+
+        });
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        if (data != null) {
+            // if user isn't logged in, we redirect them to the login page
+            if (ParseUser.getCurrentUser() == null) {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+            Matcher matcher = DEEPLINK_GROUP_PATTERN.matcher(data.toString());
+            Log.d(TAG, "onCreate: " + data.toString());
+            if (matcher.matches()) {
+                String groupID = matcher.group(1);
+                joinGroup(groupID);
+            }
+        }
+
         ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

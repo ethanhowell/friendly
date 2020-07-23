@@ -47,7 +47,7 @@ public class NewGroupActivity extends AppCompatActivity {
                 Group__User group__user = new Group__User(group, ParseUser.getCurrentUser());
                 group__user.saveInBackground(e1 -> {
                     if (e1 != null)
-                        Log.e(TAG, "createGroupOnClick: ", e);
+                        Log.e(TAG, "createGroupOnClick: ", e1);
                     else {
                         startActivity(ChatActivity.createIntent(this, group));
                         finish();
