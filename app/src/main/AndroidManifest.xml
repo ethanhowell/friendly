@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,UnusedAttribute">
         <activity
+            android:name=".activities.GroupDetails"
+            android:parentActivityName=".activities.ChatActivity" />
+        <activity
             android:name=".activities.ArchivedChatActivity"
             android:parentActivityName=".activities.ArchivedGroupActivity" />
         <activity
@@ -59,7 +62,7 @@
                     android:host="friendly-back.herokuapp.com"
                     android:pathPrefix="/g/"
                     android:scheme="http" />
-                <!-- note that the leading "/" is required for pathPrefix-->
+                <!-- note that the leading "/" is required for pathPrefix -->
             </intent-filter>
         </activity>
         <activity

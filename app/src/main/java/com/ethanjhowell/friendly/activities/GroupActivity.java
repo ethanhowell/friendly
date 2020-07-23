@@ -87,7 +87,13 @@ public class GroupActivity extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                startActivity(ChatActivity.createIntent(this, group));
+                                result.remove(Group__User.KEY_DATE_LEFT);
+                                result.saveInBackground(e12 -> {
+                                    if (e12 != null)
+                                        Log.e(TAG, "joinGroup: problem removing date left", e12);
+                                    else
+                                        startActivity(ChatActivity.createIntent(this, group));
+                                });
                             }
                         });
             }

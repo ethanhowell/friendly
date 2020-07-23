@@ -27,4 +27,7 @@
     <string name="activity_new_group_title">Create a New Group</string>
     <string name="activity_archived_chat_titleFormat">Archived: %s</string>
     <string name="invalidGroupLink_toast">Invalid friendly invite.</string>
+    <string name="itDetails_title">Details</string>
+    <string name="ivQR_contentDescription">Invite QR code</string>
+    <string name="tvUsers_text">Users</string>
 </resources>
