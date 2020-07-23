@@ -3,6 +3,9 @@ package com.ethanjhowell.friendly.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +28,7 @@ import com.ethanjhowell.friendly.models.Message;
 import com.ethanjhowell.friendly.proxy.BackgroundManager;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.parse.ParseQuery;
-import com.parse.boltsinternal.Task;
+import com.parse.ParseUser;
 import com.parse.livequery.ParseLiveQueryClient;
 import com.parse.livequery.SubscriptionHandling;
 
@@ -34,13 +37,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP_ID = "groupId";
     private static final String INTENT_GROUP_NAME = "groupName";
     public static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
-    private Group group;
+    private final Group group = new Group();
+    private Group__User relation;
+
+    private final Handler typingTimer = new Handler();
 
     private final List<Message> messages = new ArrayList<>();
     private RecyclerView rvMessages;
@@ -64,11 +71,26 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e(TAG, "loadGroup: ", e);
                 manager.failed(e);
             } else {
-                this.group = (Group) g;
                 Log.i(TAG, "loadGroup: " + group.getGroupName());
                 manager.succeeded();
             }
         });
+    }
+
+    private void loadRelation(BackgroundManager manager) {
+        ParseQuery.getQuery(Group__User.class)
+                .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
+                .whereEqualTo(Group__User.KEY_GROUP, group)
+                .getFirstInBackground((r, e) -> {
+                    if (e != null) {
+                        Log.e(TAG, "loadGroup: ", e);
+                        manager.failed(e);
+                    } else {
+                        relation = r;
+                        Log.i(TAG, "loadRelation: " + relation.getObjectId());
+                        manager.succeeded();
+                    }
+                });
     }
 
     private void scrollToBottomOfMessages(boolean smoothScroll) {
@@ -106,13 +128,36 @@ public class ChatActivity extends AppCompatActivity {
 
     private void connectMessageSocket(BackgroundManager manager) {
         ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
-        ParseQuery<Message> query = ParseQuery.getQuery(Message.class)
-                .whereEqualTo(Message.KEY_GROUP, group)
-                .include(Message.KEY_AUTHOR);
-        SubscriptionHandling<Message> subscriptionHandling = parseLiveQueryClient.subscribe(query);
+
+        SubscriptionHandling<Group__User> relationHandling = parseLiveQueryClient.subscribe(ParseQuery.getQuery(Group__User.class)
+                .include(Group__User.KEY_USER)
+                .whereEqualTo(Group__User.KEY_GROUP, group));
+        relationHandling.handleEvent(SubscriptionHandling.Event.UPDATE, (q, relation) -> {
+            FriendlyParseUser userTyping = FriendlyParseUser.fromParseUser(relation.getUser());
+            Log.i(TAG, String.format(
+                    "connectMessageSocket: %s %s is typing",
+                    userTyping.getFirstName(),
+                    userTyping.getLastName()
+            ));
+
+            // if the event comes from another user
+            if (!userTyping.equals(FriendlyParseUser.getCurrentUser())) {
+                typingTimer.removeCallbacksAndMessages(null);
+                runOnUiThread(() -> binding.typingDots.setVisibility(View.VISIBLE));
+                typingTimer.postDelayed(() -> runOnUiThread(() ->
+                        binding.typingDots.setVisibility(View.GONE)), 1000);
+            }
+        });
+
+
+        SubscriptionHandling<Message> messageHandling = parseLiveQueryClient.subscribe(
+                ParseQuery.getQuery(Message.class)
+                        .whereEqualTo(Message.KEY_GROUP, group)
+                        .include(Message.KEY_AUTHOR)
+        );
 
         // Listen for CREATE events
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
+        messageHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
             synchronized (messages) {
                 messages.add(message);
             }
@@ -139,6 +184,7 @@ public class ChatActivity extends AppCompatActivity {
                 this::onDataLoaded,
                 // tasks to run
                 this::loadGroup,
+                this::loadRelation,
                 this::connectMessageSocket
         );
         backgroundManager.run();
@@ -147,6 +193,28 @@ public class ChatActivity extends AppCompatActivity {
     private void onDataLoaded() {
         loadMessages();
         binding.btSend.setOnClickListener(this::sendOnClick);
+
+        binding.etMessageBody.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() > 0) {
+                    relation.type(e -> {
+                        if (e != null)
+                            Log.e(TAG, "afterTextChanged: ", e);
+                    });
+                }
+            }
+        });
 
         // TODO: show that user has left the chat if so
     }
@@ -206,15 +274,19 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        group = new Group();
         group.setObjectId(groupId);
-        group.setGroupName(groupName);
 
         btScrollToBottom = binding.btScrollToBottom;
         btScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
         setUpRecyclerView();
 
         loadData();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        typingTimer.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -238,9 +310,8 @@ public class ChatActivity extends AppCompatActivity {
     private void sendOnClick(View v) {
         // TODO: check that message isn't empty
         String body = binding.etMessageBody.getText().toString();
-        binding.etMessageBody.setText("");
+        binding.etMessageBody.getText().clear();
         Message message = new Message(body, group);
-        Task<Void> voidTask = message.saveInBackground();
 
         message.saveInBackground(e -> {
             if (e != null) Log.e(TAG, "sendOnClick: ", e);

@@ -17,7 +17,7 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private static final String TAG = UserAdapter.class.getCanonicalName();
-    private List<FriendlyParseUser> users;
+    private final List<FriendlyParseUser> users;
 
     public UserAdapter(List<FriendlyParseUser> users) {
         this.users = users;

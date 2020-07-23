@@ -1,10 +1,13 @@
 package com.ethanjhowell.friendly.proxy;
 
+import android.util.Log;
+
 public class BackgroundManager {
+    private static final String TAG = BackgroundManager.class.getCanonicalName();
     private boolean allPassed = true;
     private int threadCounter;
-    private Runnable callback;
-    private BackgroundTasks[] tasks;
+    private final Runnable callback;
+    private final BackgroundTasks[] tasks;
 
     public BackgroundManager(Runnable callback, BackgroundTasks... tasks) {
         this.callback = callback;
@@ -14,8 +17,13 @@ public class BackgroundManager {
 
     private void countDown() {
         threadCounter--;
-        if (threadCounter <= 0)
-            callback.run();
+        if (threadCounter <= 0) {
+            if (allPassed) {
+                callback.run();
+            } else {
+                Log.w(TAG, "countDown: A background task didn't pass");
+            }
+        }
     }
 
     public void failed(Exception e) {

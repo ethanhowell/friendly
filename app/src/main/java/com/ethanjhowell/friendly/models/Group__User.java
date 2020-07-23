@@ -3,6 +3,7 @@ package com.ethanjhowell.friendly.models;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.Date;
 
@@ -51,5 +52,11 @@ public class Group__User extends ParseObject {
 
     public void setDateLeft(Date date) {
         put(KEY_DATE_LEFT, date);
+    }
+
+    public void type(SaveCallback callback) {
+        // just a flag so that the server actually performs the update
+        put("active", true);
+        saveInBackground(callback);
     }
 }
