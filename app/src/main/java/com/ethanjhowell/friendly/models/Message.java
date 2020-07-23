@@ -1,5 +1,7 @@
 package com.ethanjhowell.friendly.models;
 
+import androidx.annotation.Nullable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -33,5 +35,13 @@ public class Message extends ParseObject {
 
     public boolean authorIsCurrentUser() {
         return getAuthor().getObjectId().equals(ParseUser.getCurrentUser().getObjectId());
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != Message.class)
+            return false;
+        Message other = (Message) obj;
+        return this.getObjectId().equals(other.getObjectId());
     }
 }
