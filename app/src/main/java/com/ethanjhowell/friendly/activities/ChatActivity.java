@@ -4,15 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.adapters.MessageAdapter;
 import com.ethanjhowell.friendly.databinding.ActivityChatBinding;
 import com.ethanjhowell.friendly.models.Group;
@@ -28,11 +32,13 @@ import com.parse.livequery.SubscriptionHandling;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = ChatActivity.class.getCanonicalName();
-    private static final String INTENT_GROUP = "groupId";
-    private static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
+    private static final String INTENT_GROUP_ID = "groupId";
+    private static final String INTENT_GROUP_NAME = "groupName";
+    public static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
     private Group group;
 
@@ -47,7 +53,8 @@ public class ChatActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context, Group group) {
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra(INTENT_GROUP, group.getObjectId());
+        intent.putExtra(INTENT_GROUP_ID, group.getObjectId());
+        intent.putExtra(INTENT_GROUP_NAME, group.getGroupName());
         return intent;
     }
 
@@ -65,10 +72,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void scrollToBottomOfMessages(boolean smoothScroll) {
-        if (smoothScroll) {
-            rvMessages.smoothScrollToPosition(messages.size() - 1);
-        } else {
-            rvMessages.scrollToPosition(messages.size() - 1);
+        int size = messages.size();
+        if (size > 0) {
+            if (smoothScroll) {
+                rvMessages.smoothScrollToPosition(size - 1);
+            } else {
+                rvMessages.scrollToPosition(size - 1);
+            }
         }
     }
 
@@ -137,8 +147,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void onDataLoaded() {
         loadMessages();
-        binding.tvGroupName.setText(group.getGroupName());
-        binding.tvLeave.setOnClickListener(this::leaveGroupOnClick);
         binding.btSend.setOnClickListener(this::sendOnClick);
 
         // TODO: show that user has left the chat if so
@@ -192,15 +200,39 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String groupId = getIntent().getStringExtra(INTENT_GROUP);
+        String groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
+        String groupId = getIntent().getStringExtra(INTENT_GROUP_ID);
+
+        Toolbar toolbar = binding.toolbar.toolbar;
+        toolbar.setTitle(groupName);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
         group = new Group();
         group.setObjectId(groupId);
+        group.setGroupName(groupName);
 
         btScrollToBottom = binding.btScrollToBottom;
         btScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
         setUpRecyclerView();
 
         loadData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.itLeaveGroup) {
+            leaveGroupOnClick();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void sendOnClick(View v) {
@@ -215,7 +247,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void leaveGroupOnClick(View v) {
+    private void leaveGroupOnClick() {
         Log.i(
                 TAG,
                 String.format(

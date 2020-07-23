@@ -5,11 +5,15 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.databinding.ActivityNewGroupBinding;
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Group__User;
 import com.parse.ParseUser;
+
+import java.util.Objects;
 
 public class NewGroupActivity extends AppCompatActivity {
     private static final String TAG = NewGroupActivity.class.getCanonicalName();
@@ -20,6 +24,11 @@ public class NewGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityNewGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Toolbar toolbar = binding.toolbar.toolbar;
+        toolbar.setTitle(R.string.activity_new_group_title);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         binding.btCreate.setOnClickListener(this::createGroupOnClick);
     }

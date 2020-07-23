@@ -16,6 +16,12 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,UnusedAttribute">
         <activity
+            android:name=".activities.ArchivedChatActivity"
+            android:parentActivityName=".activities.ArchivedGroupActivity" />
+        <activity
+            android:name=".activities.ArchivedGroupActivity"
+            android:parentActivityName=".activities.GroupActivity" />
+        <activity
             android:name=".activities.ChatActivity"
             android:parentActivityName=".activities.GroupActivity" />
         <activity

@@ -6,39 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".activities.ChatActivity">
 
-    <TextView
-        android:id="@+id/tvGroupName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".25"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_child"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Group Name" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvLeave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tvLeave_text"
-        android:textColor="@android:color/holo_red_dark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvGroupName"
-        app:layout_constraintTop_toTopOf="@+id/tvGroupName" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         android:overScrollMode="never"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/clSendMessageBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroupName" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clSendMessageBar"
@@ -80,8 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:text="@string/btScrollToBottom_latest_text"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/rvMessages"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,13 +3,17 @@ package com.ethanjhowell.friendly.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.adapters.GroupAdapter;
 import com.ethanjhowell.friendly.databinding.ActivityGroupBinding;
 import com.ethanjhowell.friendly.models.Group;
@@ -30,6 +34,8 @@ public class GroupActivity extends AppCompatActivity {
         ParseQuery.getQuery(Group__User.class)
                 .include(Group__User.KEY_GROUP)
                 .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
+                // means user hasn't left the group yet
+                .whereDoesNotExist(Group__User.KEY_DATE_LEFT)
                 .findInBackground((gs__us, e) -> {
                             if (e != null)
                                 Log.e(TAG, "getUserGroupsInBackground: ", e);
@@ -40,11 +46,7 @@ public class GroupActivity extends AppCompatActivity {
                                 for (Group__User g__u : gs__us) {
                                     Group group = g__u.getGroup();
                                     Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
-                                    if (!g__u.hasLeft())
-                                        currentGroups.add(group);
-                                    else
-                                        // TODO: make an archived groups list
-                                        Log.i(TAG, "getUserGroupsInBackground: Archived group: " + group.getGroupName());
+                                    currentGroups.add(group);
                                 }
                                 groupAdapter.notifyDataSetChanged();
                             }
@@ -61,6 +63,12 @@ public class GroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Toolbar toolbar = binding.toolbar.toolbar;
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
+
+
         currentGroups = new ArrayList<>();
 
         FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
@@ -72,11 +80,6 @@ public class GroupActivity extends AppCompatActivity {
                     .into(binding.ivProfilePic);
         });
         binding.textView.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
-        binding.btLogOut.setOnClickListener(v -> {
-            ParseUser.logOut();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        });
 
         // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;
@@ -87,6 +90,29 @@ public class GroupActivity extends AppCompatActivity {
         // click handler for floating action button
         binding.fabNewGroup.setOnClickListener(this::newGroupOnClick);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.group, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.itArchivedGroups:
+                Log.i(TAG, "onOptionsItemSelected: going to see archived chats");
+                startActivity(new Intent(this, ArchivedGroupActivity.class));
+                return true;
+            case R.id.itLogOut:
+                ParseUser.logOut();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
