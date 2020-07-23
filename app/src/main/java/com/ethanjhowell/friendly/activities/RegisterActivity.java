@@ -44,51 +44,58 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
-    private void registerNewUser(View button) {
-        // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
+    // returns null if there is a problem with the user validation
+    private FriendlyParseUser validateUserCreation() {
         // fill out fields from the views
-        FriendlyParseUser user = new FriendlyParseUser();
         String firstName = etFirstName.getText().toString();
         if (firstName.isEmpty()) {
             showError("First name field cannot be empty.");
-            return;
+            return null;
         }
-        user.setFirstName(firstName);
 
         String lastName = etLastName.getText().toString();
         if (lastName.isEmpty()) {
             showError("Last name field cannot be empty.");
-            return;
+            return null;
         }
-        user.setLastName(lastName);
 
         String email = etEmail.getText().toString();
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             showError("Invalid email.");
-            return;
+            return null;
         }
-        user.setEmail(email);
-        user.setUsername(email);
 
         String password = etPassword.getText().toString();
         if (password.isEmpty() || !password.equals(etConfirmPassword.getText().toString())) {
             showError("Passwords may not be empty and must match");
-            return;
+            return null;
         }
+
+        FriendlyParseUser user = new FriendlyParseUser();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setUsername(email);
         user.setPassword(password);
+        return user;
+    }
 
-        user.signUpInBackground(e -> {
-            // if there was an error
-            if (e != null) {
-                showError(e.getMessage());
-                Log.e(TAG, "registerNewUser: something happened", e);
-            } else {
-                Log.i(TAG, "registerNewUser: registration success!!!");
-                // tell the login activity that registration was a success
-                setResult(RESULT_OK);
-                finish();
-            }
-        });
-
+    private void registerNewUser(View button) {
+        // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
+        FriendlyParseUser user = validateUserCreation();
+        if (user != null) {
+            user.signUpInBackground(e -> {
+                // if there was an error
+                if (e != null) {
+                    showError(e.getMessage());
+                    Log.e(TAG, "registerNewUser: something happened", e);
+                } else {
+                    Log.i(TAG, "registerNewUser: registration success!!!");
+                    // tell the login activity that registration was a success
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            });
+        }
     }
 }
