@@ -23,8 +23,8 @@ import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
-    private static final String TAG = MessageAdapter.class.getCanonicalName();
+public class ActiveMessageAdapter extends RecyclerView.Adapter<ActiveMessageAdapter.ViewHolder> {
+    private static final String TAG = ActiveMessageAdapter.class.getCanonicalName();
     private static final float OTHER_MESSAGE_MARGIN_START_DP = 80;
     private static final float OTHER_MESSAGE_MARGIN_END_DP = 64;
     private static final float OWN_MESSAGE_MARGIN_START_DP = 128;
@@ -36,7 +36,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private static final int OWN_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
     private final List<Message> messages;
 
-    public MessageAdapter(List<Message> messages) {
+    public ActiveMessageAdapter(List<Message> messages) {
         this.messages = messages;
     }
 
