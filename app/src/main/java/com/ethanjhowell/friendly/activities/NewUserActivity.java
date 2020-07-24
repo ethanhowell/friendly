@@ -125,8 +125,8 @@ public class NewUserActivity extends AppCompatActivity {
 
     private void continueOnClick(View v) {
         if (parsePhotoFile != null) {
-            // TODO: some sort of loading status visual
             // TODO: validate phone number
+            binding.loading.clProgress.setVisibility(View.VISIBLE);
             FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
             user.setProfilePicture(parsePhotoFile);
             user.setPhoneNumber(binding.etPhoneNumber.getText().toString());
@@ -134,13 +134,16 @@ public class NewUserActivity extends AppCompatActivity {
             user.saveInBackground(e -> {
                 if (e != null) {
                     Log.e(TAG, "continueOnClick: problem saving user data", e);
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    // by now user account is completely created, we can navigate to the next activity
+                    startActivity(new Intent(this, GroupActivity.class));
+                    finish();
                 }
-                // by now user account is completely created, we can navigate to the next activity
-                startActivity(new Intent(this, GroupActivity.class));
-                finish();
+                binding.loading.clProgress.setVisibility(View.GONE);
             });
         } else {
-            Toast.makeText(this, getResources().getString(R.string.selectImage_toast), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.selectImage_toast, Toast.LENGTH_SHORT).show();
         }
     }
 
