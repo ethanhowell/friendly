@@ -45,20 +45,20 @@ public class GroupActivity extends AppCompatActivity {
                 // means user hasn't left the group yet
                 .whereDoesNotExist(Group__User.KEY_DATE_LEFT)
                 .findInBackground((gs__us, e) -> {
-                    if (e != null) {
-                        Log.e(TAG, "getUserGroupsInBackground: ", e);
-                    } else {
-                        // since we run this when the activity resumes, we want to clear the
-                        // groups so that we can re-add them
-                        currentGroups.clear();
-                        for (Group__User g__u : gs__us) {
-                            Group group = g__u.getGroup();
-                            Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
-                            currentGroups.add(group);
-                        }
-                        groupAdapter.notifyDataSetChanged();
-                    }
-                    progressBar.setVisibility(View.GONE);
+                            if (e != null) {
+                                Log.e(TAG, "getUserGroupsInBackground: ", e);
+                            } else {
+                                // since we run this when the activity resumes, we want to clear the
+                                // groups so that we can re-add them
+                                currentGroups.clear();
+                                for (Group__User g__u : gs__us) {
+                                    Group group = g__u.getGroup();
+                                    Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
+                                    currentGroups.add(group);
+                                }
+                                groupAdapter.notifyDataSetChanged();
+                            }
+                            progressBar.setVisibility(View.GONE);
                         }
                 );
     }
