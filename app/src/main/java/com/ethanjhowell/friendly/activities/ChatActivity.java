@@ -123,6 +123,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     messagesAdapter.notifyDataSetChanged();
                     scrollToBottomOfMessages(false);
+                    binding.loading.clProgress.setVisibility(View.GONE);
                 });
     }
 
@@ -179,6 +180,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        binding.loading.clProgress.setVisibility(View.VISIBLE);
         BackgroundManager backgroundManager = new BackgroundManager(
                 // callback
                 this::onDataLoaded,
