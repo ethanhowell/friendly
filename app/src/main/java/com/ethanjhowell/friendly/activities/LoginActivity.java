@@ -105,11 +105,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startNextActivity(FriendlyParseUser currentUser) {
         binding.loading.clProgress.setVisibility(View.GONE);
-        if (currentUser.isCompleted())
+        if (currentUser.isCompleted()) {
             startActivity(new Intent(this, GroupActivity.class));
-        else
-            // still missing fields to fill out
+        }
+        // still missing fields to fill out
+        else {
             startActivity(new Intent(this, NewUserActivity.class));
+        }
         finish();
     }
 

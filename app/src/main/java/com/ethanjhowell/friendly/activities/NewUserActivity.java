@@ -119,8 +119,9 @@ public class NewUserActivity extends AppCompatActivity {
                 );
                 parsePhotoFile = new ParseFile(photoFile);
             }
-        } else
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void continueOnClick(View v) {

@@ -211,8 +211,9 @@ public class ChatActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
                     relation.type(e -> {
-                        if (e != null)
+                        if (e != null) {
                             Log.e(TAG, "afterTextChanged: ", e);
+                        }
                     });
                 }
             }
@@ -243,8 +244,9 @@ public class ChatActivity extends AppCompatActivity {
                     InputMethodManager inputManager = (InputMethodManager) ChatActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (inputManager != null) {
                         View currentFocus = ChatActivity.this.getCurrentFocus();
-                        if (currentFocus != null)
+                        if (currentFocus != null) {
                             inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                        }
                     }
                 }
                 int lastVisiblePosition = rvMessagesLayoutManager.findLastVisibleItemPosition();
@@ -316,7 +318,9 @@ public class ChatActivity extends AppCompatActivity {
         Message message = new Message(body, group);
 
         message.saveInBackground(e -> {
-            if (e != null) Log.e(TAG, "sendOnClick: ", e);
+            if (e != null) {
+                Log.e(TAG, "sendOnClick: ", e);
+            }
         });
     }
 
@@ -335,9 +339,9 @@ public class ChatActivity extends AppCompatActivity {
                 .whereEqualTo(Group__User.KEY_GROUP, group)
                 .whereEqualTo(Group__User.KEY_USER, user.getParseUser())
                 .getFirstInBackground((g__u, e) -> {
-                    if (e != null)
+                    if (e != null) {
                         Log.e(TAG, "leaveGroupOnClick: ", e);
-                    else {
+                    } else {
                         g__u.setDateLeft(new Date());
                         g__u.saveInBackground(e1 -> {
                             // TODO: send some sort of message that "User has left the Group"

@@ -42,9 +42,9 @@ public class GroupDetails extends AppCompatActivity {
                 .whereEqualTo(Group__User.KEY_GROUP, group)
                 .include(Group__User.KEY_USER)
                 .findInBackground((group__users, e) -> {
-                    if (e != null)
+                    if (e != null) {
                         Log.e(TAG, "loadUsers: ", e);
-                    else {
+                    } else {
                         for (Group__User group__user : group__users) {
                             FriendlyParseUser friendlyParseUser = FriendlyParseUser.fromParseUser(group__user.getUser());
                             users.add(friendlyParseUser);
@@ -67,8 +67,9 @@ public class GroupDetails extends AppCompatActivity {
 
         group.setObjectId(groupId);
         group.fetchInBackground((object, e) -> {
-            if (e != null)
+            if (e != null) {
                 Log.e(TAG, "error fetching group: ", e);
+            }
         });
 
         Toolbar toolbar = binding.toolbar.toolbar;

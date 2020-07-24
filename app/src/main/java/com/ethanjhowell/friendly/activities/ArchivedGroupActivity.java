@@ -36,17 +36,17 @@ public class ArchivedGroupActivity extends AppCompatActivity {
                 // user has left the group
                 .whereExists(Group__User.KEY_DATE_LEFT)
                 .findInBackground((gs__us, e) -> {
-                    if (e != null)
-                        Log.e(TAG, "getUserGroupsInBackground: ", e);
-                    else {
-                        for (Group__User g__u : gs__us) {
+                            if (e != null) {
+                                Log.e(TAG, "getUserGroupsInBackground: ", e);
+                            } else {
+                                for (Group__User g__u : gs__us) {
                                     Group group = g__u.getGroup();
                                     Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
                                     archivedGroups.add(group);
                                 }
                                 adapter.notifyDataSetChanged();
                             }
-                    loading.setVisibility(View.GONE);
+                            loading.setVisibility(View.GONE);
                         }
                 );
     }
