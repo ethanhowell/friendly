@@ -5,6 +5,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -41,8 +42,13 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
 
     @NonNull
     @Override
-    // this should implement the binding for you
-    public abstract ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // attach the layout to our viewholder
+        ItemMessageBinding binding = ItemMessageBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false
+        );
+        return new ViewHolder(binding);
+    }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
