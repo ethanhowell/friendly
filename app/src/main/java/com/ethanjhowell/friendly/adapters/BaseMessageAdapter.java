@@ -23,20 +23,20 @@ import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
-    private static final String TAG = MessageAdapter.class.getCanonicalName();
-    private static final float OTHER_MESSAGE_MARGIN_START_DP = 80;
-    private static final float OTHER_MESSAGE_MARGIN_END_DP = 64;
-    private static final float OWN_MESSAGE_MARGIN_START_DP = 128;
-    private static final float OWN_MESSAGE_MARGIN_END_DP = 16;
-    private static final DisplayMetrics DISPLAY_METRICS = Resources.getSystem().getDisplayMetrics();
-    private static final int OTHER_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
-    private static final int OTHER_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
-    private static final int OWN_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
-    private static final int OWN_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
-    private final List<Message> messages;
+public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessageAdapter.ViewHolder> {
+    protected static final float OTHER_MESSAGE_MARGIN_START_DP = 80;
+    protected static final float OTHER_MESSAGE_MARGIN_END_DP = 64;
+    protected static final float OWN_MESSAGE_MARGIN_START_DP = 128;
+    protected static final float OWN_MESSAGE_MARGIN_END_DP = 16;
+    protected static final DisplayMetrics DISPLAY_METRICS = Resources.getSystem().getDisplayMetrics();
+    protected static final int OTHER_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
+    protected static final int OTHER_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
+    protected static final int OWN_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
+    protected static final int OWN_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
+    private static final String TAG = BaseMessageAdapter.class.getCanonicalName();
+    protected final List<Message> messages;
 
-    public MessageAdapter(List<Message> messages) {
+    public BaseMessageAdapter(List<Message> messages) {
         this.messages = messages;
     }
 
@@ -61,11 +61,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvMessageBody;
-        private TextView tvAuthorName;
-        private ImageView ivAuthorProfilePic;
-        private LinearLayout llMessage;
-        private ConstraintLayout.LayoutParams layoutParams;
+        private final TextView tvMessageBody;
+        private final TextView tvAuthorName;
+        private final ImageView ivAuthorProfilePic;
+        private final LinearLayout llMessage;
+        private final ConstraintLayout.LayoutParams layoutParams;
 
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {

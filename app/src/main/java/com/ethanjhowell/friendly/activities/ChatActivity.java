@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ethanjhowell.friendly.R;
-import com.ethanjhowell.friendly.adapters.MessageAdapter;
+import com.ethanjhowell.friendly.adapters.ActiveMessageAdapter;
 import com.ethanjhowell.friendly.databinding.ActivityChatBinding;
 import com.ethanjhowell.friendly.models.Group;
 import com.ethanjhowell.friendly.models.Group__User;
@@ -51,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager rvMessagesLayoutManager;
     private Group__User relation;
     private RecyclerView rvMessages;
-    private MessageAdapter messagesAdapter;
+    private ActiveMessageAdapter messagesAdapter;
     private Button btScrollToBottom;
 
     private ActivityChatBinding binding;
@@ -223,7 +223,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         rvMessages = binding.rvMessages;
-        messagesAdapter = new MessageAdapter(messages);
+        messagesAdapter = new ActiveMessageAdapter(messages);
         rvMessages.setAdapter(messagesAdapter);
         rvMessagesLayoutManager = new LinearLayoutManager(this);
         rvMessages.setLayoutManager(rvMessagesLayoutManager);

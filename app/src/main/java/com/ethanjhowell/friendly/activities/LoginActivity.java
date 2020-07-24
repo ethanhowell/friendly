@@ -90,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         if (parseUser == null) {
             Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
             Log.e(TAG, "facebookLoginOnClick: ", e);
+            binding.loading.clProgress.setVisibility(View.GONE);
         } else {
             FriendlyParseUser user = FriendlyParseUser.fromParseUser(parseUser);
             if (user.isNew()) {
