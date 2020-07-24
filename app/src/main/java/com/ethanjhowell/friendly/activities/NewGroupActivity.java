@@ -34,6 +34,7 @@ public class NewGroupActivity extends AppCompatActivity {
     }
 
     private void createGroupOnClick(View v) {
+        binding.loading.clProgress.setVisibility(View.VISIBLE);
         Group group = new Group();
         // TODO: blank group name edge case?
         group.setGroupName(binding.etGroupName.getText().toString());
@@ -55,6 +56,7 @@ public class NewGroupActivity extends AppCompatActivity {
                     }
                 });
             }
+            binding.loading.clProgress.setVisibility(View.GONE);
         });
     }
 }

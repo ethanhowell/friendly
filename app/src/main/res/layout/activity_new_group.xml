@@ -9,6 +9,9 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar_child" />
+    <include
+        android:id="@+id/loading"
+        layout="@layout/progress_bar_toolbar" />
 
     <EditText
         android:id="@+id/etGroupName"
