@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.databinding.ActivityLoginBinding;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.facebook.AccessToken;
@@ -82,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
         parameters.putString("fields", "email");
         request.setParameters(parameters);
         request.executeAsync();
-        // TODO: Some sort of intermediate loading bar
     }
 
 
@@ -115,11 +115,27 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    private void showError(int errorID) {
+        Toast.makeText(this, errorID, Toast.LENGTH_SHORT).show();
+    }
+
     private void loginButtonOnClick(View v) {
+        String username = binding.etUsername.getText().toString();
+        if (username.isEmpty()) {
+            showError(R.string.etUsername_invalid_toast);
+            return;
+        }
+
+        String password = binding.etPassword.getText().toString();
+        if (password.isEmpty()) {
+            showError(R.string.etPassword_invalidEmpty_toast);
+            return;
+        }
+
         binding.loading.clProgress.setVisibility(View.VISIBLE);
         ParseUser.logInInBackground(
-                binding.etUsername.getText().toString(),
-                binding.etPassword.getText().toString(),
+                username,
+                password,
                 (user, e) -> {
                     // there was a log in problem
                     if (e != null) {

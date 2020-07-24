@@ -311,16 +311,17 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendOnClick(View v) {
-        // TODO: check that message isn't empty
         String body = binding.etMessageBody.getText().toString();
-        binding.etMessageBody.getText().clear();
-        Message message = new Message(body, group);
+        if (!body.isEmpty()) {
+            binding.etMessageBody.getText().clear();
+            Message message = new Message(body, group);
 
-        message.saveInBackground(e -> {
-            if (e != null) {
-                Log.e(TAG, "sendOnClick: ", e);
-            }
-        });
+            message.saveInBackground(e -> {
+                if (e != null) {
+                    Log.e(TAG, "sendOnClick: ", e);
+                }
+            });
+        }
     }
 
     private void leaveGroupOnClick() {

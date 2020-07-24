@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.databinding.ActivityRegisterBinding;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 
@@ -48,34 +49,63 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
-    private void registerNewUser(View button) {
-        loading.setVisibility(View.VISIBLE);
-        // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
+    private void showError(int errorID) {
+        Toast.makeText(this, errorID, Toast.LENGTH_SHORT).show();
+    }
+
+    // returns null if there is a problem with the user validation
+    private FriendlyParseUser validateUserCreation() {
         // fill out fields from the views
+        String firstName = etFirstName.getText().toString();
+        if (firstName.isEmpty()) {
+            showError(R.string.etFirstName_invalid_toast);
+            return null;
+        }
+
+        String lastName = etLastName.getText().toString();
+        if (lastName.isEmpty()) {
+            showError(R.string.etLastName_invalid_toast);
+            return null;
+        }
+
+        String email = etEmail.getText().toString();
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showError(R.string.etEmail_invalid_toast);
+            return null;
+        }
+
+        String password = etPassword.getText().toString();
+        if (password.isEmpty() || !password.equals(etConfirmPassword.getText().toString())) {
+            showError(R.string.etPassword_invalidRegister_toast);
+            return null;
+        }
+
         FriendlyParseUser user = new FriendlyParseUser();
-        // TODO: check first name not empty
-        user.setFirstName(etFirstName.getText().toString());
-        // TODO: check last name not empty
-        user.setLastName(etLastName.getText().toString());
-        // TODO: Email validation
-        user.setEmail(etEmail.getText().toString());
-        user.setUsername(etEmail.getText().toString());
-        // TODO: Check that password and confirm password not empty and match
-        user.setPassword(etPassword.getText().toString());
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setUsername(email);
+        user.setPassword(password);
+        return user;
+    }
 
-        user.signUpInBackground(e -> {
-            // if there was an error
-            if (e != null) {
-                showError(e.getMessage());
-                Log.e(TAG, "registerNewUser: something happened", e);
-            } else {
-                Log.i(TAG, "registerNewUser: registration success!!!");
-                // tell the login activity that registration was a success
-                setResult(RESULT_OK);
-                finish();
-            }
-            loading.setVisibility(View.GONE);
-        });
-
+    private void registerNewUser(View button) {
+        FriendlyParseUser user = validateUserCreation();
+        if (user != null) {
+            loading.setVisibility(View.VISIBLE);
+            user.signUpInBackground(e -> {
+                // if there was an error
+                if (e != null) {
+                    showError(e.getMessage());
+                    Log.e(TAG, "registerNewUser: something happened", e);
+                } else {
+                    Log.i(TAG, "registerNewUser: registration success!!!");
+                    // tell the login activity that registration was a success
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                loading.setVisibility(View.GONE);
+            });
+        }
     }
 }
