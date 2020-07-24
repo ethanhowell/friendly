@@ -8,11 +8,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.databinding.ActivityRegisterBinding;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
+
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
     private final static String TAG = RegisterActivity.class.getCanonicalName();
@@ -30,6 +33,11 @@ public class RegisterActivity extends AppCompatActivity {
         ActivityRegisterBinding binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getAllViews(binding);
+
+        Toolbar toolbar = binding.toolbar.toolbar;
+        toolbar.setTitle(R.string.activity_register_title);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         btSignup.setOnClickListener(this::registerNewUser);
     }

@@ -38,4 +38,5 @@
     <string name="etUsername_invalid_toast">Username can\'t be empty</string>
     <string name="etPassword_invalidEmpty_toast">Password can\'t be empty</string>
     <string name="etPhoneNumber_invalid_toast">Invalid phone number</string>
+    <string name="activity_register_title">Register</string>
 </resources>
