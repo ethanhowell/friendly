@@ -39,19 +39,18 @@ import java.util.Objects;
 
 
 public class ChatActivity extends AppCompatActivity {
+    public static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
     private static final String TAG = ChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP_ID = "groupId";
     private static final String INTENT_GROUP_NAME = "groupName";
-    public static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
     private final Group group = new Group();
-    private Group__User relation;
-
     private final Handler typingTimer = new Handler();
-
     private final List<Message> messages = new ArrayList<>();
+
+    private LinearLayoutManager rvMessagesLayoutManager;
+    private Group__User relation;
     private RecyclerView rvMessages;
-    LinearLayoutManager rvMessagesLayoutManager;
     private MessageAdapter messagesAdapter;
     private Button btScrollToBottom;
 
@@ -123,6 +122,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     messagesAdapter.notifyDataSetChanged();
                     scrollToBottomOfMessages(false);
+                    binding.loading.clProgress.setVisibility(View.GONE);
                 });
     }
 
@@ -179,6 +179,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        binding.loading.clProgress.setVisibility(View.VISIBLE);
         BackgroundManager backgroundManager = new BackgroundManager(
                 // callback
                 this::onDataLoaded,
@@ -209,8 +210,9 @@ public class ChatActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
                     relation.type(e -> {
-                        if (e != null)
+                        if (e != null) {
                             Log.e(TAG, "afterTextChanged: ", e);
+                        }
                     });
                 }
             }
@@ -241,8 +243,9 @@ public class ChatActivity extends AppCompatActivity {
                     InputMethodManager inputManager = (InputMethodManager) ChatActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (inputManager != null) {
                         View currentFocus = ChatActivity.this.getCurrentFocus();
-                        if (currentFocus != null)
+                        if (currentFocus != null) {
                             inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                        }
                     }
                 }
                 int lastVisiblePosition = rvMessagesLayoutManager.findLastVisibleItemPosition();
@@ -315,7 +318,9 @@ public class ChatActivity extends AppCompatActivity {
             Message message = new Message(body, group);
 
             message.saveInBackground(e -> {
-                if (e != null) Log.e(TAG, "sendOnClick: ", e);
+                if (e != null) {
+                    Log.e(TAG, "sendOnClick: ", e);
+                }
             });
         }
     }
@@ -335,9 +340,9 @@ public class ChatActivity extends AppCompatActivity {
                 .whereEqualTo(Group__User.KEY_GROUP, group)
                 .whereEqualTo(Group__User.KEY_USER, user.getParseUser())
                 .getFirstInBackground((g__u, e) -> {
-                    if (e != null)
+                    if (e != null) {
                         Log.e(TAG, "leaveGroupOnClick: ", e);
-                    else {
+                    } else {
                         g__u.setDateLeft(new Date());
                         g__u.saveInBackground(e1 -> {
                             // TODO: send some sort of message that "User has left the Group"

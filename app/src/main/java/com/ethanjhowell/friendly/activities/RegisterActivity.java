@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.databinding.ActivityRegisterBinding;
@@ -21,6 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etPassword;
     private EditText etConfirmPassword;
     private Button btSignup;
+    private ConstraintLayout loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,8 @@ public class RegisterActivity extends AppCompatActivity {
         etPassword = binding.etPassword;
         etConfirmPassword = binding.etConfirmPassword;
         btSignup = binding.btSignup;
+
+        loading = binding.loading.clProgress;
     }
 
     private void showError(String error) {
@@ -86,9 +90,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerNewUser(View button) {
-        // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
         FriendlyParseUser user = validateUserCreation();
         if (user != null) {
+            loading.setVisibility(View.VISIBLE);
             user.signUpInBackground(e -> {
                 // if there was an error
                 if (e != null) {
@@ -100,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
                     setResult(RESULT_OK);
                     finish();
                 }
+                loading.setVisibility(View.GONE);
             });
         }
     }

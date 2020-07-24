@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,32 +31,34 @@ import java.util.regex.Pattern;
 
 public class GroupActivity extends AppCompatActivity {
     private final static String TAG = GroupActivity.class.getCanonicalName();
+    private static final Pattern DEEPLINK_GROUP_PATTERN = Pattern.compile("^http://friendly-back\\.herokuapp.com/g/(.*)$");
     private ArrayList<Group> currentGroups;
     private GroupAdapter groupAdapter;
-
-    private static final Pattern DEEPLINK_GROUP_PATTERN = Pattern.compile("^http://friendly-back\\.herokuapp.com/g/(.*)$");
+    private ConstraintLayout progressBar;
 
     private void getUserGroupsInBackground() {
         assert groupAdapter != null;
+        progressBar.setVisibility(View.VISIBLE);
         ParseQuery.getQuery(Group__User.class)
                 .include(Group__User.KEY_GROUP)
                 .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
                 // means user hasn't left the group yet
                 .whereDoesNotExist(Group__User.KEY_DATE_LEFT)
                 .findInBackground((gs__us, e) -> {
-                            if (e != null)
-                                Log.e(TAG, "getUserGroupsInBackground: ", e);
-                            else {
-                                // since we run this when the activity resumes, we want to clear the
-                                // groups so that we can re-add them
-                                currentGroups.clear();
-                                for (Group__User g__u : gs__us) {
-                                    Group group = g__u.getGroup();
-                                    Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
-                                    currentGroups.add(group);
-                                }
-                                groupAdapter.notifyDataSetChanged();
-                            }
+                    if (e != null) {
+                        Log.e(TAG, "getUserGroupsInBackground: ", e);
+                    } else {
+                        // since we run this when the activity resumes, we want to clear the
+                        // groups so that we can re-add them
+                        currentGroups.clear();
+                        for (Group__User g__u : gs__us) {
+                            Group group = g__u.getGroup();
+                            Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
+                            currentGroups.add(group);
+                        }
+                        groupAdapter.notifyDataSetChanged();
+                    }
+                    progressBar.setVisibility(View.GONE);
                         }
                 );
     }
@@ -65,12 +68,14 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void joinGroup(String groupID) {
+        progressBar.setVisibility(View.VISIBLE);
         Group group = new Group();
         group.setObjectId(groupID);
         group.fetchInBackground((g, groupException) -> {
             if (groupException != null) {
                 Toast.makeText(this, R.string.invalidGroupLink_toast, Toast.LENGTH_SHORT).show();
                 Log.i(TAG, "joinGroup: " + groupException);
+                progressBar.setVisibility(View.GONE);
             } else {
                 ParseQuery.getQuery(Group__User.class)
                         .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
@@ -80,19 +85,22 @@ public class GroupActivity extends AppCompatActivity {
                             if (result == null) {
                                 Group__User group__user = new Group__User(group, ParseUser.getCurrentUser());
                                 group__user.saveInBackground(e1 -> {
-                                    if (e1 != null)
+                                    if (e1 != null) {
                                         Log.e(TAG, "joinGroup: ", e1);
-                                    else {
+                                    } else {
                                         startActivity(ChatActivity.createIntent(this, group));
                                     }
+                                    progressBar.setVisibility(View.GONE);
                                 });
                             } else {
                                 result.remove(Group__User.KEY_DATE_LEFT);
                                 result.saveInBackground(e12 -> {
-                                    if (e12 != null)
+                                    if (e12 != null) {
                                         Log.e(TAG, "joinGroup: problem removing date left", e12);
-                                    else
+                                    } else {
                                         startActivity(ChatActivity.createIntent(this, group));
+                                    }
+                                    progressBar.setVisibility(View.GONE);
                                 });
                             }
                         });
@@ -105,6 +113,16 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        Toolbar toolbar = binding.toolbar.toolbar;
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
+
+        progressBar = binding.loading.clProgress;
 
         Intent intent = getIntent();
         Uri data = intent.getData();
@@ -122,20 +140,13 @@ public class GroupActivity extends AppCompatActivity {
             }
         }
 
-        ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        Toolbar toolbar = binding.toolbar.toolbar;
-        toolbar.setTitle(R.string.app_name);
-        setSupportActionBar(toolbar);
-
-
         currentGroups = new ArrayList<>();
 
         FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
         user.getProfilePicture().getFileInBackground((file, e) -> {
-            if (e != null)
+            if (e != null) {
                 Log.e(TAG, "onCreate: ", e);
+            }
             Glide.with(this)
                     .load(file)
                     .into(binding.ivProfilePic);

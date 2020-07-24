@@ -25,10 +25,14 @@ public class FriendlyParseUser {
         user = parseUser;
     }
 
+    public FriendlyParseUser() {
+        this(new ParseUser());
+    }
+
     public static FriendlyParseUser fromParseUser(ParseUser parseUser) {
-        if (parseUser == null)
+        if (parseUser == null) {
             return null;
-        else {
+        } else {
             try {
                 return new FriendlyParseUser(parseUser.fetchIfNeeded());
             } catch (ParseException e) {
@@ -36,10 +40,6 @@ public class FriendlyParseUser {
                 return null;
             }
         }
-    }
-
-    public FriendlyParseUser() {
-        this(new ParseUser());
     }
 
     public static FriendlyParseUser getCurrentUser() {
@@ -116,8 +116,12 @@ public class FriendlyParseUser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FriendlyParseUser that = (FriendlyParseUser) o;
         return user.getObjectId().equals(that.user.getObjectId());
     }

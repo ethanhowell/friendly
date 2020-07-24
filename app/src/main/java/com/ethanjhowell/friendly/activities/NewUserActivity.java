@@ -120,17 +120,20 @@ public class NewUserActivity extends AppCompatActivity {
                 );
                 parsePhotoFile = new ParseFile(photoFile);
             }
-        } else
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void continueOnClick(View v) {
         if (parsePhotoFile != null) {
-            // TODO: some sort of loading status visual
+            binding.loading.clProgress.setVisibility(View.VISIBLE);
+
             String phoneNumber = binding.etPhoneNumber.getText().toString();
             phoneNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
             if (phoneNumber.isEmpty() || !PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
                 Toast.makeText(this, R.string.etPhoneNumber_invalid_toast, Toast.LENGTH_SHORT).show();
+                binding.loading.clProgress.setVisibility(View.GONE);
                 return;
             }
             FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
@@ -140,13 +143,16 @@ public class NewUserActivity extends AppCompatActivity {
             user.saveInBackground(e -> {
                 if (e != null) {
                     Log.e(TAG, "continueOnClick: problem saving user data", e);
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    // by now user account is completely created, we can navigate to the next activity
+                    startActivity(new Intent(this, GroupActivity.class));
+                    finish();
                 }
-                // by now user account is completely created, we can navigate to the next activity
-                startActivity(new Intent(this, GroupActivity.class));
-                finish();
+                binding.loading.clProgress.setVisibility(View.GONE);
             });
         } else {
-            Toast.makeText(this, getResources().getString(R.string.selectImage_toast), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.selectImage_toast, Toast.LENGTH_SHORT).show();
         }
     }
 

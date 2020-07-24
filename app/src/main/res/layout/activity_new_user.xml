@@ -7,6 +7,10 @@
     android:padding="40dp"
     tools:context=".activities.NewUserActivity">
 
+    <include
+        android:id="@+id/loading"
+        layout="@layout/progress_bar" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clChooseProfilePic"
