@@ -7,9 +7,8 @@ import java.util.Date;
 
 @ParseClassName("Group")
 public class Group extends ParseObject {
-    private Date dateLeft;
-
     public static final String KEY_GROUP_NAME = "groupName";
+    private Date dateLeft;
 
     public String getGroupName() {
         return getString(KEY_GROUP_NAME);

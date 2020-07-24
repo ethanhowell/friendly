@@ -25,6 +25,10 @@ public class FriendlyParseUser {
         user = parseUser;
     }
 
+    public FriendlyParseUser() {
+        this(new ParseUser());
+    }
+
     public static FriendlyParseUser fromParseUser(ParseUser parseUser) {
         if (parseUser == null) {
             return null;
@@ -36,10 +40,6 @@ public class FriendlyParseUser {
                 return null;
             }
         }
-    }
-
-    public FriendlyParseUser() {
-        this(new ParseUser());
     }
 
     public static FriendlyParseUser getCurrentUser() {

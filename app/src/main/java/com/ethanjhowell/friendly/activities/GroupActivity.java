@@ -31,11 +31,10 @@ import java.util.regex.Pattern;
 
 public class GroupActivity extends AppCompatActivity {
     private final static String TAG = GroupActivity.class.getCanonicalName();
+    private static final Pattern DEEPLINK_GROUP_PATTERN = Pattern.compile("^http://friendly-back\\.herokuapp.com/g/(.*)$");
     private ArrayList<Group> currentGroups;
     private GroupAdapter groupAdapter;
     private ConstraintLayout progressBar;
-
-    private static final Pattern DEEPLINK_GROUP_PATTERN = Pattern.compile("^http://friendly-back\\.herokuapp.com/g/(.*)$");
 
     private void getUserGroupsInBackground() {
         assert groupAdapter != null;
