@@ -311,7 +311,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendOnClick(View v) {
-        // TODO: some sort of loading indicator
         String body = binding.etMessageBody.getText().toString();
         if (!body.isEmpty()) {
             binding.etMessageBody.getText().clear();
