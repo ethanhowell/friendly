@@ -12,6 +12,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/loading"
+        layout="@layout/progress_bar_toolbar" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvArchivedGroups"
         android:layout_width="0dp"

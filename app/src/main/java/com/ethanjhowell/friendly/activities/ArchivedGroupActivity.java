@@ -2,9 +2,11 @@ package com.ethanjhowell.friendly.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,24 +26,27 @@ public class ArchivedGroupActivity extends AppCompatActivity {
 
     private final List<Group> archivedGroups = new ArrayList<>();
     private final ArchivedGroupAdapter adapter = new ArchivedGroupAdapter(archivedGroups);
+    private ConstraintLayout loading;
 
     private void getUserGroupsInBackground() {
+        loading.setVisibility(View.VISIBLE);
         ParseQuery.getQuery(Group__User.class)
                 .include(Group__User.KEY_GROUP)
                 .whereEqualTo(Group__User.KEY_USER, ParseUser.getCurrentUser())
                 // user has left the group
                 .whereExists(Group__User.KEY_DATE_LEFT)
                 .findInBackground((gs__us, e) -> {
-                            if (e != null)
-                                Log.e(TAG, "getUserGroupsInBackground: ", e);
-                            else {
-                                for (Group__User g__u : gs__us) {
+                    if (e != null)
+                        Log.e(TAG, "getUserGroupsInBackground: ", e);
+                    else {
+                        for (Group__User g__u : gs__us) {
                                     Group group = g__u.getGroup();
                                     Log.d(TAG, "getUserGroupsInBackground: " + group.getGroupName());
                                     archivedGroups.add(group);
                                 }
                                 adapter.notifyDataSetChanged();
                             }
+                    loading.setVisibility(View.GONE);
                         }
                 );
     }
@@ -50,10 +55,11 @@ public class ArchivedGroupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getUserGroupsInBackground();
-
         ActivityArchivedGroupBinding binding = ActivityArchivedGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        loading = binding.loading.clProgress;
+        getUserGroupsInBackground();
 
         Toolbar toolbar = binding.toolbar.toolbar;
         toolbar.setTitle("Archived Groups");
