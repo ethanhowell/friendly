@@ -40,13 +40,14 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: user already logged in");
             startNextActivity(user);
         } else {
-            binding.btFacebookLogin.setOnClickListener(
-                    v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
-                            this,
-                            Collections.singletonList("email"),
-                            this::facebookLoginCallback
-                    )
-            );
+            binding.btFacebookLogin.setOnClickListener(v -> {
+                binding.loading.clProgress.setVisibility(View.VISIBLE);
+                ParseFacebookUtils.logInWithReadPermissionsInBackground(
+                        this,
+                        Collections.singletonList("email"),
+                        this::facebookLoginCallback
+                );
+            });
             binding.btLogin.setOnClickListener(this::loginButtonOnClick);
             binding.tvSignup.setOnClickListener(this::registrationOnClick);
         }
@@ -103,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startNextActivity(FriendlyParseUser currentUser) {
+        binding.loading.clProgress.setVisibility(View.GONE);
         if (currentUser.isCompleted()) {
             startActivity(new Intent(this, GroupActivity.class));
         }
@@ -114,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginButtonOnClick(View v) {
+        binding.loading.clProgress.setVisibility(View.VISIBLE);
         ParseUser.logInInBackground(
                 binding.etUsername.getText().toString(),
                 binding.etPassword.getText().toString(),

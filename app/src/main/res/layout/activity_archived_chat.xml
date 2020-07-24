@@ -10,6 +10,10 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_child" />
 
+    <include
+        android:id="@+id/loading"
+        layout="@layout/progress_bar_toolbar" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvArchivedMessages"
         android:layout_width="0dp"

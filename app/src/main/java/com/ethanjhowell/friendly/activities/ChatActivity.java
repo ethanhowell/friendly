@@ -39,19 +39,18 @@ import java.util.Objects;
 
 
 public class ChatActivity extends AppCompatActivity {
+    public static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
     private static final String TAG = ChatActivity.class.getCanonicalName();
     private static final String INTENT_GROUP_ID = "groupId";
     private static final String INTENT_GROUP_NAME = "groupName";
-    public static final int NUM_MESSAGES_BEFORE_SCROLL_BUTTON = 20;
 
     private final Group group = new Group();
-    private Group__User relation;
-
     private final Handler typingTimer = new Handler();
-
     private final List<Message> messages = new ArrayList<>();
+
+    private LinearLayoutManager rvMessagesLayoutManager;
+    private Group__User relation;
     private RecyclerView rvMessages;
-    LinearLayoutManager rvMessagesLayoutManager;
     private MessageAdapter messagesAdapter;
     private Button btScrollToBottom;
 
@@ -123,6 +122,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     messagesAdapter.notifyDataSetChanged();
                     scrollToBottomOfMessages(false);
+                    binding.loading.clProgress.setVisibility(View.GONE);
                 });
     }
 
@@ -179,6 +179,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        binding.loading.clProgress.setVisibility(View.VISIBLE);
         BackgroundManager backgroundManager = new BackgroundManager(
                 // callback
                 this::onDataLoaded,

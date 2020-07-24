@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.ethanjhowell.friendly.databinding.ActivityRegisterBinding;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
@@ -20,6 +21,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etPassword;
     private EditText etConfirmPassword;
     private Button btSignup;
+    private ConstraintLayout loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,8 @@ public class RegisterActivity extends AppCompatActivity {
         etPassword = binding.etPassword;
         etConfirmPassword = binding.etConfirmPassword;
         btSignup = binding.btSignup;
+
+        loading = binding.loading.clProgress;
     }
 
     private void showError(String error) {
@@ -45,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerNewUser(View button) {
+        loading.setVisibility(View.VISIBLE);
         // TODO: some sort of way to indicate to the user this is happening, maybe freeze the button and have loading circle
         // fill out fields from the views
         FriendlyParseUser user = new FriendlyParseUser();
@@ -69,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
                 setResult(RESULT_OK);
                 finish();
             }
+            loading.setVisibility(View.GONE);
         });
 
     }
