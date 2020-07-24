@@ -127,15 +127,14 @@ public class NewUserActivity extends AppCompatActivity {
 
     private void continueOnClick(View v) {
         if (parsePhotoFile != null) {
-            binding.loading.clProgress.setVisibility(View.VISIBLE);
-
             String phoneNumber = binding.etPhoneNumber.getText().toString();
             phoneNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
             if (phoneNumber.isEmpty() || !PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
                 Toast.makeText(this, R.string.etPhoneNumber_invalid_toast, Toast.LENGTH_SHORT).show();
-                binding.loading.clProgress.setVisibility(View.GONE);
                 return;
             }
+
+            binding.loading.clProgress.setVisibility(View.VISIBLE);
             FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
             user.setProfilePicture(parsePhotoFile);
             user.setPhoneNumber(phoneNumber);
