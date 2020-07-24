@@ -10,6 +10,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +41,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
     private final Group group = new Group();
     private RecyclerView rvArchivedMessages;
     private Button btScrollToBottom;
+    private ConstraintLayout loading;
 
     public static Intent createIntent(Context context, Group group) {
         Intent intent = new Intent(context, ArchivedChatActivity.class);
@@ -63,6 +65,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
     }
 
     private void loadMessages() {
+        loading.setVisibility(View.VISIBLE);
         ParseQuery.getQuery(Message.class)
                 .whereEqualTo(Message.KEY_GROUP, group)
                 // only the ones before we left the group
@@ -78,6 +81,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
                     archivedMessages.addAll(messages);
                     archivedMessagesAdapter.notifyDataSetChanged();
                     scrollToBottomOfMessages(false);
+                    loading.setVisibility(View.GONE);
                 });
     }
 
@@ -130,6 +134,8 @@ public class ArchivedChatActivity extends AppCompatActivity {
         group.setObjectId(groupId);
         group.setGroupName(groupName);
         group.setDateLeft(groupDateLeft);
+
+        loading = binding.loading.clProgress;
 
         loadMessages();
     }
