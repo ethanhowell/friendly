@@ -83,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
         parameters.putString("fields", "email");
         request.setParameters(parameters);
         request.executeAsync();
-        // TODO: Some sort of intermediate loading bar
     }
 
 
