@@ -60,12 +60,12 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
         return messages.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tvMessageBody;
-        private final TextView tvAuthorName;
-        private final ImageView ivAuthorProfilePic;
-        private final LinearLayout llMessage;
-        private final ConstraintLayout.LayoutParams layoutParams;
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
+        final TextView tvMessageBody;
+        final TextView tvAuthorName;
+        final ImageView ivAuthorProfilePic;
+        final LinearLayout llMessage;
+        final ConstraintLayout.LayoutParams layoutParams;
 
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {
