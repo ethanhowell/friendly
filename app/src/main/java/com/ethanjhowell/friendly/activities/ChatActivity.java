@@ -301,13 +301,24 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.itLeaveGroup) {
-            leaveGroupOnClick();
-            return true;
-        } else if (item.getItemId() == R.id.itDetails) {
-            startActivity(GroupDetails.createIntent(this, group));
+        switch (item.getItemId()) {
+            case R.id.itLeaveGroup:
+                leaveGroupOnClick();
+                return true;
+            case R.id.itDetails:
+                startActivity(GroupDetails.createIntent(this, group));
+                break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     private void sendOnClick(View v) {
