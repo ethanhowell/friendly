@@ -1,6 +1,5 @@
 package com.ethanjhowell.friendly.adapters;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.activities.ChatActivity;
 import com.ethanjhowell.friendly.databinding.ItemGroupBinding;
 import com.ethanjhowell.friendly.models.Group;
@@ -65,9 +66,10 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             int pos = getAdapterPosition();
             Log.d(TAG, "onClick: click at " + pos);
             if (pos != RecyclerView.NO_POSITION) {
-                Context context = view.getContext();
+                AppCompatActivity context = (AppCompatActivity) view.getContext();
                 Intent intent = ChatActivity.createIntent(context, groups.get(pos));
                 context.startActivity(intent);
+                context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         }
     }
