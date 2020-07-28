@@ -23,6 +23,7 @@ import com.ethanjhowell.friendly.models.Message;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
 import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.Multiset;
+import com.parse.ParseUser;
 
 import java.util.List;
 import java.util.Locale;
@@ -93,10 +94,22 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
             Multiset<String> reactionCounts = LinkedHashMultiset.create();
             reactionCounts.addAll(reactions.values());
 
+            String userId = ParseUser.getCurrentUser().getObjectId();
+            String userEmoji = reactions.containsKey(userId) ? reactions.get(userId) : null;
+
             for (String emoji : reactionCounts.elementSet()) {
                 TextView textView = new TextView(context);
                 textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                textView.setText(String.format(Locale.US, "%s %d", emoji, reactionCounts.count(emoji)));
+                int count = reactionCounts.count(emoji);
+                if (count > 1) {
+                    textView.setText(String.format(Locale.US, "%s %d", emoji, count));
+                } else {
+                    textView.setText(emoji);
+                }
+                if (emoji.equals(userEmoji)) {
+                    Log.d(TAG, "setReactions: match");
+                    textView.setBackgroundColor(0xff1479fb);
+                }
                 llReactions.addView(textView);
             }
 
