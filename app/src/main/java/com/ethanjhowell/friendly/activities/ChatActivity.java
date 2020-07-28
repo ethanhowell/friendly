@@ -48,6 +48,8 @@ public class ChatActivity extends AppCompatActivity {
     private final Handler typingTimer = new Handler();
     private final List<Message> messages = new ArrayList<>();
 
+    private final Object messageMutex = new Object();
+
     private LinearLayoutManager rvMessagesLayoutManager;
     private Group__User relation;
     private RecyclerView rvMessages;
@@ -109,7 +111,7 @@ public class ChatActivity extends AppCompatActivity {
                 .include(Message.KEY_AUTHOR)
                 // id is unique so we only need to get the first (and only) result
                 .findInBackground((messagesFromServer, e) -> {
-                    synchronized (messages) {
+                    synchronized (messageMutex) {
                         if (e != null) {
                             Log.e(TAG, "loadMessages: ", e);
                             return;
@@ -158,7 +160,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // Listen for CREATE events
         messageHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
-            synchronized (messages) {
+            synchronized (messageMutex) {
                 messages.add(message);
             }
             Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
