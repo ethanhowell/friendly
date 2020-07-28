@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.ethanjhowell.friendly.R;
 import com.ethanjhowell.friendly.databinding.ItemMessageBinding;
 import com.ethanjhowell.friendly.models.Message;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
@@ -122,12 +123,16 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
             tvMessageBody.setText(message.getBody());
             setReactions(message.getReactions());
             if (message.authorIsCurrentUser()) {
+                tvMessageBody.setTextColor(0xffffffff);
+                tvMessageBody.setBackgroundResource(R.color.colorPrimaryDark);
                 ivAuthorProfilePic.setVisibility(View.GONE);
                 tvAuthorName.setVisibility(View.GONE);
                 layoutParams.setMarginStart(OWN_MESSAGE_MARGIN_START_PX);
                 layoutParams.setMarginEnd(OWN_MESSAGE_MARGIN_END_PX);
                 llMessage.setGravity(Gravity.END);
             } else {
+                tvMessageBody.setTextColor(0xff000000);
+                tvMessageBody.setBackgroundResource(R.color.colorPrimaryVariant);
                 ivAuthorProfilePic.setVisibility(View.VISIBLE);
                 tvAuthorName.setVisibility(View.VISIBLE);
                 tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));

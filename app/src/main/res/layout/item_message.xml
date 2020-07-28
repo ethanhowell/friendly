@@ -33,7 +33,7 @@
             android:id="@+id/tvMessageBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#C3C3C3"
+            android:background="@color/colorPrimaryVariant"
             tools:text="Message body" />
 
         <LinearLayout
