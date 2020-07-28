@@ -46,8 +46,6 @@ public class ActiveMessageAdapter extends BaseMessageAdapter {
                     message.saveInBackground(e1 -> {
                         if (e1 != null) {
                             Log.e(TAG, "adding reaction to message", e1);
-                        } else {
-                            viewHolder.tvReactions.setText(message.getReactionString());
                         }
                     });
                     Log.d(TAG, "onDoubleTap: " + message.getBody());

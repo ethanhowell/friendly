@@ -177,6 +177,14 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         });
+
+        messageHandling.handleEvent(SubscriptionHandling.Event.UPDATE, (q, message) -> {
+            Log.d(TAG, "connectMessageSocket: updated:" + message.getBody());
+            int i = messages.indexOf(message);
+            messages.set(i, message);
+            runOnUiThread(() -> messagesAdapter.notifyItemChanged(i));
+        });
+
         manager.succeeded();
     }
 
@@ -229,6 +237,8 @@ public class ChatActivity extends AppCompatActivity {
         rvMessages.setAdapter(messagesAdapter);
         rvMessagesLayoutManager = new LinearLayoutManager(this);
         rvMessages.setLayoutManager(rvMessagesLayoutManager);
+        rvMessages.setItemAnimator(null);
+
 
         rvMessages.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
