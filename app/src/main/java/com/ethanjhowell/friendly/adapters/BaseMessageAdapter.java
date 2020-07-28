@@ -124,7 +124,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
             setReactions(message.getReactions());
             if (message.authorIsCurrentUser()) {
                 tvMessageBody.setTextColor(0xffffffff);
-                tvMessageBody.setBackgroundResource(R.color.colorPrimaryDark);
+                tvMessageBody.setBackgroundResource(R.drawable.message_bubble_dark);
                 ivAuthorProfilePic.setVisibility(View.GONE);
                 tvAuthorName.setVisibility(View.GONE);
                 layoutParams.setMarginStart(OWN_MESSAGE_MARGIN_START_PX);
@@ -132,7 +132,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
                 llMessage.setGravity(Gravity.END);
             } else {
                 tvMessageBody.setTextColor(0xff000000);
-                tvMessageBody.setBackgroundResource(R.color.colorPrimaryVariant);
+                tvMessageBody.setBackgroundResource(R.drawable.message_bubble_light);
                 ivAuthorProfilePic.setVisibility(View.VISIBLE);
                 tvAuthorName.setVisibility(View.VISIBLE);
                 tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
