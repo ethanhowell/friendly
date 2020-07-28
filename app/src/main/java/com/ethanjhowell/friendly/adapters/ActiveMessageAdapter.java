@@ -4,15 +4,17 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ethanjhowell.friendly.OnDoubleTapListener;
 import com.ethanjhowell.friendly.models.Message;
+import com.parse.ParseUser;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class ActiveMessageAdapter extends BaseMessageAdapter {
     private static final String TAG = ActiveMessageAdapter.class.getCanonicalName();
@@ -33,9 +35,20 @@ public class ActiveMessageAdapter extends BaseMessageAdapter {
                 int pos = viewHolder.getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
                     Message message = messages.get(pos);
-                    // TODO: perform double tap to thumb's up message here
+                    Map<String, String> reactions = message.getReactions();
+                    String personId = ParseUser.getCurrentUser().getObjectId();
+                    if (reactions.containsKey(personId) && Objects.equals(reactions.get(personId), "👍")) {
+                        reactions.remove(personId);
+                    } else {
+                        reactions.put(personId, "👍");
+                    }
+                    message.setReactions(reactions);
+                    message.saveInBackground(e1 -> {
+                        if (e1 != null) {
+                            Log.e(TAG, "adding reaction to message", e1);
+                        }
+                    });
                     Log.d(TAG, "onDoubleTap: " + message.getBody());
-                    Toast.makeText(parent.getContext(), message.getBody(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
