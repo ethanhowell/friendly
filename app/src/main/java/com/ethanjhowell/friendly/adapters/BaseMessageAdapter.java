@@ -66,12 +66,14 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
         final ImageView ivAuthorProfilePic;
         final LinearLayout llMessage;
         final ConstraintLayout.LayoutParams layoutParams;
+        final TextView tvReactions;
 
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {
             super(binding.getRoot());
 
             tvMessageBody = binding.tvMessageBody;
+            tvReactions = binding.tvReactions;
             tvAuthorName = binding.tvAuthorName;
             ivAuthorProfilePic = binding.ivAuthorProfilePic;
             llMessage = binding.llMessage;
@@ -84,6 +86,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
             FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
 
             tvMessageBody.setText(message.getBody());
+            tvReactions.setText(message.getReactionString());
             if (message.authorIsCurrentUser()) {
                 ivAuthorProfilePic.setVisibility(View.GONE);
                 tvAuthorName.setVisibility(View.GONE);
