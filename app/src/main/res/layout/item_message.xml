@@ -36,11 +36,11 @@
             android:background="#C3C3C3"
             tools:text="Message body" />
 
-        <TextView
-            android:id="@+id/tvReactions"
+        <LinearLayout
+            android:id="@+id/llReactions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="👍 1" />
+            android:orientation="horizontal" />
     </LinearLayout>
 
     <TextView

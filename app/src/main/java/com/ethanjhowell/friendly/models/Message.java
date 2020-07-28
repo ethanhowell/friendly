@@ -2,8 +2,6 @@ package com.ethanjhowell.friendly.models;
 
 import androidx.annotation.Nullable;
 
-import com.google.common.collect.LinkedHashMultiset;
-import com.google.common.collect.Multiset;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -36,22 +34,6 @@ public class Message extends ParseObject {
         }
     }
 
-    public String getReactionString() {
-        Map<String, String> reactions = getReactions();
-        // we go for the LinkedHashMultiset to preserve insertion order
-        Multiset<String> emojis = LinkedHashMultiset.create();
-        emojis.addAll(reactions.values());
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String emoji : emojis.elementSet()) {
-            stringBuilder.append(emoji);
-            int count = emojis.count(emoji);
-            if (count > 1) {
-                stringBuilder.append(count);
-            }
-            stringBuilder.append(' ');
-        }
-        return stringBuilder.toString();
-    }
 
     public void setReactions(Map<String, String> reactions) {
         put(KEY_REACTIONS, reactions);

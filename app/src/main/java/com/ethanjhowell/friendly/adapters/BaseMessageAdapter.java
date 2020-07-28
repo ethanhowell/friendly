@@ -1,5 +1,6 @@
 package com.ethanjhowell.friendly.adapters;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,8 +21,12 @@ import com.bumptech.glide.Glide;
 import com.ethanjhowell.friendly.databinding.ItemMessageBinding;
 import com.ethanjhowell.friendly.models.Message;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
+import com.google.common.collect.LinkedHashMultiset;
+import com.google.common.collect.Multiset;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessageAdapter.ViewHolder> {
     protected static final float OTHER_MESSAGE_MARGIN_START_DP = 80;
@@ -66,19 +71,35 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
         final ImageView ivAuthorProfilePic;
         final LinearLayout llMessage;
         final ConstraintLayout.LayoutParams layoutParams;
-        final TextView tvReactions;
+        final LinearLayout llReactions;
+        private final Context context;
 
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {
             super(binding.getRoot());
 
             tvMessageBody = binding.tvMessageBody;
-            tvReactions = binding.tvReactions;
+            llReactions = binding.llReactions;
             tvAuthorName = binding.tvAuthorName;
             ivAuthorProfilePic = binding.ivAuthorProfilePic;
             llMessage = binding.llMessage;
+            context = itemView.getContext();
 
             layoutParams = (ConstraintLayout.LayoutParams) llMessage.getLayoutParams();
+        }
+
+        private void setReactions(Map<String, String> reactions) {
+            llReactions.removeAllViews();
+            Multiset<String> reactionCounts = LinkedHashMultiset.create();
+            reactionCounts.addAll(reactions.values());
+
+            for (String emoji : reactionCounts.elementSet()) {
+                TextView textView = new TextView(context);
+                textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                textView.setText(String.format(Locale.US, "%s %d", emoji, reactionCounts.count(emoji)));
+                llReactions.addView(textView);
+            }
+
         }
 
         public void bind(Message message) {
@@ -86,7 +107,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
             FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
 
             tvMessageBody.setText(message.getBody());
-            tvReactions.setText(message.getReactionString());
+            setReactions(message.getReactions());
             if (message.authorIsCurrentUser()) {
                 ivAuthorProfilePic.setVisibility(View.GONE);
                 tvAuthorName.setVisibility(View.GONE);
