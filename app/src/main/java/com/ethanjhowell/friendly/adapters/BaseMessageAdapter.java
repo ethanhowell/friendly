@@ -91,29 +91,33 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
         }
 
         private void setReactions(Map<String, String> reactions) {
-            llReactions.removeAllViews();
-            Multiset<String> reactionCounts = LinkedHashMultiset.create();
-            reactionCounts.addAll(reactions.values());
+            if (reactions.isEmpty()) {
+                llReactions.setVisibility(View.GONE);
+            } else {
+                llReactions.setVisibility(View.VISIBLE);
+                llReactions.removeAllViews();
+                Multiset<String> reactionCounts = LinkedHashMultiset.create();
+                reactionCounts.addAll(reactions.values());
 
-            String userId = ParseUser.getCurrentUser().getObjectId();
-            String userEmoji = reactions.containsKey(userId) ? reactions.get(userId) : null;
+                String userId = ParseUser.getCurrentUser().getObjectId();
+                String userEmoji = reactions.containsKey(userId) ? reactions.get(userId) : null;
 
-            for (String emoji : reactionCounts.elementSet()) {
-                TextView textView = new TextView(context);
-                textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                int count = reactionCounts.count(emoji);
-                if (count > 1) {
-                    textView.setText(String.format(Locale.US, "%s %d", emoji, count));
-                } else {
-                    textView.setText(emoji);
+                for (String emoji : reactionCounts.elementSet()) {
+                    TextView textView = new TextView(context);
+                    textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    int count = reactionCounts.count(emoji);
+                    if (count > 1) {
+                        textView.setText(String.format(Locale.US, "%s %d", emoji, count));
+                    } else {
+                        textView.setText(emoji);
+                    }
+                    if (emoji.equals(userEmoji)) {
+                        Log.d(TAG, "setReactions: match");
+                        textView.setBackgroundColor(0xff1479fb);
+                    }
+                    llReactions.addView(textView);
                 }
-                if (emoji.equals(userEmoji)) {
-                    Log.d(TAG, "setReactions: match");
-                    textView.setBackgroundColor(0xff1479fb);
-                }
-                llReactions.addView(textView);
             }
-
         }
 
         public void bind(Message message) {
