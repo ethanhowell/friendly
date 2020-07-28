@@ -1,5 +1,6 @@
 package com.ethanjhowell.friendly.adapters;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,8 +21,13 @@ import com.bumptech.glide.Glide;
 import com.ethanjhowell.friendly.databinding.ItemMessageBinding;
 import com.ethanjhowell.friendly.models.Message;
 import com.ethanjhowell.friendly.proxy.FriendlyParseUser;
+import com.google.common.collect.LinkedHashMultiset;
+import com.google.common.collect.Multiset;
+import com.parse.ParseUser;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessageAdapter.ViewHolder> {
     protected static final float OTHER_MESSAGE_MARGIN_START_DP = 80;
@@ -60,23 +66,53 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
         return messages.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tvMessageBody;
-        private final TextView tvAuthorName;
-        private final ImageView ivAuthorProfilePic;
-        private final LinearLayout llMessage;
-        private final ConstraintLayout.LayoutParams layoutParams;
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
+        final TextView tvMessageBody;
+        final TextView tvAuthorName;
+        final ImageView ivAuthorProfilePic;
+        final LinearLayout llMessage;
+        final ConstraintLayout.LayoutParams layoutParams;
+        final LinearLayout llReactions;
+        private final Context context;
 
 
         public ViewHolder(@NonNull ItemMessageBinding binding) {
             super(binding.getRoot());
 
             tvMessageBody = binding.tvMessageBody;
+            llReactions = binding.llReactions;
             tvAuthorName = binding.tvAuthorName;
             ivAuthorProfilePic = binding.ivAuthorProfilePic;
             llMessage = binding.llMessage;
+            context = itemView.getContext();
 
             layoutParams = (ConstraintLayout.LayoutParams) llMessage.getLayoutParams();
+        }
+
+        private void setReactions(Map<String, String> reactions) {
+            llReactions.removeAllViews();
+            Multiset<String> reactionCounts = LinkedHashMultiset.create();
+            reactionCounts.addAll(reactions.values());
+
+            String userId = ParseUser.getCurrentUser().getObjectId();
+            String userEmoji = reactions.containsKey(userId) ? reactions.get(userId) : null;
+
+            for (String emoji : reactionCounts.elementSet()) {
+                TextView textView = new TextView(context);
+                textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                int count = reactionCounts.count(emoji);
+                if (count > 1) {
+                    textView.setText(String.format(Locale.US, "%s %d", emoji, count));
+                } else {
+                    textView.setText(emoji);
+                }
+                if (emoji.equals(userEmoji)) {
+                    Log.d(TAG, "setReactions: match");
+                    textView.setBackgroundColor(0xff1479fb);
+                }
+                llReactions.addView(textView);
+            }
+
         }
 
         public void bind(Message message) {
@@ -84,6 +120,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
             FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
 
             tvMessageBody.setText(message.getBody());
+            setReactions(message.getReactions());
             if (message.authorIsCurrentUser()) {
                 ivAuthorProfilePic.setVisibility(View.GONE);
                 tvAuthorName.setVisibility(View.GONE);

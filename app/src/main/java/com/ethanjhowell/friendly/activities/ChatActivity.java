@@ -34,6 +34,7 @@ import com.parse.livequery.SubscriptionHandling;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,6 +48,9 @@ public class ChatActivity extends AppCompatActivity {
     private final Group group = new Group();
     private final Handler typingTimer = new Handler();
     private final List<Message> messages = new ArrayList<>();
+    private final HashMap<String, Integer> messagesPos = new HashMap<>();
+
+    private final Object messageMutex = new Object();
 
     private LinearLayoutManager rvMessagesLayoutManager;
     private Group__User relation;
@@ -103,19 +107,27 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    private void addMessage(Message m) {
+        messagesPos.put(m.getObjectId(), messages.size());
+        messages.add(m);
+    }
+
     private void loadMessages() {
         ParseQuery.getQuery(Message.class)
                 .whereEqualTo(Message.KEY_GROUP, group)
                 .include(Message.KEY_AUTHOR)
                 // id is unique so we only need to get the first (and only) result
                 .findInBackground((messagesFromServer, e) -> {
-                    synchronized (messages) {
+                    synchronized (messageMutex) {
                         if (e != null) {
                             Log.e(TAG, "loadMessages: ", e);
                             return;
                         }
                         messages.clear();
-                        messages.addAll(messagesFromServer);
+                        messagesPos.clear();
+                        for (Message message : messagesFromServer) {
+                            addMessage(message);
+                        }
                     }
                     for (Message message : messagesFromServer) {
                         Log.d(TAG, "loadMessages: " + message.getBody());
@@ -158,8 +170,8 @@ public class ChatActivity extends AppCompatActivity {
 
         // Listen for CREATE events
         messageHandling.handleEvent(SubscriptionHandling.Event.CREATE, (q, message) -> {
-            synchronized (messages) {
-                messages.add(message);
+            synchronized (messageMutex) {
+                addMessage(message);
             }
             Log.d(TAG, "connectMessageSocket: new Message: " + message.getBody());
             int oldLastMessagePos = messages.size() - 2;
@@ -175,6 +187,20 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         });
+
+        messageHandling.handleEvent(SubscriptionHandling.Event.UPDATE, (q, message) -> {
+            Log.d(TAG, "connectMessageSocket: updated: " + message.getBody());
+            Integer position = messagesPos.get(message.getObjectId());
+            if (position != null) {
+                int pos = position;
+                messages.set(pos, message);
+                Log.d(TAG, "connectMessageSocket: position: " + pos);
+                runOnUiThread(() -> messagesAdapter.notifyItemChanged(pos));
+            } else {
+                Log.e(TAG, "connectMessageSocket: ", new NullPointerException("Message not found"));
+            }
+        });
+
         manager.succeeded();
     }
 
@@ -227,6 +253,8 @@ public class ChatActivity extends AppCompatActivity {
         rvMessages.setAdapter(messagesAdapter);
         rvMessagesLayoutManager = new LinearLayoutManager(this);
         rvMessages.setLayoutManager(rvMessagesLayoutManager);
+        rvMessages.setItemAnimator(null);
+
 
         rvMessages.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {

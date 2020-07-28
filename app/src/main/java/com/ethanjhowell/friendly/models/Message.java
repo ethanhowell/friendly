@@ -6,11 +6,15 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @ParseClassName("Message")
 public class Message extends ParseObject {
     public static final String KEY_BODY = "body";
     public static final String KEY_AUTHOR = "author";
     public static final String KEY_GROUP = "group";
+    public static final String KEY_REACTIONS = "reactions";
 
     public Message() {
     }
@@ -19,6 +23,20 @@ public class Message extends ParseObject {
         put(KEY_BODY, body);
         put(KEY_GROUP, group);
         put(KEY_AUTHOR, ParseUser.getCurrentUser());
+    }
+
+    public Map<String, String> getReactions() {
+        Map<String, String> map = getMap(KEY_REACTIONS);
+        if (map == null) {
+            return new HashMap<>();
+        } else {
+            return map;
+        }
+    }
+
+
+    public void setReactions(Map<String, String> reactions) {
+        put(KEY_REACTIONS, reactions);
     }
 
     public String getBody() {
