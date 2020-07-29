@@ -36,12 +36,14 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
     protected static final float OTHER_MESSAGE_MARGIN_END_DP = 64;
     protected static final float OWN_MESSAGE_MARGIN_START_DP = 128;
     protected static final float OWN_MESSAGE_MARGIN_END_DP = 16;
+    protected static final float REACTION_MARGIN_END_DP = 4;
     protected static final Resources RESOURCES = Resources.getSystem();
     protected static final DisplayMetrics DISPLAY_METRICS = Resources.getSystem().getDisplayMetrics();
     protected static final int OTHER_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
     protected static final int OTHER_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
     protected static final int OWN_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
     protected static final int OWN_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
+    protected static final int REACTION_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, REACTION_MARGIN_END_DP, DISPLAY_METRICS);
     protected static final float REACTION_BUBBLE_ELEVATION = 2;
 
     protected static final int COLOR_BLACK = 0xff000000;
@@ -113,7 +115,9 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
 
                 for (String emoji : reactionCounts.elementSet()) {
                     TextView textView = new TextView(context);
-                    textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMarginEnd(REACTION_MARGIN_END_PX);
+                    textView.setLayoutParams(layoutParams);
                     textView.setElevation(REACTION_BUBBLE_ELEVATION);
                     int count = reactionCounts.count(emoji);
                     if (count > 1) {

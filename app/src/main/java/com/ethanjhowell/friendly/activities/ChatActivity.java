@@ -116,6 +116,7 @@ public class ChatActivity extends AppCompatActivity {
         ParseQuery.getQuery(Message.class)
                 .whereEqualTo(Message.KEY_GROUP, group)
                 .include(Message.KEY_AUTHOR)
+                .addAscendingOrder(Message.KEY_CREATED_AT)
                 // id is unique so we only need to get the first (and only) result
                 .findInBackground((messagesFromServer, e) -> {
                     synchronized (messageMutex) {
