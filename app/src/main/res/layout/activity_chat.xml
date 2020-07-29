@@ -23,7 +23,7 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/typingDots"
+        app:layout_constraintBottom_toTopOf="@id/clSendMessageBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -57,6 +57,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
+        android:paddingTop="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,6 +69,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:background="@drawable/et_message_body_bubble"
             android:ems="10"
             android:gravity="start|top"
             android:hint="@string/etMessageBody_hint"
@@ -79,9 +81,9 @@
 
         <Button
             android:id="@+id/btSend"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="@string/btSend_text"
+            android:background="@drawable/bt_send_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -93,7 +95,7 @@
         android:layout_marginBottom="32dp"
         android:text="@string/btScrollToBottom_latest_text"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/rvMessages"
+        app:layout_constraintBottom_toTopOf="@+id/clSendMessageBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

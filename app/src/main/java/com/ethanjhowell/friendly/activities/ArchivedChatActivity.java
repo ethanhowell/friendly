@@ -71,6 +71,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
                 .whereEqualTo(Message.KEY_GROUP, group)
                 // only the ones before we left the group
                 .whereLessThanOrEqualTo(Message.KEY_CREATED_AT, group.getDateLeft())
+                .addAscendingOrder(Message.KEY_CREATED_AT)
                 .findInBackground((messages, e) -> {
                     if (e != null) {
                         Log.e(TAG, "problem retrieving archived messages: ", e);

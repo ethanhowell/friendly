@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clRoot"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/ivAuthorProfilePic"
@@ -17,6 +15,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_person_24" />
+
+    <TextView
+        android:id="@+id/tvAuthorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/llMessage"
+        app:layout_constraintStart_toStartOf="@+id/llMessage"
+        app:layout_constraintTop_toTopOf="@+id/ivAuthorProfilePic"
+        tools:text="First Last" />
 
     <LinearLayout
         android:id="@+id/llMessage"
@@ -33,22 +41,15 @@
             android:id="@+id/tvMessageBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#C3C3C3"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/message_bubble_light"
             tools:text="Message body" />
 
         <LinearLayout
             android:id="@+id/llReactions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:orientation="horizontal" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvAuthorName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/llMessage"
-        app:layout_constraintStart_toStartOf="@+id/llMessage"
-        tools:text="First Last" />
 </androidx.constraintlayout.widget.ConstraintLayout>

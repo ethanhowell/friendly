@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.GroupDetails">
+    tools:context=".activities.GroupDetailsActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -43,6 +43,8 @@
                 android:enabled="true"
                 android:focusable="true"
                 android:longClickable="true"
+                android:maxWidth="300dp"
+                android:textAlignment="center"
                 android:textIsSelectable="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,18 +55,20 @@
                 android:id="@+id/tvUsers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/tvUsers_text"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:fontFamily="sans-serif-light"
+                android:textAllCaps="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvInviteLink" />
+                app:layout_constraintTop_toBottomOf="@+id/tvInviteLink"
+                tools:text="3 people" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvUsers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
                 android:nestedScrollingEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"

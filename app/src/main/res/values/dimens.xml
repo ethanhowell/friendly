@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="activitySlideTransitionDuration">250</integer>
+    <dimen name="message_bubble_padding_horizontal">12dp</dimen>
+    <dimen name="message_bubble_padding_vertical">8dp</dimen>
+    <dimen name="message_bubble_corners_radius">6dp</dimen>
+    <dimen name="reaction_bubble_other_padding_vertical">2dp</dimen>
+    <dimen name="reaction_bubble_other_padding_horizontal">8dp</dimen>
+    <dimen name="reaction_bubble_other_corners_radius">16dp</dimen>
 </resources>

@@ -20,7 +20,6 @@
     <string name="btCreate_text">Create</string>
     <string name="itLeaveGroup_title">Leave group</string>
     <string name="etMessageBody_hint">Friendly message</string>
-    <string name="btSend_text">Send</string>
     <string name="ivAuthorProfilePic_contentDescription">Author Profile Picture</string>
     <string name="btScrollToBottom_latest_text">Latest Message ↓</string>
     <string name="itArchivedGroups_title">Archived groups</string>
@@ -29,7 +28,6 @@
     <string name="invalidGroupLink_toast">Invalid friendly invite</string>
     <string name="itDetails_title">Details</string>
     <string name="ivQR_contentDescription">Invite QR code</string>
-    <string name="tvUsers_text">Users</string>
     <string name="etFirstName_invalid_toast">First name can\'t be empty</string>
     <string name="etLastName_invalid_toast">Last name can\'t be empty</string>
     <string name="etEmail_invalid_toast">Invalid email</string>
@@ -39,4 +37,5 @@
     <string name="etPassword_invalidEmpty_toast">Password can\'t be empty</string>
     <string name="etPhoneNumber_invalid_toast">Invalid phone number</string>
     <string name="activity_register_title">Register</string>
+    <string name="tvUsers_template">%d people</string>
 </resources>
