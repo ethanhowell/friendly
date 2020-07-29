@@ -48,6 +48,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         ParseQuery.getQuery(Group__User.class)
                 .whereEqualTo(Group__User.KEY_GROUP, group)
                 .include(Group__User.KEY_USER)
+                .addAscendingOrder(Group__User.KEY_UPDATED_AT)
                 .findInBackground((group__users, e) -> {
                     if (e != null) {
                         Log.e(TAG, "loadUsers: ", e);
