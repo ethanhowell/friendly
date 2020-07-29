@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.ethanjhowell.friendly.R;
@@ -87,8 +89,10 @@ public class GroupDetailsActivity extends AppCompatActivity {
         tvInviteLink.setText(inviteUrl);
         tvInviteLink.setPaintFlags(tvInviteLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        binding.rvUsers.setAdapter(userAdapter);
-        binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView rvUsers = binding.rvUsers;
+        rvUsers.setAdapter(userAdapter);
+        rvUsers.setLayoutManager(new LinearLayoutManager(this));
+        rvUsers.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         tvUsers = binding.tvUsers;
 
         loadUsers();
