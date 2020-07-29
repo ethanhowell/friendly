@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class GroupDetails extends AppCompatActivity {
-    private static final String TAG = GroupDetails.class.getCanonicalName();
+public class GroupDetailsActivity extends AppCompatActivity {
+    private static final String TAG = GroupDetailsActivity.class.getCanonicalName();
     private static final String INTENT_GROUP_ID = "groupId";
     private static final String INTENT_GROUP_NAME = "groupName";
     private final Group group = new Group();
@@ -31,7 +31,7 @@ public class GroupDetails extends AppCompatActivity {
     private final UserAdapter userAdapter = new UserAdapter(users);
 
     public static Intent createIntent(Context context, Group group) {
-        Intent intent = new Intent(context, GroupDetails.class);
+        Intent intent = new Intent(context, GroupDetailsActivity.class);
         intent.putExtra(INTENT_GROUP_ID, group.getObjectId());
         intent.putExtra(INTENT_GROUP_NAME, group.getGroupName());
         return intent;

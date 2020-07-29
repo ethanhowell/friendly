@@ -335,7 +335,7 @@ public class ChatActivity extends AppCompatActivity {
                 leaveGroupOnClick();
                 return true;
             case R.id.itDetails:
-                startActivity(GroupDetails.createIntent(this, group));
+                startActivity(GroupDetailsActivity.createIntent(this, group));
                 break;
             case android.R.id.home:
                 onBackPressed();
