@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -35,11 +36,17 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
     protected static final float OTHER_MESSAGE_MARGIN_END_DP = 64;
     protected static final float OWN_MESSAGE_MARGIN_START_DP = 128;
     protected static final float OWN_MESSAGE_MARGIN_END_DP = 16;
+    protected static final Resources RESOURCES = Resources.getSystem();
     protected static final DisplayMetrics DISPLAY_METRICS = Resources.getSystem().getDisplayMetrics();
     protected static final int OTHER_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
     protected static final int OTHER_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OTHER_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
     protected static final int OWN_MESSAGE_MARGIN_START_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_START_DP, DISPLAY_METRICS);
     protected static final int OWN_MESSAGE_MARGIN_END_PX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, OWN_MESSAGE_MARGIN_END_DP, DISPLAY_METRICS);
+    protected static final float REACTION_BUBBLE_ELEVATION = 2;
+
+    protected static final int COLOR_BLACK = 0xff000000;
+    protected static final int COLOR_WHITE = 0xffffffff;
+
     private static final String TAG = BaseMessageAdapter.class.getCanonicalName();
     protected final List<Message> messages;
 
@@ -107,6 +114,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
                 for (String emoji : reactionCounts.elementSet()) {
                     TextView textView = new TextView(context);
                     textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    textView.setElevation(REACTION_BUBBLE_ELEVATION);
                     int count = reactionCounts.count(emoji);
                     if (count > 1) {
                         textView.setText(String.format(Locale.US, "%s %d", emoji, count));
@@ -115,7 +123,11 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
                     }
                     if (emoji.equals(userEmoji)) {
                         Log.d(TAG, "setReactions: match");
-                        textView.setBackgroundColor(0xff1479fb);
+                        textView.setBackgroundResource(R.drawable.reaction_bubble_self);
+                        textView.setTextColor(ResourcesCompat.getColor(context.getResources(), R.color.colorPrimaryDark, null));
+                    } else {
+                        textView.setBackgroundResource(R.drawable.reaction_bubble_other);
+                        textView.setTextColor(COLOR_BLACK);
                     }
                     llReactions.addView(textView);
                 }
@@ -136,7 +148,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
             setReactions(message.getReactions());
             if (message.authorIsCurrentUser()) {
                 tvAuthorName.setVisibility(View.GONE);
-                tvMessageBody.setTextColor(0xffffffff);
+                tvMessageBody.setTextColor(COLOR_WHITE);
                 tvMessageBody.setBackgroundResource(R.drawable.message_bubble_dark);
                 ivAuthorProfilePic.setVisibility(View.GONE);
                 layoutParams.setMarginStart(OWN_MESSAGE_MARGIN_START_PX);
@@ -151,7 +163,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
                     tvAuthorName.setVisibility(View.VISIBLE);
                     tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
                 }
-                tvMessageBody.setTextColor(0xff000000);
+                tvMessageBody.setTextColor(COLOR_BLACK);
                 tvMessageBody.setBackgroundResource(R.drawable.message_bubble_light);
                 layoutParams.setMarginStart(OTHER_MESSAGE_MARGIN_START_PX);
                 layoutParams.setMarginEnd(OTHER_MESSAGE_MARGIN_END_PX);
