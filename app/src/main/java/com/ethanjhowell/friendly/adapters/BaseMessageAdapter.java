@@ -59,7 +59,11 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(messages.get(position));
+        holder.bind(
+                position != 0 ? messages.get(position - 1) : null,
+                messages.get(position),
+                position < messages.size() - 1 ? messages.get(position + 1) : null
+        );
     }
 
     @Override
@@ -91,9 +95,7 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
         }
 
         private void setReactions(Map<String, String> reactions) {
-            if (reactions.isEmpty()) {
-                llReactions.setVisibility(View.GONE);
-            } else {
+            if (!reactions.isEmpty()) {
                 llReactions.setVisibility(View.VISIBLE);
                 llReactions.removeAllViews();
                 Multiset<String> reactionCounts = LinkedHashMultiset.create();
@@ -120,26 +122,37 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
             }
         }
 
-        public void bind(Message message) {
+        public void bind(Message prev, Message message, Message next) {
             Log.d(TAG, "bind: " + message.getBody());
             FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
+
+            if (next == null || next.getAuthor().getObjectId().equals(message.getAuthor().getObjectId())) {
+                llReactions.setVisibility(View.GONE);
+            } else {
+                llReactions.setVisibility(View.INVISIBLE);
+            }
 
             tvMessageBody.setText(message.getBody());
             setReactions(message.getReactions());
             if (message.authorIsCurrentUser()) {
+                tvAuthorName.setVisibility(View.GONE);
                 tvMessageBody.setTextColor(0xffffffff);
                 tvMessageBody.setBackgroundResource(R.drawable.message_bubble_dark);
                 ivAuthorProfilePic.setVisibility(View.GONE);
-                tvAuthorName.setVisibility(View.GONE);
                 layoutParams.setMarginStart(OWN_MESSAGE_MARGIN_START_PX);
                 layoutParams.setMarginEnd(OWN_MESSAGE_MARGIN_END_PX);
                 llMessage.setGravity(Gravity.END);
             } else {
+                if (prev != null && prev.getAuthor().getObjectId().equals(message.getAuthor().getObjectId())) {
+                    ivAuthorProfilePic.setVisibility(View.GONE);
+                    tvAuthorName.setVisibility(View.GONE);
+                } else {
+                    ivAuthorProfilePic.setVisibility(View.VISIBLE);
+                    tvAuthorName.setVisibility(View.VISIBLE);
+                    tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
+                }
                 tvMessageBody.setTextColor(0xff000000);
                 tvMessageBody.setBackgroundResource(R.drawable.message_bubble_light);
-                ivAuthorProfilePic.setVisibility(View.VISIBLE);
-                tvAuthorName.setVisibility(View.VISIBLE);
-                tvAuthorName.setText(String.format("%s %s", author.getFirstName(), author.getLastName()));
                 layoutParams.setMarginStart(OTHER_MESSAGE_MARGIN_START_PX);
                 layoutParams.setMarginEnd(OTHER_MESSAGE_MARGIN_END_PX);
                 llMessage.setGravity(Gravity.START);
