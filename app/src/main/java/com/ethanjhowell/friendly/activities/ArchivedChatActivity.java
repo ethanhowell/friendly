@@ -122,7 +122,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
         Date groupDateLeft = new Date();
         groupDateLeft.setTime(getIntent().getLongExtra(INTENT_GROUP_DATE_LEFT, -1));
 
-        Toolbar toolbar = binding.toolbar;
+        Toolbar toolbar = binding.includeToolbar.toolbar;
         toolbar.setTitle(String.format(getString(R.string.activity_archived_chat_titleFormat), groupName));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -137,7 +137,7 @@ public class ArchivedChatActivity extends AppCompatActivity {
         group.setGroupName(groupName);
         group.setDateLeft(groupDateLeft);
 
-        loading = binding.clProgress;
+        loading = binding.loading.clProgress;
 
         loadMessages();
     }

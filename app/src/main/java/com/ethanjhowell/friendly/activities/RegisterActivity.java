@@ -34,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getAllViews(binding);
 
-        Toolbar toolbar = binding.toolbar.toolbar;
+        Toolbar toolbar = binding.includeToolbar.toolbar;
         toolbar.setTitle(R.string.activity_register_title);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

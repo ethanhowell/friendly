@@ -26,7 +26,7 @@ public class NewGroupActivity extends AppCompatActivity {
         binding = ActivityNewGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Toolbar toolbar = binding.toolbar.toolbar;
+        Toolbar toolbar = binding.includeToolbar.toolbar;
         toolbar.setTitle(R.string.activity_new_group_title);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

@@ -7,7 +7,7 @@
     tools:context=".activities.RegisterActivity">
 
     <include
-        android:id="@+id/toolbar"
+        android:id="@+id/includeToolbar"
         layout="@layout/toolbar" />
 
     <include
@@ -21,7 +21,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toBottomOf="@id/includeToolbar">
 
         <EditText
             android:id="@+id/etFirstName"
