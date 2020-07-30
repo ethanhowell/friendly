@@ -17,7 +17,6 @@
     <string name="selectImage_toast">Please select an image</string>
     <string name="itLogOut_title">Log out</string>
     <string name="etGroupName_hint">Group Name</string>
-    <string name="btCreate_text">Create</string>
     <string name="itLeaveGroup_title">Leave group</string>
     <string name="etMessageBody_hint">Friendly message</string>
     <string name="ivAuthorProfilePic_contentDescription">Author Profile Picture</string>
@@ -32,7 +31,6 @@
     <string name="etLastName_invalid_toast">Last name can\'t be empty</string>
     <string name="etEmail_invalid_toast">Invalid email</string>
     <string name="etPassword_invalidRegister_toast">Passwords can\'t be empty and must match</string>
-    <string name="etGroupName_invalid_toast">Group name can\'t be blank</string>
     <string name="etUsername_invalid_toast">Username can\'t be empty</string>
     <string name="etPassword_invalidEmpty_toast">Password can\'t be empty</string>
     <string name="etPhoneNumber_invalid_toast">Invalid phone number</string>
