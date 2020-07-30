@@ -148,9 +148,9 @@ public class GroupActivity extends AppCompatActivity {
             }
             Glide.with(this)
                     .load(file)
+                    .circleCrop()
                     .into(binding.ivProfilePic);
         });
-        binding.textView.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
 
         // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;

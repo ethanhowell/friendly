@@ -27,8 +27,8 @@
 
         <ImageView
             android:id="@+id/ivProfilePic"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
             android:layout_marginTop="16dp"
             android:contentDescription="@string/ivProfilePic_contentDescription"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,26 +37,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivProfilePic"
-            tools:text="First Last" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvGroups"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             android:overScrollMode="never"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/ivProfilePic" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabNewGroup"
