@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:background="@drawable/message_bubble_light"
+            android:background="@drawable/bubble_light"
             tools:text="Message body" />
 
         <LinearLayout

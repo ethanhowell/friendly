@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">friendly</string>
     <string name="etUsername_hint">Email</string>
-    <string name="btLogin_text">Login</string>
-    <string name="tvSignup_text">Sign up</string>
+    <string name="btLogin_text">Log In</string>
+    <string name="tvSignup_text">Create new account</string>
     <string name="etFirstName_hint">First Name</string>
     <string name="etLastName_hint">Last Name</string>
     <string name="etEmail_hint">Email</string>
@@ -10,7 +10,7 @@
     <string name="etPassword_hint">Password</string>
     <string name="etConfirmPassword_hint">Confirm Password</string>
     <string name="btSignup_text">Sign up</string>
-    <string name="btFacebookLogin_text">Log In with facebook</string>
+    <string name="btFacebookLogin_text">Sign in with Facebook</string>
     <string name="btContinue_text">Continue</string>
     <string name="ivProfilePic_contentDescription">Profile Picture</string>
     <string name="tvChoosePhoto_text">Choose Photo</string>
@@ -37,4 +37,5 @@
     <string name="activity_register_title">Register</string>
     <string name="tvUsers_template">%d people</string>
     <string name="ivLogo_contentDescription">logo</string>
+    <string name="or">or</string>
 </resources>
