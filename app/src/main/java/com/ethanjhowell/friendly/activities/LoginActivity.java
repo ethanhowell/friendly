@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                 );
             });
             binding.btLogin.setOnClickListener(this::loginButtonOnClick);
+            binding.btLogin.setClickable(false);
             binding.tvSignup.setOnClickListener(this::registrationOnClick);
             InputTextChange inputTextChange = new InputTextChange();
             binding.etUsername.addTextChangedListener(inputTextChange);
@@ -191,7 +192,7 @@ public class LoginActivity extends AppCompatActivity {
                 binding.btLogin.setClickable(false);
             } else {
                 binding.btLogin.setBackgroundResource(R.drawable.bubble);
-                binding.btLogin.setClickable(false);
+                binding.btLogin.setClickable(true);
             }
         }
     }

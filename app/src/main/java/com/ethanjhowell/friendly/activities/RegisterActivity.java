@@ -1,6 +1,8 @@
 package com.ethanjhowell.friendly.activities;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +35,12 @@ public class RegisterActivity extends AppCompatActivity {
         ActivityRegisterBinding binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getAllViews(binding);
+        InputTextChange inputTextChange = new InputTextChange();
+        etFirstName.addTextChangedListener(inputTextChange);
+        etLastName.addTextChangedListener(inputTextChange);
+        etEmail.addTextChangedListener(inputTextChange);
+        etPassword.addTextChangedListener(inputTextChange);
+        etConfirmPassword.addTextChangedListener(inputTextChange);
 
         Toolbar toolbar = binding.includeToolbar.toolbar;
         toolbar.setTitle(R.string.activity_register_title);
@@ -40,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         btSignup.setOnClickListener(this::registerNewUser);
+        btSignup.setClickable(false);
     }
 
     private void getAllViews(ActivityRegisterBinding binding) {
@@ -51,6 +60,34 @@ public class RegisterActivity extends AppCompatActivity {
         btSignup = binding.btSignup;
 
         loading = binding.loading.clProgress;
+    }
+
+
+    private class InputTextChange implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (etFirstName.length() == 0 ||
+                    etLastName.length() == 0 ||
+                    etEmail.length() == 0 ||
+                    etPassword.length() == 0 ||
+                    etConfirmPassword.length() == 0 ||
+                    !etPassword.getText().toString().equals(etConfirmPassword.getText().toString())
+            ) {
+                btSignup.setBackgroundResource(R.drawable.bubble_light);
+                btSignup.setClickable(false);
+            } else {
+                btSignup.setBackgroundResource(R.drawable.bubble);
+                btSignup.setClickable(true);
+            }
+        }
     }
 
     private void showError(String error) {
