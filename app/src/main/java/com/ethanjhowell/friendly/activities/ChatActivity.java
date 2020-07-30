@@ -135,7 +135,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     messagesAdapter.notifyDataSetChanged();
                     scrollToBottomOfMessages(false);
-                    binding.clProgress.setVisibility(View.GONE);
+                    binding.loading.clProgress.setVisibility(View.GONE);
                 });
     }
 
@@ -206,7 +206,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        binding.clProgress.setVisibility(View.VISIBLE);
+        binding.loading.clProgress.setVisibility(View.VISIBLE);
         BackgroundManager backgroundManager = new BackgroundManager(
                 // callback
                 this::onDataLoaded,
@@ -301,7 +301,7 @@ public class ChatActivity extends AppCompatActivity {
         String groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
         String groupId = getIntent().getStringExtra(INTENT_GROUP_ID);
 
-        Toolbar toolbar = binding.toolbar;
+        Toolbar toolbar = binding.includeToolbar.toolbar;
         toolbar.setTitle(groupName);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

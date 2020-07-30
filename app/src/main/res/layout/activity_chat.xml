@@ -6,42 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".activities.ChatActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/white"
-        app:layout_constraintTop_toTopOf="parent">
+    <include
+        android:id="@+id/includeToolbar"
+        layout="@layout/toolbar_child_shadow" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clProgress"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#33000000"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+        android:id="@+id/loading"
+        layout="@layout/progress_bar_toolbar" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -50,10 +21,11 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:scrollbars="vertical"
+        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@id/clSendMessageBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
+        app:layout_constraintTop_toBottomOf="@id/includeToolbar" />
 
     <com.eyalbira.loadingdots.LoadingDots
         android:id="@+id/typingDots"
@@ -87,6 +59,8 @@
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="16dp"
+        android:background="@color/white"
+        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
