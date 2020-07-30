@@ -118,7 +118,6 @@ public class GroupActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Toolbar toolbar = binding.includeToolbar.toolbar;
-        toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
         progressBar = binding.loading.clProgress;
