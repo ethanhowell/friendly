@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar_child" />
+        layout="@layout/toolbar" />
 
     <include
         android:id="@+id/loading"
