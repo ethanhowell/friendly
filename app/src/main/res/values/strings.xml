@@ -38,4 +38,6 @@
     <string name="tvUsers_template">%d people</string>
     <string name="ivLogo_contentDescription">logo</string>
     <string name="or">or</string>
+    <string name="ivGroupPic_contentDescription">group icon</string>
+    <string name="tvGroupsTitle_text">Recent Chats</string>
 </resources>

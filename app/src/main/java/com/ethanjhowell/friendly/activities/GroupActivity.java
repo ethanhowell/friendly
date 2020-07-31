@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -155,6 +156,7 @@ public class GroupActivity extends AppCompatActivity {
         RecyclerView rvGroups = binding.rvGroups;
         groupAdapter = new GroupAdapter(currentGroups);
         rvGroups.setAdapter(groupAdapter);
+        rvGroups.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         rvGroups.setLayoutManager(new LinearLayoutManager(this));
 
         // click handler for floating action button
