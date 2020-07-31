@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -37,6 +41,8 @@ public class NewUserActivity extends AppCompatActivity {
     private File photoFile;
     private ActivityNewUserBinding binding;
     private ParseFile parsePhotoFile;
+    private int COLOR_CONTROL_HIGHLIGHT;
+    private int COLOR_CONTROL_ACTIVATED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,19 @@ public class NewUserActivity extends AppCompatActivity {
         }
 
         binding.btContinue.setOnClickListener(this::continueOnClick);
+        binding.btContinue.setClickable(false);
+        loadColors();
+        binding.etPhoneNumber.addTextChangedListener(new InputTextWatcher());
         binding.clChooseProfilePic.setOnClickListener(this::launchCamera);
+    }
+
+    private void loadColors() {
+        TypedValue typedValue = new TypedValue();
+        this.getTheme().resolveAttribute(R.attr.colorControlHighlight, typedValue, true);
+        COLOR_CONTROL_HIGHLIGHT = typedValue.data;
+
+        this.getTheme().resolveAttribute(R.attr.colorControlActivated, typedValue, true);
+        COLOR_CONTROL_ACTIVATED = typedValue.data;
     }
 
     private File getPhotoFileUri() {
@@ -125,14 +143,34 @@ public class NewUserActivity extends AppCompatActivity {
         }
     }
 
+    private class InputTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String phoneNumber = binding.etPhoneNumber.getText().toString();
+            phoneNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
+            if (phoneNumber.isEmpty() || !PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
+                binding.btContinue.setClickable(false);
+                DrawableCompat.setTint(binding.btContinue.getBackground(), COLOR_CONTROL_HIGHLIGHT);
+            } else {
+                binding.btContinue.setClickable(true);
+                DrawableCompat.setTint(binding.btContinue.getBackground(), COLOR_CONTROL_ACTIVATED);
+            }
+        }
+    }
+
     private void continueOnClick(View v) {
         if (parsePhotoFile != null) {
             String phoneNumber = binding.etPhoneNumber.getText().toString();
             phoneNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
-            if (phoneNumber.isEmpty() || !PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
-                Toast.makeText(this, R.string.etPhoneNumber_invalid_toast, Toast.LENGTH_SHORT).show();
-                return;
-            }
 
             binding.loading.clProgress.setVisibility(View.VISIBLE);
             FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
