@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +39,9 @@ public class GroupActivity extends AppCompatActivity {
     private GroupAdapter groupAdapter;
     private ConstraintLayout progressBar;
     private boolean userCardExpanded = false;
+    private ConstraintLayout clCardDetails;
+    private CardView cardProfile;
+    private ImageView ivProfilePic;
 
     private void getUserGroupsInBackground() {
         assert groupAdapter != null;
@@ -154,31 +159,39 @@ public class GroupActivity extends AppCompatActivity {
 
         // setup for user card
         FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
+        ivProfilePic = binding.ivProfilePic;
         user.getProfilePicture().getFileInBackground((file, e) -> {
             if (e != null) {
                 Log.e(TAG, "onCreate: ", e);
+            } else {
+                Glide.with(this)
+                        .load(file)
+                        .circleCrop()
+                        .into(ivProfilePic);
             }
-            Glide.with(this)
-                    .load(file)
-                    .circleCrop()
-                    .into(binding.ivProfilePic);
         });
-        binding.ivProfilePic.setOnClickListener(this::onPicClick);
         binding.tvUserName.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
         binding.tvEmail.setText(user.getEmail());
         binding.tvPhone.setText(user.getPhoneNumber());
+
+        cardProfile = binding.cardProfile;
+        clCardDetails = binding.clCardDetails;
+        ivProfilePic.setOnClickListener(this::onPicClick);
 
     }
 
     private void onPicClick(View v) {
         if (userCardExpanded) {
+            clCardDetails.setVisibility(View.GONE);
+            cardProfile.setRadius(ivProfilePic.getWidth());
 
+            userCardExpanded = false;
         } else {
+            clCardDetails.setVisibility(View.VISIBLE);
+            cardProfile.setRadius(0);
 
+            userCardExpanded = true;
         }
-
-        // flip the switch
-        userCardExpanded ^= true;
     }
 
     @Override

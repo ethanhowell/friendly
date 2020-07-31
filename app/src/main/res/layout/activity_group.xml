@@ -27,15 +27,17 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardProfile"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:animateLayoutChanges="true"
+            app:cardCornerRadius="128dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp">
 
@@ -50,9 +52,13 @@
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clCardDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="40dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/ivProfilePic">
