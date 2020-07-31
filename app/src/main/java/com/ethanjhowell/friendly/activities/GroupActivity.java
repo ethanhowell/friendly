@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,13 +36,15 @@ import java.util.regex.Pattern;
 public class GroupActivity extends AppCompatActivity {
     private final static String TAG = GroupActivity.class.getCanonicalName();
     private static final Pattern DEEPLINK_GROUP_PATTERN = Pattern.compile("^http://friendly-back\\.herokuapp.com/g/(.*)$");
+    private static final float CARD_PROFILE_ELEVATION_DP = 2f;
     private ArrayList<Group> currentGroups;
     private GroupAdapter groupAdapter;
     private ConstraintLayout progressBar;
-    private boolean userCardExpanded = false;
+    private boolean cardProfileExpanded = false;
     private ConstraintLayout clCardDetails;
     private CardView cardProfile;
     private ImageView ivProfilePic;
+    private float cardProfileElevationPx;
 
     private void getUserGroupsInBackground() {
         assert groupAdapter != null;
@@ -178,22 +181,28 @@ public class GroupActivity extends AppCompatActivity {
         clCardDetails = binding.clCardDetails;
         ivProfilePic.setOnClickListener(this::onPicClick);
 
+        cardProfileElevationPx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                CARD_PROFILE_ELEVATION_DP,
+                getResources().getDisplayMetrics()
+        );
+
     }
 
     private void onPicClick(View v) {
-        if (userCardExpanded) {
+        if (cardProfileExpanded) {
             clCardDetails.setVisibility(View.GONE);
             cardProfile.setCardElevation(0);
             cardProfile.setCardBackgroundColor(0);
 
-            userCardExpanded = false;
+            cardProfileExpanded = false;
         } else {
             clCardDetails.setVisibility(View.VISIBLE);
-            cardProfile.setCardElevation(10);
+            cardProfile.setCardElevation(cardProfileElevationPx);
             // all bits set, white
             cardProfile.setCardBackgroundColor(~0);
 
-            userCardExpanded = true;
+            cardProfileExpanded = true;
         }
     }
 
