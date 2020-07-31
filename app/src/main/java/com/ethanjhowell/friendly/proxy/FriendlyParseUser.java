@@ -130,4 +130,8 @@ public class FriendlyParseUser {
     public int hashCode() {
         return Objects.hash(user.getObjectId());
     }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
 }

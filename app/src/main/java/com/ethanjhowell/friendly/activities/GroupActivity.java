@@ -36,6 +36,7 @@ public class GroupActivity extends AppCompatActivity {
     private ArrayList<Group> currentGroups;
     private GroupAdapter groupAdapter;
     private ConstraintLayout progressBar;
+    private boolean userCardExpanded = false;
 
     private void getUserGroupsInBackground() {
         assert groupAdapter != null;
@@ -141,17 +142,6 @@ public class GroupActivity extends AppCompatActivity {
 
         currentGroups = new ArrayList<>();
 
-        FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
-        user.getProfilePicture().getFileInBackground((file, e) -> {
-            if (e != null) {
-                Log.e(TAG, "onCreate: ", e);
-            }
-            Glide.with(this)
-                    .load(file)
-                    .circleCrop()
-                    .into(binding.ivProfilePic);
-        });
-
         // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;
         groupAdapter = new GroupAdapter(currentGroups);
@@ -162,6 +152,33 @@ public class GroupActivity extends AppCompatActivity {
         // click handler for floating action button
         binding.fabNewGroup.setOnClickListener(this::newGroupOnClick);
 
+        // setup for user card
+        FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
+        user.getProfilePicture().getFileInBackground((file, e) -> {
+            if (e != null) {
+                Log.e(TAG, "onCreate: ", e);
+            }
+            Glide.with(this)
+                    .load(file)
+                    .circleCrop()
+                    .into(binding.ivProfilePic);
+        });
+        binding.ivProfilePic.setOnClickListener(this::onPicClick);
+        binding.tvUserName.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
+        binding.tvEmail.setText(user.getEmail());
+        binding.tvPhone.setText(user.getPhoneNumber());
+
+    }
+
+    private void onPicClick(View v) {
+        if (userCardExpanded) {
+
+        } else {
+
+        }
+
+        // flip the switch
+        userCardExpanded ^= true;
     }
 
     @Override
