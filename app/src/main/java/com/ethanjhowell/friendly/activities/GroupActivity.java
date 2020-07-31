@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,9 +36,15 @@ import java.util.regex.Pattern;
 public class GroupActivity extends AppCompatActivity {
     private final static String TAG = GroupActivity.class.getCanonicalName();
     private static final Pattern DEEPLINK_GROUP_PATTERN = Pattern.compile("^http://friendly-back\\.herokuapp.com/g/(.*)$");
+    private static final float CARD_PROFILE_ELEVATION_DP = 2f;
     private ArrayList<Group> currentGroups;
     private GroupAdapter groupAdapter;
     private ConstraintLayout progressBar;
+    private boolean cardProfileExpanded = false;
+    private ConstraintLayout clCardDetails;
+    private CardView cardProfile;
+    private ImageView ivProfilePic;
+    private float cardProfileElevationPx;
 
     private void getUserGroupsInBackground() {
         assert groupAdapter != null;
@@ -141,17 +150,6 @@ public class GroupActivity extends AppCompatActivity {
 
         currentGroups = new ArrayList<>();
 
-        FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
-        user.getProfilePicture().getFileInBackground((file, e) -> {
-            if (e != null) {
-                Log.e(TAG, "onCreate: ", e);
-            }
-            Glide.with(this)
-                    .load(file)
-                    .circleCrop()
-                    .into(binding.ivProfilePic);
-        });
-
         // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;
         groupAdapter = new GroupAdapter(currentGroups);
@@ -162,6 +160,50 @@ public class GroupActivity extends AppCompatActivity {
         // click handler for floating action button
         binding.fabNewGroup.setOnClickListener(this::newGroupOnClick);
 
+        // setup for user card
+        FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
+        ivProfilePic = binding.ivProfilePic;
+        user.getProfilePicture().getFileInBackground((file, e) -> {
+            if (e != null) {
+                Log.e(TAG, "onCreate: ", e);
+            } else {
+                Glide.with(this)
+                        .load(file)
+                        .circleCrop()
+                        .into(ivProfilePic);
+            }
+        });
+        binding.tvUserName.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
+        binding.tvEmail.setText(user.getEmail());
+        binding.tvPhone.setText(user.getPhoneNumber());
+
+        cardProfile = binding.cardProfile;
+        clCardDetails = binding.clCardDetails;
+        ivProfilePic.setOnClickListener(this::onPicClick);
+
+        cardProfileElevationPx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                CARD_PROFILE_ELEVATION_DP,
+                getResources().getDisplayMetrics()
+        );
+
+    }
+
+    private void onPicClick(View v) {
+        if (cardProfileExpanded) {
+            clCardDetails.setVisibility(View.GONE);
+            cardProfile.setCardElevation(0);
+            cardProfile.setCardBackgroundColor(0);
+
+            cardProfileExpanded = false;
+        } else {
+            clCardDetails.setVisibility(View.VISIBLE);
+            cardProfile.setCardElevation(cardProfileElevationPx);
+            // all bits set, white
+            cardProfile.setCardBackgroundColor(~0);
+
+            cardProfileExpanded = true;
+        }
     }
 
     @Override
