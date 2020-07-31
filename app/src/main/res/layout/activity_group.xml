@@ -31,9 +31,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:animateLayoutChanges="true"
-            app:cardCornerRadius="128dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:cardBackgroundColor="#0000"
+            app:cardElevation="0dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout

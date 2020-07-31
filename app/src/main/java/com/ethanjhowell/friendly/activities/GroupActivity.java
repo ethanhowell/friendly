@@ -183,12 +183,15 @@ public class GroupActivity extends AppCompatActivity {
     private void onPicClick(View v) {
         if (userCardExpanded) {
             clCardDetails.setVisibility(View.GONE);
-            cardProfile.setRadius(ivProfilePic.getWidth());
+            cardProfile.setCardElevation(0);
+            cardProfile.setCardBackgroundColor(0);
 
             userCardExpanded = false;
         } else {
             clCardDetails.setVisibility(View.VISIBLE);
-            cardProfile.setRadius(0);
+            cardProfile.setCardElevation(10);
+            // all bits set, white
+            cardProfile.setCardBackgroundColor(~0);
 
             userCardExpanded = true;
         }
