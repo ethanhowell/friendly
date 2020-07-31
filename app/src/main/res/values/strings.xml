@@ -32,7 +32,6 @@
     <string name="etPassword_invalidRegister_toast">Passwords can\'t be empty and must match</string>
     <string name="etUsername_invalid_toast">Username can\'t be empty</string>
     <string name="etPassword_invalidEmpty_toast">Password can\'t be empty</string>
-    <string name="etPhoneNumber_invalid_toast">Invalid phone number</string>
     <string name="activity_register_title">Register</string>
     <string name="tvUsers_template">%d people</string>
     <string name="ivLogo_contentDescription">logo</string>
