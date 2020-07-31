@@ -2,6 +2,8 @@ package com.ethanjhowell.friendly.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -50,7 +52,11 @@ public class LoginActivity extends AppCompatActivity {
                 );
             });
             binding.btLogin.setOnClickListener(this::loginButtonOnClick);
+            binding.btLogin.setClickable(false);
             binding.tvSignup.setOnClickListener(this::registrationOnClick);
+            InputTextChange inputTextChange = new InputTextChange();
+            binding.etUsername.addTextChangedListener(inputTextChange);
+            binding.etPassword.addTextChangedListener(inputTextChange);
         }
     }
 
@@ -142,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (e != null) {
                         Log.e(TAG, "onCreate: log in problem ", e);
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        binding.loading.clProgress.setVisibility(View.GONE);
                     } else {
                         startNextActivity(FriendlyParseUser.fromParseUser(user));
                     }
@@ -164,6 +171,29 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == REGISTER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             // if registration was a success then we can launch the group activity
             startNextActivity(FriendlyParseUser.getCurrentUser());
+        }
+    }
+
+    private class InputTextChange implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (binding.etUsername.length() == 0 ||
+                    binding.etPassword.length() == 0
+            ) {
+                binding.btLogin.setBackgroundResource(R.drawable.bubble_light);
+                binding.btLogin.setClickable(false);
+            } else {
+                binding.btLogin.setBackgroundResource(R.drawable.bubble);
+                binding.btLogin.setClickable(true);
+            }
         }
     }
 }

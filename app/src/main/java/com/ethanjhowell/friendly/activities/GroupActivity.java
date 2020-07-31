@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -114,12 +115,10 @@ public class GroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         ActivityGroupBinding binding = ActivityGroupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Toolbar toolbar = binding.toolbar.toolbar;
-        toolbar.setTitle(R.string.app_name);
+        Toolbar toolbar = binding.includeToolbar.toolbar;
         setSupportActionBar(toolbar);
 
         progressBar = binding.loading.clProgress;
@@ -149,14 +148,15 @@ public class GroupActivity extends AppCompatActivity {
             }
             Glide.with(this)
                     .load(file)
+                    .circleCrop()
                     .into(binding.ivProfilePic);
         });
-        binding.textView.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
 
         // set up recycler view for the groups
         RecyclerView rvGroups = binding.rvGroups;
         groupAdapter = new GroupAdapter(currentGroups);
         rvGroups.setAdapter(groupAdapter);
+        rvGroups.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         rvGroups.setLayoutManager(new LinearLayoutManager(this));
 
         // click handler for floating action button

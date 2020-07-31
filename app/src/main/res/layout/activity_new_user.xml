@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="40dp"
     tools:context=".activities.NewUserActivity">
 
     <include
@@ -16,18 +15,16 @@
         android:id="@+id/clChooseProfilePic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".16">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/ivProfilePic"
             android:layout_width="300dp"
             android:layout_height="300dp"
+            android:layout_marginTop="48dp"
             android:contentDescription="@string/ivProfilePic_contentDescription"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,11 +36,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="#CC6E6A6A"
+            android:background="@drawable/bubble_dark"
             android:padding="8dp"
+            android:textAllCaps="true"
             android:text="@string/tvChoosePhoto_text"
             android:textAlignment="center"
-            android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/ivProfilePic"
@@ -53,27 +50,29 @@
 
     <EditText
         android:id="@+id/etPhoneNumber"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:autofillHints="phone"
-        android:ems="10"
+        android:background="@drawable/input_bubble"
         android:hint="@string/etPhoneNumber_hint"
         android:inputType="phone"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clChooseProfilePic" />
 
     <Button
         android:id="@+id/btContinue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btContinue_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPhoneNumber"
-        app:layout_constraintVertical_bias=".2" />
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/ic_round_arrow_forward_24"
+        android:backgroundTint="?attr/colorControlHighlight"
+        app:layout_constraintBottom_toBottomOf="@+id/etPhoneNumber"
+        app:layout_constraintStart_toEndOf="@id/etPhoneNumber"
+        app:layout_constraintTop_toTopOf="@+id/etPhoneNumber" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

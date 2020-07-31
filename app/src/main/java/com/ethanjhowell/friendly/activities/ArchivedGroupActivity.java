@@ -61,7 +61,7 @@ public class ArchivedGroupActivity extends AppCompatActivity {
         loading = binding.loading.clProgress;
         getUserGroupsInBackground();
 
-        Toolbar toolbar = binding.toolbar.toolbar;
+        Toolbar toolbar = binding.includeToolbar.toolbar;
         toolbar.setTitle("Archived Groups");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

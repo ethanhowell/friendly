@@ -301,7 +301,7 @@ public class ChatActivity extends AppCompatActivity {
         String groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
         String groupId = getIntent().getStringExtra(INTENT_GROUP_ID);
 
-        Toolbar toolbar = binding.toolbar.toolbar;
+        Toolbar toolbar = binding.includeToolbar.toolbar;
         toolbar.setTitle(groupName);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

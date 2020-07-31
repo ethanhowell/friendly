@@ -7,10 +7,8 @@
     tools:context=".activities.ChatActivity">
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_child"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/includeToolbar"
+        layout="@layout/toolbar" />
 
     <include
         android:id="@+id/loading"
@@ -23,10 +21,11 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:scrollbars="vertical"
+        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@id/clSendMessageBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/includeToolbar" />
 
     <com.eyalbira.loadingdots.LoadingDots
         android:id="@+id/typingDots"
@@ -60,6 +59,8 @@
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="16dp"
+        android:background="@color/white"
+        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

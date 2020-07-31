@@ -7,8 +7,8 @@
     tools:context=".activities.ArchivedChatActivity">
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_child" />
+        android:id="@+id/includeToolbar"
+        layout="@layout/toolbar" />
 
     <include
         android:id="@+id/loading"
@@ -22,7 +22,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/includeToolbar" />
 
     <Button
         android:id="@+id/btScrollToBottom"

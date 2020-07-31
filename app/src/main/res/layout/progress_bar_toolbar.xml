@@ -6,12 +6,13 @@
     android:layout_height="0dp"
     android:background="#33000000"
     android:clickable="true"
+    android:elevation="100dp"
     android:focusable="true"
     android:visibility="gone"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/toolbar">
+    app:layout_constraintTop_toBottomOf="@id/includeToolbar">
 
     <ProgressBar
         style="?android:attr/progressBarStyle"

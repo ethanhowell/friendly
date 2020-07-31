@@ -7,8 +7,8 @@
     tools:context=".activities.NewGroupActivity">
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_child" />
+        android:id="@+id/includeToolbar"
+        layout="@layout/toolbar" />
 
     <include
         android:id="@+id/loading"
@@ -16,26 +16,30 @@
 
     <EditText
         android:id="@+id/etGroupName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/etGroupName_hint"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btCreate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintTop_toBottomOf="@+id/includeToolbar" />
 
     <Button
         android:id="@+id/btCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btCreate_text"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_round_arrow_forward_24"
+        android:backgroundTint="?attr/colorControlHighlight"
+        app:layout_constraintBottom_toBottomOf="@+id/etGroupName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etGroupName" />
+        app:layout_constraintTop_toTopOf="@+id/etGroupName" />
 </androidx.constraintlayout.widget.ConstraintLayout>
