@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public abstract class MessageGestureListener implements View.OnTouchListener {
+    private static final String TAG = MessageGestureListener.class.getCanonicalName();
     private GestureDetector gestureDetector;
 
     public MessageGestureListener(Context c) {
@@ -36,8 +37,9 @@ public abstract class MessageGestureListener implements View.OnTouchListener {
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
+            super.onDoubleTap(e);
             MessageGestureListener.this.onDoubleTap(e);
-            return super.onDoubleTap(e);
+            return true;
         }
     }
 }

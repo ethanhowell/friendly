@@ -19,9 +19,9 @@
         android:id="@+id/rvMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/white"
         android:overScrollMode="never"
         android:scrollbars="vertical"
-        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@id/clSendMessageBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,12 +55,12 @@
         android:id="@+id/clSendMessageBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="4dp"
         android:paddingStart="16dp"
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="16dp"
-        android:background="@color/white"
-        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -89,14 +89,25 @@
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/btScrollToBottom"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvScrollToBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="@string/btScrollToBottom_latest_text"
         android:visibility="gone"
+        android:background="#0000"
+        app:cardCornerRadius="@dimen/message_bubble_corners_radius"
         app:layout_constraintBottom_toTopOf="@+id/clSendMessageBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bubble"
+            android:backgroundTint="#97000000"
+            android:text="@string/btScrollToBottom_latest_text"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
