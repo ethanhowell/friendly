@@ -121,6 +121,7 @@
         android:background="@drawable/emoji_bar_bubble"
         android:elevation="6dp"
         android:gravity="center_horizontal"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/clSendMessageBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

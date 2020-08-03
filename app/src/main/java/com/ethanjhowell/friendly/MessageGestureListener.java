@@ -18,6 +18,8 @@ public abstract class MessageGestureListener implements View.OnTouchListener {
         return gestureDetector.onTouchEvent(motionEvent);
     }
 
+    public abstract void onDown(MotionEvent e);
+
     public abstract void onDoubleTap(MotionEvent e);
 
     public abstract void onLongPress(MotionEvent e);
@@ -32,6 +34,7 @@ public abstract class MessageGestureListener implements View.OnTouchListener {
 
         @Override
         public boolean onDown(MotionEvent e) {
+            MessageGestureListener.this.onDown(e);
             return true;
         }
 
