@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,10 +35,13 @@ public class ActiveMessageAdapter extends BaseMessageAdapter {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewHolder viewHolder = super.onCreateViewHolder(parent, viewType);
         ChatActivity chatActivity = (ChatActivity) parent.getContext();
+
         viewHolder.tvMessageBody.setOnTouchListener(new MessageGestureListener(chatActivity) {
+            private final LinearLayout llEmojiBar = chatActivity.findViewById(R.id.llEmojiBar);
+
             @Override
             public void onDown(MotionEvent e) {
-                chatActivity.findViewById(R.id.llEmojiBar).setVisibility(View.GONE);
+                llEmojiBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -64,11 +69,45 @@ public class ActiveMessageAdapter extends BaseMessageAdapter {
             @Override
             public void onLongPress(MotionEvent e) {
                 int pos = viewHolder.getAdapterPosition();
-                chatActivity.findViewById(R.id.llEmojiBar).setVisibility(View.VISIBLE);
+                llEmojiBar.setVisibility(View.VISIBLE);
                 if (pos != RecyclerView.NO_POSITION) {
                     Message message = messages.get(pos);
                     Log.d(TAG, "onLongClick: " + message.getBody());
+                    chatActivity.findViewById(R.id.tvReactionThumbsUp).setOnClickListener(
+                            view -> emojiReaction((TextView) view, message)
+                    );
+                    chatActivity.findViewById(R.id.tvReactionJoy).setOnClickListener(
+                            view -> emojiReaction((TextView) view, message)
+                    );
+                    chatActivity.findViewById(R.id.tvReactionSmile).setOnClickListener(
+                            view -> emojiReaction((TextView) view, message)
+                    );
+                    chatActivity.findViewById(R.id.tvReactionWow).setOnClickListener(
+                            view -> emojiReaction((TextView) view, message)
+                    );
+                    chatActivity.findViewById(R.id.tvReactionHope).setOnClickListener(
+                            view -> emojiReaction((TextView) view, message)
+                    );
+                    chatActivity.findViewById(R.id.tvReactionWink).setOnClickListener(
+                            view -> emojiReaction((TextView) view, message)
+                    );
+                    chatActivity.findViewById(R.id.tvReactionThumbsDown).setOnClickListener(
+                            view -> emojiReaction((TextView) view, message)
+                    );
                 }
+            }
+
+            private void emojiReaction(TextView tvReaction, Message message) {
+                Map<String, String> reactions = message.getReactions();
+                String personId = ParseUser.getCurrentUser().getObjectId();
+                reactions.put(personId, (String) tvReaction.getText());
+                message.setReactions(reactions);
+                message.saveInBackground(e1 -> {
+                    if (e1 != null) {
+                        Log.e(TAG, "adding reaction to message", e1);
+                    }
+                    llEmojiBar.setVisibility(View.GONE);
+                });
             }
         });
         return viewHolder;
