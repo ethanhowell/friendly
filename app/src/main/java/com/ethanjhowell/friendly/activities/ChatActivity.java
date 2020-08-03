@@ -11,11 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
     private Group__User relation;
     private RecyclerView rvMessages;
     private ActiveMessageAdapter messagesAdapter;
-    private Button btScrollToBottom;
+    private CardView cvScrollToBottom;
 
     private ActivityChatBinding binding;
     private FriendlyParseUser user = FriendlyParseUser.getCurrentUser();
@@ -279,16 +279,16 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 int lastVisiblePosition = rvMessagesLayoutManager.findLastVisibleItemPosition();
                 if (lastVisiblePosition < messages.size() - 1 - NUM_MESSAGES_BEFORE_SCROLL_BUTTON) {
-                    btScrollToBottom.setVisibility(View.VISIBLE);
+                    cvScrollToBottom.setVisibility(View.VISIBLE);
                 } else if (lastVisiblePosition == messages.size() - 1) {
-                    btScrollToBottom.setVisibility(View.GONE);
+                    cvScrollToBottom.setVisibility(View.GONE);
                 }
             }
         });
     }
 
     private void scrollToBottomOnClick(View v) {
-        btScrollToBottom.setVisibility(View.GONE);
+        cvScrollToBottom.setVisibility(View.GONE);
         scrollToBottomOfMessages(true);
     }
 
@@ -308,8 +308,8 @@ public class ChatActivity extends AppCompatActivity {
 
         group.setObjectId(groupId);
 
-        btScrollToBottom = binding.btScrollToBottom;
-        btScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
+        cvScrollToBottom = binding.cvScrollToBottom;
+        cvScrollToBottom.setOnClickListener(this::scrollToBottomOnClick);
         setUpRecyclerView();
 
         loadData();
