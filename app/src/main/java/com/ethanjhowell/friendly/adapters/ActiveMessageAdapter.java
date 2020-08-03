@@ -4,11 +4,12 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ethanjhowell.friendly.OnDoubleTapListener;
+import com.ethanjhowell.friendly.MessageGestureListener;
 import com.ethanjhowell.friendly.models.Message;
 import com.parse.ParseUser;
 
@@ -29,7 +30,7 @@ public class ActiveMessageAdapter extends BaseMessageAdapter {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewHolder viewHolder = super.onCreateViewHolder(parent, viewType);
-        viewHolder.tvMessageBody.setOnTouchListener(new OnDoubleTapListener(parent.getContext()) {
+        viewHolder.tvMessageBody.setOnTouchListener(new MessageGestureListener(parent.getContext()) {
             @Override
             public void onDoubleTap(MotionEvent e) {
                 int pos = viewHolder.getAdapterPosition();
@@ -49,6 +50,16 @@ public class ActiveMessageAdapter extends BaseMessageAdapter {
                         }
                     });
                     Log.d(TAG, "onDoubleTap: " + message.getBody());
+                }
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                int pos = viewHolder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    Message message = messages.get(pos);
+                    Toast.makeText(parent.getContext(), message.getBody(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onLongClick: " + message.getBody());
                 }
             }
         });
