@@ -47,6 +47,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
     private void loadUsers() {
         ParseQuery.getQuery(Group__User.class)
                 .whereEqualTo(Group__User.KEY_GROUP, group)
+                .whereDoesNotExist(Group__User.KEY_DATE_LEFT)
                 .include(Group__User.KEY_USER)
                 .addAscendingOrder(Group__User.KEY_UPDATED_AT)
                 .findInBackground((group__users, e) -> {
@@ -59,7 +60,11 @@ public class GroupDetailsActivity extends AppCompatActivity {
                             Log.d(TAG, "loadUsers: " + friendlyParseUser.getFirstName() + " " + friendlyParseUser.getLastName());
                         }
                         userAdapter.notifyDataSetChanged();
-                        tvUsers.setText(String.format(Locale.US, getString(R.string.tvUsers_template), users.size()));
+                        if (users.size() > 1) {
+                            tvUsers.setText(String.format(Locale.US, getString(R.string.tvUsers_template), users.size()));
+                        } else {
+                            tvUsers.setText(R.string.tvUsers_single);
+                        }
                     }
                 });
     }
