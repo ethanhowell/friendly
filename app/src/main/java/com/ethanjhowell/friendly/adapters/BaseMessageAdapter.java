@@ -104,9 +104,8 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
         }
 
         private void setReactions(Map<String, String> reactions) {
+            llReactions.removeAllViews();
             if (!reactions.isEmpty()) {
-                llReactions.setVisibility(View.VISIBLE);
-                llReactions.removeAllViews();
                 Multiset<String> reactionCounts = LinkedHashMultiset.create();
                 reactionCounts.addAll(reactions.values());
 
@@ -141,12 +140,6 @@ public abstract class BaseMessageAdapter extends RecyclerView.Adapter<BaseMessag
         public void bind(Message prev, Message message, Message next) {
             Log.d(TAG, "bind: " + message.getBody());
             FriendlyParseUser author = FriendlyParseUser.fromParseUser(message.getAuthor());
-
-            if (next == null || next.getAuthor().getObjectId().equals(message.getAuthor().getObjectId())) {
-                llReactions.setVisibility(View.GONE);
-            } else {
-                llReactions.setVisibility(View.INVISIBLE);
-            }
 
             tvMessageBody.setText(message.getBody());
             setReactions(message.getReactions());
